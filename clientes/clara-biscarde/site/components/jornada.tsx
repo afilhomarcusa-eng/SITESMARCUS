@@ -11,7 +11,7 @@
  * cérebro que já existe no logo. Vira lista empilhada no mobile.
  */
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { usePrefersReducedMotion } from "@/lib/reduced-motion";
 import { cn, curva } from "@/lib/utils";
@@ -42,14 +42,11 @@ const desenhos = {
   bandeira: Bandeira,
 };
 
+/* O tipo da parada já aparece no seletor, acima. Não repete aqui. */
 function Painel({ parada }: { parada: ParadaJornada }) {
   return (
     <div>
-      <p className="text-micro uppercase tracking-[0.18em] text-coral-texto">
-        {parada.tipo}
-      </p>
-
-      <h3 className="mt-3 max-w-[26ch] font-display text-grande leading-[1.2] text-oliva-texto">
+      <h3 className="max-w-[26ch] font-display text-grande leading-[1.2] text-oliva-texto">
         {parada.titulo}
       </h3>
 
@@ -77,6 +74,7 @@ function Painel({ parada }: { parada: ParadaJornada }) {
 
 export function Jornada({ paradas }: { paradas: ParadaJornada[] }) {
   const [ativa, setAtiva] = useState(0);
+  const base = useId();
   const prefersReduced = usePrefersReducedMotion();
 
   return (
@@ -155,24 +153,87 @@ export function Jornada({ paradas }: { paradas: ParadaJornada[] }) {
         </div>
       </div>
 
-      {/* ── Empilhado no mobile, tudo aberto ── */}
-      <ol className="space-y-12 md:hidden">
+      {/*
+        ── Mobile ──
+        Empilhado e fechado. Com as seis paradas abertas a seção passava de
+        3.300px, um terço da página inteira num aparelho de 812px de altura.
+        Aqui a pessoa toca na parada que interessa.
+      */}
+      <ol className="md:hidden">
         {paradas.map((p, i) => {
           const Desenho = desenhos[p.desenho];
+          const aberta = i === ativa;
+          const idPainel = `${base}-parada-${i}`;
+
           return (
-            <li
-              key={p.rotulo}
-              className="relative border-l border-dashed border-oliva pb-2 pl-8"
-            >
-              <span className="absolute -left-[1.6rem] top-0 flex h-[3.25rem] w-[3.25rem] items-center justify-center rounded-full border border-coral bg-creme text-coral-texto">
-                <Desenho className="h-7 w-7" />
-              </span>
-              <div className="pt-16">
-                <p className="text-micro uppercase tracking-[0.14em] text-tinta-media">
-                  {p.tipo} · parada {i + 1}
-                </p>
-                <Painel parada={p} />
-              </div>
+            <li key={p.rotulo} className="fio first:border-t-0">
+              <button
+                type="button"
+                aria-expanded={aberta}
+                aria-controls={idPainel}
+                onClick={() => setAtiva(aberta ? -1 : i)}
+                className="flex w-full items-center gap-4 py-4 text-left"
+              >
+                {/* Ícone no fluxo, não deslocado para fora: no celular a
+                    posição absoluta jogava o círculo para fora da tela. */}
+                <span
+                  className={cn(
+                    "flex h-12 w-12 shrink-0 items-center justify-center rounded-full border bg-creme transition-colors",
+                    aberta
+                      ? "border-coral text-coral-texto"
+                      : "border-borda text-oliva"
+                  )}
+                >
+                  <Desenho className="h-6 w-6" />
+                </span>
+
+                <span className="min-w-0 flex-1">
+                  <span className="block text-micro uppercase tracking-[0.14em] text-coral-texto">
+                    {p.tipo}
+                  </span>
+                  <span className="mt-0.5 block font-display text-medio leading-[1.25] text-oliva-texto">
+                    {p.rotulo}
+                  </span>
+                </span>
+
+                {/* Cruz que vira traço, igual ao acordeão da outra seção */}
+                <span
+                  aria-hidden
+                  className="relative block h-3.5 w-3.5 shrink-0"
+                >
+                  <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-coral-texto" />
+                  <motion.span
+                    className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-coral-texto"
+                    animate={{ scaleY: aberta ? 0 : 1 }}
+                    transition={
+                      prefersReduced
+                        ? { duration: 0 }
+                        : { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
+                    }
+                  />
+                </span>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {aberta && (
+                  <motion.div
+                    id={idPainel}
+                    initial={prefersReduced ? false : { height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={prefersReduced ? undefined : { height: 0, opacity: 0 }}
+                    transition={
+                      prefersReduced
+                        ? { duration: 0 }
+                        : { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
+                    }
+                    className="overflow-hidden"
+                  >
+                    <div className="pb-8 pl-16">
+                      <Painel parada={p} />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </li>
           );
         })}

@@ -37,9 +37,15 @@
   --font-display: var(--fonte-display), Georgia, serif;
   --font-corpo: var(--fonte-corpo), system-ui, sans-serif;
 
-  /* Escala reduzida. Menor: 12px. Maior: 52px no hero. Razão de 4.3x. */
-  --text-micro: 0.75rem;
-  --text-mini: 0.8125rem;
+  /*
+    Escala. Menor: 13px. Maior: 52px no hero. Razão de 4x.
+
+    O micro e o mini eram 12px e 13px. No celular, que é a maior parte do
+    público aqui, isso ficava no limite do ilegível para etiqueta e legenda.
+    Subiram um degrau cada.
+  */
+  --text-micro: 0.8125rem;
+  --text-mini: 0.875rem;
   --text-base: 1rem;
   --text-medio: clamp(1.125rem, 0.3vw + 1.05rem, 1.25rem);
   --text-grande: clamp(1.3125rem, 0.85vw + 1.1rem, 1.625rem);

@@ -81,6 +81,7 @@ export default function Home() {
             {retrato ? (
               <Image
                 src={retrato}
+                sizes="(min-width: 1024px) 42vw, 100vw"
                 alt={`${clara.nome}, ${clara.profissao}`}
                 width={clara.retratoLargura}
                 height={clara.retratoAltura}
@@ -162,6 +163,7 @@ export default function Home() {
                   />
                   <Image
                     src="/clara-1.jpeg"
+                    sizes="(min-width: 768px) 30vw, 100vw"
                     alt={clara.nome}
                     width={960}
                     height={1280}
@@ -267,6 +269,7 @@ export default function Home() {
                   />
                   <Image
                     src="/clara-2.jpeg"
+                    sizes="(min-width: 768px) 40vw, 100vw"
                     alt="Clara Biscarde com jogos usados nas sessões"
                     width={1200}
                     height={1600}
@@ -567,6 +570,7 @@ export default function Home() {
               <div>
                 <Image
                   src="/logo-assinatura.png"
+                  sizes="260px"
                   alt={clara.nome}
                   width={3124}
                   height={841}

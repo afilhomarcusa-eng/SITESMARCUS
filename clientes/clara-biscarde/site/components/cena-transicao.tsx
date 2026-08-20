@@ -124,6 +124,7 @@ export function CenaTransicao({ variante }: { variante: Variante }) {
         >
           <Image
             src="/marca.png"
+            sizes="64px"
             alt=""
             width={429}
             height={564}

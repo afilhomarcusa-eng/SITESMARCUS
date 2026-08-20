@@ -47,6 +47,7 @@ export function Cabecalho() {
         <a href="#topo" className="flex shrink-0 items-center gap-3.5">
           <Image
             src="/logo-assinatura.png"
+            sizes="220px"
             alt={clara.nome}
             width={3124}
             height={841}
@@ -129,7 +130,8 @@ export function Cabecalho() {
             onClick={() => setAberto((v) => !v)}
             aria-expanded={aberto}
             aria-label="Abrir menu"
-            className="flex h-9 w-9 flex-col items-center justify-center gap-[5px] lg:hidden"
+            /* 44px é o mínimo confortável para o dedo. Antes eram 36. */
+            className="-mr-2 flex h-11 w-11 flex-col items-center justify-center gap-[5px] lg:hidden"
           >
             <span className="h-px w-5 bg-tinta" />
             <span className="h-px w-5 bg-tinta" />
