@@ -11,9 +11,8 @@ export const clara = {
   profissao: "Psicóloga Infantojuvenil",
   registro: "CRP 03/34973",
 
-  // CRP 03 é o conselho da Bahia, mas a cidade não foi confirmada. Não chutar.
-  cidade: null as string | null,
-  estado: null as string | null,
+  cidade: "Salvador" as string | null,
+  estado: "BA" as string | null,
 
   whatsapp: null as string | null, // "5571999999999"
   telefone: null as string | null,
@@ -56,8 +55,10 @@ export const links = {
 export function telefoneLegivel(numero: string | null): string | null {
   if (!numero) return null;
   const so = numero.replace(/\D/g, "").replace(/^55/, "");
-  if (so.length === 11) return `(${so.slice(0, 2)}) ${so.slice(2, 7)}-${so.slice(7)}`;
-  if (so.length === 10) return `(${so.slice(0, 2)}) ${so.slice(2, 6)}-${so.slice(6)}`;
+  if (so.length === 11)
+    return `(${so.slice(0, 2)}) ${so.slice(2, 7)}-${so.slice(7)}`;
+  if (so.length === 10)
+    return `(${so.slice(0, 2)}) ${so.slice(2, 6)}-${so.slice(6)}`;
   return numero;
 }
 
@@ -321,6 +322,24 @@ export const jornada = [
       "Falta frequente trava o vínculo mais do que parece.",
     ],
   },
+];
+
+/**
+ * Faixa que corre entre uma seção e outra. Cada item é um fato curto sobre o
+ * atendimento, do tipo que a pessoa lê de relance enquanto rola a página.
+ *
+ * Só entra aqui o que já está confirmado. Bairro do consultório e se ela
+ * atende online ainda não foram, e nada disso se chuta: assim que ela
+ * responder, cada um vira uma linha aqui e aparece sozinho na faixa.
+ */
+export const faixaInfo: string[] = [
+  `Psicóloga em ${clara.cidade}`,
+  clara.registro,
+  "Atende criança e adolescente",
+  // Descomentar conforme ela confirmar, trocando o que está entre < >:
+  // `Presencial no <bairro>`,
+  // "Online para todo o Brasil",
+  // "Atendimento particular",
 ];
 
 /** Menu do cabeçalho. Só entra âncora de seção que existe de fato. */

@@ -12,6 +12,60 @@ import { clara, links, menu, agendar } from "@/lib/clara";
 import { cn } from "@/lib/utils";
 import { IconeWhatsapp, IconeInstagram } from "@/components/icones-sociais";
 
+/**
+ * WhatsApp e Instagram no canto superior esquerdo, colados na assinatura.
+ *
+ * Os dois aparecem sempre, porque são peça de design do cabeçalho. O que não
+ * aparece é destino inventado: enquanto o dado não estiver em lib/clara.ts o
+ * ícone é um selo, não um link. Assim que o número e o @ entrarem, cada um
+ * vira link sozinho.
+ */
+function Redes({
+  encolhido,
+  sempre = false,
+}: {
+  encolhido: boolean;
+  /** Ignora o corte por largura. Usado dentro do menu do celular. */
+  sempre?: boolean;
+}) {
+  const redes = [
+    { nome: "WhatsApp", href: links.whatsapp, Icone: IconeWhatsapp },
+    { nome: "Instagram", href: links.instagram, Icone: IconeInstagram },
+  ];
+
+  const forma = cn(
+    "flex items-center justify-center rounded-full border border-borda",
+    "text-tinta-media transition-[height,width,color,border-color]",
+    "duration-[250ms] ease-out",
+    encolhido ? "h-8 w-8" : "h-9 w-9",
+  );
+
+  return (
+    <div
+      className={cn("items-center gap-2", sempre ? "flex" : "hidden sm:flex")}
+    >
+      {redes.map(({ nome, href, Icone }) =>
+        href ? (
+          <a
+            key={nome}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={nome}
+            className={cn(forma, "hover:border-coral hover:text-coral-texto")}
+          >
+            <Icone className="h-4 w-4" />
+          </a>
+        ) : (
+          <span key={nome} aria-hidden className={forma}>
+            <Icone className="h-4 w-4" />
+          </span>
+        ),
+      )}
+    </div>
+  );
+}
+
 export function Cabecalho() {
   const [encolhido, setEncolhido] = useState(false);
   const [aberto, setAberto] = useState(false);
@@ -34,38 +88,43 @@ export function Cabecalho() {
         "transition-[padding,box-shadow] duration-[250ms] ease-out",
         encolhido
           ? "py-2 shadow-[0_1px_0_var(--color-borda)]"
-          : "py-4 shadow-[0_1px_0_transparent]"
+          : "py-4 shadow-[0_1px_0_transparent]",
       )}
     >
       <div className="mx-auto flex w-full max-w-[80rem] items-center justify-between gap-6 px-6 md:px-10">
-        {/*
-          Só a assinatura entra como imagem. A profissão e o CRP viram texto
-          de verdade: no logo original eles são miúdos demais e viram borrão
-          em qualquer tamanho de cabeçalho.
-        */}
-        {/* A assinatura entra sem filtro nenhum, nas cores originais do logo. */}
-        <a href="#topo" className="flex shrink-0 items-center gap-3.5">
-          <Image
-            src="/logo-assinatura.png"
-            sizes="220px"
-            alt={clara.nome}
-            width={3124}
-            height={841}
-            priority
-            className={cn(
-              "w-auto transition-[height] duration-[250ms] ease-out",
-              encolhido ? "h-9" : "h-12"
-            )}
-          />
-          <span className="hidden border-l border-borda pl-3.5 leading-[1.35] sm:block">
-            <span className="block text-micro uppercase tracking-[0.16em] text-tinta-media">
-              {clara.profissao}
+        {/* Canto superior esquerdo: assinatura e, colado nela, as redes. */}
+        <div className="flex shrink-0 items-center gap-4">
+          {/*
+            Só a assinatura entra como imagem. A profissão e o CRP viram texto
+            de verdade: no logo original eles são miúdos demais e viram borrão
+            em qualquer tamanho de cabeçalho.
+          */}
+          {/* A assinatura entra sem filtro nenhum, nas cores originais do logo. */}
+          <a href="#topo" className="flex shrink-0 items-center gap-3.5">
+            <Image
+              src="/logo-assinatura.png"
+              sizes="220px"
+              alt={clara.nome}
+              width={3124}
+              height={841}
+              priority
+              className={cn(
+                "w-auto transition-[height] duration-[250ms] ease-out",
+                encolhido ? "h-9" : "h-12",
+              )}
+            />
+            <span className="hidden border-l border-borda pl-3.5 leading-[1.35] sm:block">
+              <span className="block text-micro uppercase tracking-[0.16em] text-tinta-media">
+                {clara.profissao}
+              </span>
+              <span className="block text-micro uppercase tracking-[0.16em] text-tinta-media">
+                {clara.registro}
+              </span>
             </span>
-            <span className="block text-micro uppercase tracking-[0.16em] text-tinta-media">
-              {clara.registro}
-            </span>
-          </span>
-        </a>
+          </a>
+
+          <Redes encolhido={encolhido} />
+        </div>
 
         <nav className="hidden items-center gap-8 lg:flex">
           {menu.map((item) => (
@@ -89,40 +148,6 @@ export function Cabecalho() {
             >
               Agendar
             </a>
-          )}
-
-          {/* Canto superior direito, a ponta mais visível do cabeçalho */}
-          {(links.whatsapp || links.instagram) && (
-            <div className="hidden items-center gap-2 sm:flex">
-              {links.whatsapp && (
-                <a
-                  href={links.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="WhatsApp"
-                  className={cn(
-                    "flex items-center justify-center rounded-full border border-borda text-tinta-media transition-[height,width] duration-[250ms] ease-out hover:border-coral hover:text-coral-texto",
-                    encolhido ? "h-8 w-8" : "h-9 w-9"
-                  )}
-                >
-                  <IconeWhatsapp className="h-4 w-4" />
-                </a>
-              )}
-              {links.instagram && (
-                <a
-                  href={links.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className={cn(
-                    "flex items-center justify-center rounded-full border border-borda text-tinta-media transition-[height,width] duration-[250ms] ease-out hover:border-coral hover:text-coral-texto",
-                    encolhido ? "h-8 w-8" : "h-9 w-9"
-                  )}
-                >
-                  <IconeInstagram className="h-4 w-4" />
-                </a>
-              )}
-            </div>
           )}
 
           <button
@@ -165,6 +190,12 @@ export function Cabecalho() {
                 </a>
               </li>
             )}
+
+            {/* No celular não sobra largura ao lado da assinatura, então as
+                redes descem para cá em vez de sumirem. */}
+            <li className="pt-1">
+              <Redes encolhido={false} sempre />
+            </li>
           </ul>
         </nav>
       )}

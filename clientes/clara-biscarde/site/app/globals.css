@@ -109,6 +109,46 @@
   .folha-alt {
     border-radius: 38% 62% 58% 42% / 46% 58% 42% 54%;
   }
+
+  /*
+    Peão girando no próprio eixo, entre um item e outro da faixa.
+
+    É CSS e não motion de propósito: a faixa repete a lista várias vezes para
+    o laço não ter emenda, então são dezenas de peões por quebra de página.
+    Um requestAnimationFrame para cada seria peso à toa; assim o compositor
+    resolve sozinho e o bloco de prefers-reduced-motion lá embaixo já congela
+    todos de uma vez.
+
+    Girar com rotate faria o desenho dar cambalhota. Quem trabalha é o scaleX:
+    o corpo achata e volta a encher conforme a face dá a volta, e o valor
+    negativo espelha a listra na hora certa. Os 0.3 nos extremos são o piso —
+    peão é sólido de revolução e a silhueta dele nunca chega a sumir de perfil.
+  */
+  .peao-gira {
+    animation: peao-gira 2.4s linear infinite;
+  }
+}
+
+@keyframes peao-gira {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  22% {
+    transform: scaleX(0.3);
+  }
+  28% {
+    transform: scaleX(-0.3);
+  }
+  50% {
+    transform: scaleX(-1);
+  }
+  72% {
+    transform: scaleX(-0.3);
+  }
+  78% {
+    transform: scaleX(0.3);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

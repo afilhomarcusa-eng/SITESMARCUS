@@ -35,12 +35,14 @@ export function BotaoFlutuante({ href }: { href: string }) {
   const ix = useTransform(sx, (v) => v * -0.3);
   const iy = useTransform(sy, (v) => v * -0.3);
 
-  // Aparece depois de 30% de scroll, conforme o briefing
+  /*
+    Acompanha o site inteiro. O único trecho em que ele não aparece é a capa,
+    onde já existe um "Agendar pelo WhatsApp" do mesmo tamanho a dois palmos
+    de distância — dois botões iguais na mesma tela viram ruído. Meia tela de
+    scroll já libera, então na prática ele está sempre lá.
+  */
   useEffect(() => {
-    const aoRolar = () => {
-      const total = document.body.scrollHeight - window.innerHeight;
-      setVisivel(total > 0 && window.scrollY / total > 0.3);
-    };
+    const aoRolar = () => setVisivel(window.scrollY > window.innerHeight * 0.6);
     aoRolar();
     window.addEventListener("scroll", aoRolar, { passive: true });
     return () => window.removeEventListener("scroll", aoRolar);
@@ -64,8 +66,11 @@ export function BotaoFlutuante({ href }: { href: string }) {
         <motion.a
           ref={ref}
           href={href}
-          target="_blank"
-          rel="noopener noreferrer"
+          /* Sem canal cadastrado o destino é a própria seção de contato, e
+             âncora interna não abre aba nova. */
+          {...(href.startsWith("#")
+            ? {}
+            : { target: "_blank", rel: "noopener noreferrer" })}
           className={classe}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -83,7 +88,7 @@ export function BotaoFlutuante({ href }: { href: string }) {
             className="flex items-center gap-2.5"
             style={prefersReduced ? undefined : { x: ix, y: iy }}
           >
-            Agendar
+            Agendar consulta
           </motion.span>
         </motion.a>
       )}

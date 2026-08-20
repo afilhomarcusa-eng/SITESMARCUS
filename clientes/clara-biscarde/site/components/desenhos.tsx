@@ -8,7 +8,8 @@
  * travessia. As cores vêm dos tokens, nunca fixas no componente.
  */
 
-type Props = { className?: string };
+/* `style` existe por causa do peão, que recebe a defasagem do giro por ali. */
+type Props = { className?: string; style?: React.CSSProperties };
 
 export const traco = {
   fill: "none",
@@ -122,6 +123,34 @@ export function Bandeira({ className }: Props) {
         <path d="M12 54h18" />
         {/* montinho */}
         <path d="M34 54c3-5 8-8 14-8s12 3 14 8" />
+      </g>
+    </svg>
+  );
+}
+
+/**
+ * Peão de rodar, daqueles de madeira com a ponta de metal.
+ *
+ * Entrou no lugar do símbolo do logo, que rodando virava um borrão sem forma.
+ * Um peão também é brinquedo, que é o material de trabalho dela, então ele
+ * conversa com o resto sem precisar puxar a marca para dentro da animação.
+ *
+ * A listra do meio não é enfeite: é ela que deixa o giro visível. Sem uma
+ * marca no corpo, um cone girando parado parece um cone parado.
+ */
+export function Peao({ className, style }: Props) {
+  return (
+    <svg viewBox="0 0 32 40" className={className} style={style} aria-hidden>
+      <g {...traco} stroke="currentColor" strokeWidth={1.7}>
+        {/* haste e cabeça */}
+        <path d="M16 9V4" />
+        <circle cx="16" cy="2.8" r="1.5" />
+        {/* aba do topo */}
+        <path d="M6.5 10.5h19" />
+        {/* corpo até a ponta */}
+        <path d="M6.5 10.5c.5 10.5 4.5 20 9.5 26 5-6 9-15.5 9.5-26" />
+        {/* listra que revela o giro */}
+        <path d="M8.2 16.6c3.4 2 12.2 2 15.6 0" />
       </g>
     </svg>
   );

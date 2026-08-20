@@ -19,7 +19,9 @@ import { ScrollSuave } from "@/components/scroll-suave";
 import { Entrada } from "@/components/entrada";
 import { Parallax } from "@/components/parallax";
 import { RetratoCircular } from "@/components/retrato-circular";
-import { CenaTransicao } from "@/components/cena-transicao";
+import { FaixaInfo } from "@/components/faixa-info";
+import { FotoFlutuante } from "@/components/foto-flutuante";
+import { FormularioContato } from "@/components/formulario-contato";
 import {
   SectionReveal,
   RevealLista,
@@ -72,7 +74,9 @@ export default function Home() {
     <>
       <ScrollSuave />
       <Cabecalho />
-      {agendar && <BotaoFlutuante href={agendar} />}
+      {/* Sem canal cadastrado o botão leva para a seção de contato, que é o
+          destino honesto enquanto o número dela não existe. */}
+      <BotaoFlutuante href={agendar ?? "#contato"} />
 
       <main id="topo">
         {/* ══════════ Hero ══════════ */}
@@ -125,21 +129,20 @@ export default function Home() {
 
               <Entrada delay={0.24}>
                 <div className="mt-9 flex flex-wrap items-center gap-3.5">
-                  {agendar && (
-                    <a
-                      href={agendar}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="rounded-botao bg-coral px-7 py-3.5 text-mini font-semibold uppercase tracking-[0.1em] text-tinta transition-transform duration-300 hover:scale-[1.03]"
-                    >
-                      Agendar conversa
-                    </a>
-                  )}
                   <a
-                    href="#atendimento"
+                    href={agendar ?? "#contato"}
+                    {...(agendar
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    className="rounded-botao bg-coral px-7 py-3.5 text-mini font-semibold uppercase tracking-[0.1em] text-tinta transition-transform duration-300 hover:scale-[1.03]"
+                  >
+                    Agendar pelo WhatsApp
+                  </a>
+                  <a
+                    href="#sobre"
                     className="rounded-botao border border-tinta/25 px-7 py-3.5 text-mini font-semibold uppercase tracking-[0.1em] text-tinta transition-colors duration-300 hover:border-tinta/60"
                   >
-                    Como eu trabalho
+                    Vem conhecer
                   </a>
                 </div>
               </Entrada>
@@ -147,7 +150,65 @@ export default function Home() {
           </div>
         </section>
 
-        <CenaTransicao variante="inicio" />
+        <FaixaInfo />
+
+        {/*
+          ══════════ Sobre mim ══════════
+          Subiu para logo depois da capa: quem chega quer saber com quem vai
+          falar antes de ouvir sobre o método.
+        */}
+        <section id="sobre" className="bg-salvia py-[var(--space-normal)]">
+          <Faixa>
+            <SectionReveal className="grid grid-cols-12 items-center gap-y-10 md:gap-x-14">
+              <div className="col-span-12 border-l-4 border-oliva pl-7 md:col-span-7">
+                <Etiqueta>Sobre mim</Etiqueta>
+
+                <h2 className="mt-6 max-w-[22ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
+                  Sou {clara.nome} e atendo criança e adolescente
+                </h2>
+
+                <div className="mt-6 space-y-5 leading-[1.7] text-tinta-media">
+                  <p>
+                    No meu consultório tem caixa de brinquedo, jogo de
+                    tabuleiro, papel e lápis de cor espalhados. Isso não é
+                    decoração de sala de espera. É com isso que a gente
+                    trabalha.
+                  </p>
+                  <p>
+                    Criança não senta na poltrona e explica o que está sentindo.
+                    Ela mostra. No jogo que escolhe, no personagem que inventa,
+                    no desenho que rasga no meio antes de terminar.
+                  </p>
+                  <p className="text-tinta">
+                    Meu trabalho é entender o que está sendo dito ali, e
+                    traduzir isso junto com quem cuida dela.
+                  </p>
+                </div>
+
+                <p className="mt-7 text-mini uppercase tracking-[0.16em] text-coral-texto">
+                  {clara.profissao} · {clara.registro}
+                </p>
+              </div>
+
+              {/* Sem massa de cor atrás: a foto sozinha, respirando. */}
+              <div className="col-span-12 md:col-span-5">
+                <FotoFlutuante duracao={7.5}>
+                  <div className="relative aspect-[4/5] w-full overflow-hidden">
+                    <Image
+                      src="/clara-3.jpeg"
+                      alt={`${clara.nome} no consultório`}
+                      fill
+                      sizes="(min-width: 768px) 40vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                </FotoFlutuante>
+              </div>
+            </SectionReveal>
+          </Faixa>
+        </section>
+
+        <FaixaInfo />
 
         {/* ══════════ O que trouxe você aqui ══════════ */}
         <section id="comeco" className="py-[var(--space-normal)]">
@@ -156,20 +217,20 @@ export default function Home() {
               <div className="col-span-12 md:col-span-4">
                 <Etiqueta>Talvez você tenha chegado assim</Etiqueta>
 
-                <div className="relative mt-8 hidden md:block">
-                  <div
-                    aria-hidden
-                    className="folha-alt absolute -left-4 -top-4 h-full w-full bg-oliva/20"
-                  />
+                <FotoFlutuante
+                  className="mt-8 hidden md:block"
+                  duracao={8.5}
+                  atraso={0.8}
+                >
                   <Image
                     src="/clara-1.jpeg"
                     sizes="(min-width: 768px) 30vw, 100vw"
                     alt={clara.nome}
                     width={960}
                     height={1280}
-                    className="folha-alt relative h-full w-full object-cover"
+                    className="folha-alt h-full w-full object-cover"
                   />
-                </div>
+                </FotoFlutuante>
               </div>
 
               <div className="col-span-12 md:col-span-8">
@@ -200,61 +261,7 @@ export default function Home() {
           </Faixa>
         </section>
 
-        {/* ══════════ Sobre mim ══════════ */}
-        <section id="sobre" className="bg-salvia py-[var(--space-normal)]">
-          <Faixa>
-            <SectionReveal className="grid grid-cols-12 items-center gap-y-10 md:gap-x-14">
-              <div className="col-span-12 border-l-4 border-oliva pl-7 md:col-span-7">
-                <Etiqueta>Sobre mim</Etiqueta>
-
-                <h2 className="mt-6 max-w-[22ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
-                  Sou {clara.nome} e atendo criança e adolescente
-                </h2>
-
-                <div className="mt-6 space-y-5 leading-[1.7] text-tinta-media">
-                  <p>
-                    No meu consultório tem caixa de brinquedo, jogo de
-                    tabuleiro, papel e lápis de cor espalhados. Isso não é
-                    decoração de sala de espera. É com isso que a gente
-                    trabalha.
-                  </p>
-                  <p>
-                    Criança não senta na poltrona e explica o que está sentindo.
-                    Ela mostra. No jogo que escolhe, no personagem que inventa,
-                    no desenho que rasga no meio antes de terminar.
-                  </p>
-                  <p className="text-tinta">
-                    Meu trabalho é entender o que está sendo dito ali, e traduzir
-                    isso junto com quem cuida dela.
-                  </p>
-                </div>
-
-                <p className="mt-7 text-mini uppercase tracking-[0.16em] text-coral-texto">
-                  {clara.profissao} · {clara.registro}
-                </p>
-              </div>
-
-              {/* Foto com massa de oliva atrás, o verde institucional do manual */}
-              <div className="col-span-12 md:col-span-5">
-                <div className="relative">
-                  <div
-                    aria-hidden
-                    className="folha-alt absolute -bottom-5 -right-5 h-full w-full bg-oliva"
-                  />
-                  <div className="relative aspect-[4/5] w-full overflow-hidden">
-                    <Image
-                      src="/clara-3.jpeg"
-                      alt={`${clara.nome} no consultório`}
-                      fill
-                      sizes="(min-width: 768px) 40vw, 100vw"
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-            </SectionReveal>
-          </Faixa>
-        </section>
+        <FaixaInfo />
 
         {/* ══════════ Atendimento ══════════ */}
         <section id="atendimento" className="bg-rose py-[var(--space-largo)]">
@@ -262,20 +269,16 @@ export default function Home() {
             <SectionReveal className="grid grid-cols-12 items-center gap-y-10 md:gap-x-14">
               {/* A foto com os jogos mostra literalmente o material da sessão */}
               <div className="col-span-12 md:col-span-5">
-                <div className="relative">
-                  <div
-                    aria-hidden
-                    className="folha-alt absolute -bottom-5 -left-5 h-full w-full bg-oliva/25"
-                  />
+                <FotoFlutuante duracao={8} atraso={0.4}>
                   <Image
                     src="/clara-2.jpeg"
                     sizes="(min-width: 768px) 40vw, 100vw"
                     alt="Clara Biscarde com jogos usados nas sessões"
                     width={1200}
                     height={1600}
-                    className="folha-alt relative h-full w-full object-cover"
+                    className="folha-alt h-full w-full object-cover"
                   />
-                </div>
+                </FotoFlutuante>
               </div>
 
               <div className="col-span-12 md:col-span-7">
@@ -306,8 +309,6 @@ export default function Home() {
           </Faixa>
         </section>
 
-        <CenaTransicao variante="meio" />
-
         {/* ══════════ Áreas. Só com dado confirmado. ══════════ */}
         {areas.length > 0 && (
           <section id="areas" className="py-[var(--space-normal)]">
@@ -315,7 +316,10 @@ export default function Home() {
               <Etiqueta>Áreas</Etiqueta>
               <RevealLista className="mt-10 grid grid-cols-12 gap-y-8 md:gap-x-10">
                 {areas.map((a) => (
-                  <RevealItem key={a.titulo} className="col-span-12 md:col-span-6">
+                  <RevealItem
+                    key={a.titulo}
+                    className="col-span-12 md:col-span-6"
+                  >
                     <p className="font-display text-grande leading-[1.25] text-oliva-texto">
                       {a.titulo}
                     </p>
@@ -329,6 +333,8 @@ export default function Home() {
           </section>
         )}
 
+        <FaixaInfo />
+
         {/* ══════════ Isso é fase? · agrupado por faixa etária ══════════ */}
         <section id="pais" className="bg-salvia py-[var(--space-normal)]">
           <Faixa>
@@ -341,14 +347,14 @@ export default function Home() {
               </div>
 
               <div className="col-span-12 flex justify-center md:col-span-4 md:justify-end">
-                <Parallax speed={0.15}>
+                <FotoFlutuante duracao={6.5} atraso={1.2}>
                   <RetratoCircular
                     src="/clara-4.jpeg"
                     alt={clara.nome}
                     lado="direita"
                     className="h-40 w-40 md:h-48 md:w-48"
                   />
-                </Parallax>
+                </FotoFlutuante>
               </div>
             </SectionReveal>
 
@@ -370,6 +376,8 @@ export default function Home() {
           </Faixa>
         </section>
 
+        <FaixaInfo />
+
         {/* ══════════ A jornada ══════════ */}
         <section className="bg-rose py-[var(--space-normal)]">
           <Faixa>
@@ -390,7 +398,7 @@ export default function Home() {
           </Faixa>
         </section>
 
-        <CenaTransicao variante="fim" />
+        <FaixaInfo />
 
         {/* ══════════ Vamos conversar? · fotos e contato juntos, fechando no WhatsApp ══════════ */}
         <section id="contato" className="bg-salvia py-[var(--space-largo)]">
@@ -401,8 +409,8 @@ export default function Home() {
                 Vamos conversar sobre seu filho?
               </h2>
               <p className="mt-5 leading-[1.7] text-tinta-media">
-                Manda mensagem contando o que está acontecendo. Pode ser em
-                duas linhas, do jeito que sair. Quem responde sou eu.
+                Manda mensagem contando o que está acontecendo. Pode ser em duas
+                linhas, do jeito que sair. Quem responde sou eu.
               </p>
             </SectionReveal>
 
@@ -435,28 +443,51 @@ export default function Home() {
               ))}
             </RevealLista>
 
-            {agendar && (
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-3.5">
-                <a
-                  href={agendar}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-botao bg-coral px-7 py-3.5 text-mini font-semibold uppercase tracking-[0.1em] text-tinta transition-transform duration-300 hover:scale-[1.03]"
-                >
-                  Falar pelo WhatsApp
-                </a>
-                {links.whatsappWeb && (
+            {/*
+              O formulário substituiu os dois botões grandes que ficavam aqui:
+              com "Enviar via WhatsApp" logo abaixo dos campos, mais um par de
+              botões com o mesmo destino só dividia a atenção. Quem prefere ir
+              direto tem o link discreto no rodapé do bloco.
+            */}
+            <div className="mx-auto mt-12 max-w-[42rem] rounded-bloco border border-borda bg-creme p-7 sm:p-9">
+              <h3 className="font-display text-grande font-normal leading-[1.25]">
+                Envie uma mensagem
+              </h3>
+              <p className="mt-2 max-w-[46ch] text-mini leading-[1.7] text-tinta-media">
+                O que você escrever aqui chega no meu WhatsApp já montado. Dá
+                para reler e mudar antes de mandar.
+              </p>
+
+              <FormularioContato />
+
+              {agendar && (
+                <p className="mt-7 border-t border-borda pt-6 text-mini leading-[1.7] text-tinta-media">
+                  Prefere ir direto?{" "}
                   <a
-                    href={links.whatsappWeb}
+                    href={agendar}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-botao border border-tinta/25 px-7 py-3.5 text-mini font-semibold uppercase tracking-[0.1em] text-tinta transition-colors duration-300 hover:border-tinta/60"
+                    className="text-tinta underline decoration-coral decoration-2 underline-offset-4"
                   >
-                    Abrir no WhatsApp Web
+                    Abrir a conversa no WhatsApp
                   </a>
-                )}
-              </div>
-            )}
+                  {links.whatsappWeb && (
+                    <>
+                      {" ou "}
+                      <a
+                        href={links.whatsappWeb}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-tinta underline decoration-coral decoration-2 underline-offset-4"
+                      >
+                        no WhatsApp Web
+                      </a>
+                    </>
+                  )}
+                  .
+                </p>
+              )}
+            </div>
 
             {/* Central de canais, secundária. Cada linha só existe se o dado existir. */}
             <div className="mx-auto mt-14 max-w-[34rem]">
