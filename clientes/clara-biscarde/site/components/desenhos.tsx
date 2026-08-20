@@ -10,12 +10,16 @@
 
 type Props = { className?: string };
 
-const traco = {
+export const traco = {
   fill: "none",
   strokeWidth: 2,
   strokeLinecap: "round" as const,
   strokeLinejoin: "round" as const,
 };
+
+/** Curva da Trilha, exportada para a carroça ambiente andar por cima dela. */
+export const TRILHA_D =
+  "M0,40 C 90,26 150,50 250,34 S 420,24 520,40 S 700,50 800,32 S 940,26 1000,38";
 
 export function Castelo({ className }: Props) {
   return (
@@ -133,7 +137,7 @@ export function Trilha({ className }: Props) {
     >
       {/* Amplitude presa entre y 24 e y 48 para nunca invadir os rótulos */}
       <path
-        d="M0,40 C 90,26 150,50 250,34 S 420,24 520,40 S 700,50 800,32 S 940,26 1000,38"
+        d={TRILHA_D}
         fill="none"
         stroke="var(--color-oliva-apoio)"
         strokeWidth="2.5"

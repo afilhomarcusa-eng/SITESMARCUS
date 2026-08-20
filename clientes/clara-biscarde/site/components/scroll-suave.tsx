@@ -12,7 +12,7 @@ export function ScrollSuave() {
   useEffect(() => {
     if (prefersReduced) return;
 
-    const lenis = new Lenis({ duration: 1.05, smoothWheel: true });
+    const lenis = new Lenis({ duration: 1.15, smoothWheel: true });
 
     let frame = 0;
     const loop = (tempo: number) => {

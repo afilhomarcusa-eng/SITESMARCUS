@@ -249,11 +249,11 @@ export const jornada = [
     rotulo: "Antes de abrir o assunto",
     titulo: "O tom pesa mais do que a frase",
     texto:
-      "Criança presta menos atenção nas palavras e mais no jeito como você fala. Se você chegar tenso, ela entende que é coisa grave. Se chegar leve demais, ela sente que está sendo enrolada e fica desconfiada antes mesmo de saber do que se trata.",
+      "Criança presta menos atenção nas palavras e mais no tom. Tenso demais soa grave. Leve demais soa enrolação.",
     dicas: [
-      "Escolha um momento neutro. No carro, numa caminhada, arrumando a mesa.",
-      "Nunca logo depois de uma briga. Terapia anunciada dentro de uma punição vira punição.",
-      "Se vocês são dois cuidadores, combinem antes o que vão dizer. Versões diferentes confundem.",
+      "Escolha um momento neutro: no carro, numa caminhada.",
+      "Nunca logo depois de uma briga.",
+      "Se forem dois cuidadores, combinem antes o que vão dizer.",
     ],
   },
   {
@@ -262,11 +262,11 @@ export const jornada = [
     rotulo: "A conversa",
     titulo: "O objetivo não é convencer, é informar",
     texto:
-      "Quanto mais simples a frase, menos espaço sobra para ele imaginar que tem alguma coisa errada com ele. Explicação longa demais costuma soar como justificativa, e justificativa levanta suspeita.",
+      "Frase simples deixa menos espaço para ele imaginar que tem algo errado. Explicação longa demais soa como justificativa.",
     dicas: [
-      "Diga o que é: um lugar de conversar e brincar com alguém que ajuda quando as coisas ficam difíceis de explicar.",
-      "Evite “você vai adorar”. Ele pode não adorar, e aí você perdeu a credibilidade logo no começo.",
-      "Se vier “eu sou doido?”, responda direto que não, e que gente que não está doente também vai.",
+      "Diga o que é: um lugar de conversar e brincar com quem ajuda.",
+      "Evite “você vai adorar”. Ele pode não adorar.",
+      "Se vier “eu sou doido?”, responda que não — gente saudável também vai.",
     ],
   },
   {
@@ -275,11 +275,11 @@ export const jornada = [
     rotulo: "O “eu não quero ir”",
     titulo: "Recusar não quer dizer que não está funcionando",
     texto:
-      "Quase toda criança trava em algum momento, e costuma travar justamente quando o assunto começou a ficar próximo demais. A recusa é informação, não fracasso. Tratar como birra costuma transformar uma fase em briga longa.",
+      "Quase toda criança trava em algum momento — geralmente quando o assunto ficou próximo demais. A recusa é informação, não fracasso.",
     dicas: [
-      "Não negocie com prêmio. Sorvete depois da sessão transforma terapia em obrigação paga.",
-      "Não ameace tirar a terapia como castigo. Isso confirma para ele que terapia é coisa ruim.",
-      "Leve a recusa para a psicóloga em vez de resolver sozinha em casa. É material de trabalho.",
+      "Não negocie com prêmio: sorvete depois vira obrigação paga.",
+      "Não ameace tirar a terapia como castigo.",
+      "Leve a recusa para a psicóloga. É material de trabalho.",
     ],
   },
   {
@@ -288,11 +288,11 @@ export const jornada = [
     rotulo: "A primeira sessão",
     titulo: "Sair igual a como entrou também é normal",
     texto:
-      "Vínculo não se forma em uma hora. Muita criança sai da primeira sessão sem comentar nada e sem parecer diferente, e isso não diz nada sobre como foi. As primeiras semanas servem para ela descobrir que aquele lugar é seguro.",
+      "Vínculo não se forma em uma hora. Sair sem comentar nada não diz nada sobre como foi. As primeiras semanas servem pra ela descobrir que o lugar é seguro.",
     dicas: [
-      "Chegue com alguns minutos de folga. Chegar correndo já começa a sessão tensa.",
-      "Não faça ensaio no caminho. Combinar o que ele deve falar tira o sentido do espaço.",
-      "Se ele quiser levar um brinquedo, um desenho ou um caderno, deixe levar.",
+      "Chegue com minutos de folga — correndo já começa tenso.",
+      "Não ensaie no caminho o que ele deve falar.",
+      "Se ele quiser levar um brinquedo, deixe.",
     ],
   },
   {
@@ -301,11 +301,11 @@ export const jornada = [
     rotulo: "O silêncio depois",
     titulo: "A parte mais desconfortável para quem cuida",
     texto:
-      "Você provavelmente não vai saber em detalhe o que acontece lá dentro. O sigilo com criança e adolescente existe para proteger a confiança dela no espaço, não para deixar você de fora. Quem cuida continua sendo parte do processo, só por outra porta.",
+      "Você não vai saber em detalhe o que acontece lá dentro. O sigilo protege a confiança dela no espaço — não deixa você de fora, só muda a porta.",
     dicas: [
-      "Evite “o que vocês fizeram hoje?” toda semana. Perguntar demais costuma fechar a criança.",
-      "Prefira “como você está?” e aceite “bem” como resposta completa.",
-      "Quando precisar de resposta, procure a psicóloga. Ela sabe o que pode e o que não pode contar.",
+      "Evite perguntar “o que fizeram hoje?” toda semana.",
+      "Prefira “como você está?” e aceite “bem” como resposta.",
+      "Quando precisar de resposta, procure a psicóloga.",
     ],
   },
   {
@@ -314,29 +314,20 @@ export const jornada = [
     rotulo: "Quando vira rotina",
     titulo: "Deixa de ser assunto e começa a render",
     texto:
-      "Depois de algumas semanas a terapia sai do centro das atenções da casa e vira parte da semana, como aula de natação. É mais ou menos aí que costuma começar a render de verdade, quando ninguém está mais observando para ver se está dando certo.",
+      "Depois de algumas semanas a terapia vira parte da semana, como aula de natação. É aí que costuma começar a render de verdade.",
     dicas: [
-      "Mantenha a frequência inclusive nas semanas em que parece que está tudo bem.",
-      "Avise sobre mudanças grandes em casa. Mudança, separação e luto mexem no processo.",
-      "Falta frequente trava o vínculo mais do que costuma parecer de fora.",
+      "Mantenha a frequência mesmo quando parece que está tudo bem.",
+      "Avise sobre mudanças grandes em casa: mudança, separação, luto.",
+      "Falta frequente trava o vínculo mais do que parece.",
     ],
   },
-];
-
-/** Itens curtos. Entram numa faixa horizontal, não em coluna. */
-export const antesDaConversa = [
-  { titulo: "Quando começou", texto: "“Desde as férias” já ajuda." },
-  { titulo: "O que a escola falou", texto: "Bilhete, print, relatório." },
-  { titulo: "O que já tentaram", texto: "Inclusive o que parou de funcionar." },
-  { titulo: "Quem mais convive", texto: "Avós, babá, padrasto, irmãos." },
-  { titulo: "Histórico", texto: "Laudos e avaliações anteriores." },
 ];
 
 /** Menu do cabeçalho. Só entra âncora de seção que existe de fato. */
 export const menu = [
   { rotulo: "Sobre mim", href: "#sobre" },
   ...(areas.length ? [{ rotulo: "Áreas", href: "#areas" }] : []),
-  { rotulo: "Abordagem", href: "#abordagem" },
+  { rotulo: "Atendimento", href: "#atendimento" },
   { rotulo: "Para os pais", href: "#pais" },
   { rotulo: "Contato", href: "#contato" },
 ];

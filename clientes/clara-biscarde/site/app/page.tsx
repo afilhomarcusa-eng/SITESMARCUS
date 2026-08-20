@@ -9,7 +9,6 @@ import {
   quandoProcurarCrianca,
   quandoProcurarAdolescente,
   jornada,
-  antesDaConversa,
   telefoneLegivel,
 } from "@/lib/clara";
 import { Cabecalho } from "@/components/cabecalho";
@@ -18,6 +17,9 @@ import { Jornada } from "@/components/jornada";
 import { BotaoFlutuante } from "@/components/botao-flutuante";
 import { ScrollSuave } from "@/components/scroll-suave";
 import { Entrada } from "@/components/entrada";
+import { Parallax } from "@/components/parallax";
+import { RetratoCircular } from "@/components/retrato-circular";
+import { CenaTransicao } from "@/components/cena-transicao";
 import {
   SectionReveal,
   RevealLista,
@@ -144,6 +146,8 @@ export default function Home() {
           </div>
         </section>
 
+        <CenaTransicao variante="inicio" />
+
         {/* ══════════ O que trouxe você aqui ══════════ */}
         <section id="comeco" className="py-[var(--space-normal)]">
           <Faixa>
@@ -198,23 +202,6 @@ export default function Home() {
         <section id="sobre" className="bg-salvia py-[var(--space-normal)]">
           <Faixa>
             <SectionReveal className="grid grid-cols-12 items-center gap-y-10 md:gap-x-14">
-              {/* Retrato em forma orgânica, elemento gráfico do manual */}
-              <div className="col-span-12 md:col-span-5">
-                <div className="relative">
-                  <div
-                    aria-hidden
-                    className="folha absolute -left-5 -top-5 h-full w-full bg-coral/25"
-                  />
-                  <Image
-                    src="/clara-3.jpeg"
-                    alt={`${clara.nome} no consultório`}
-                    width={1280}
-                    height={1600}
-                    className="folha relative h-full w-full object-cover"
-                  />
-                </div>
-              </div>
-
               <div className="col-span-12 md:col-span-7">
                 <Etiqueta>Sobre mim</Etiqueta>
 
@@ -244,14 +231,44 @@ export default function Home() {
                   {clara.profissao} · {clara.registro}
                 </p>
               </div>
+
+              {/* Foto simples, sem máscara, mesmo tratamento da capa */}
+              <div className="col-span-12 md:col-span-5">
+                <div className="relative aspect-[4/5] w-full overflow-hidden">
+                  <Image
+                    src="/clara-3.jpeg"
+                    alt={`${clara.nome} no consultório`}
+                    fill
+                    sizes="(min-width: 768px) 40vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
             </SectionReveal>
           </Faixa>
         </section>
 
         {/* ══════════ Atendimento ══════════ */}
-        <section id="atendimento" className="py-[var(--space-largo)]">
+        <section id="atendimento" className="bg-rose py-[var(--space-largo)]">
           <Faixa>
             <SectionReveal className="grid grid-cols-12 items-center gap-y-10 md:gap-x-14">
+              {/* A foto com os jogos mostra literalmente o material da sessão */}
+              <div className="col-span-12 md:col-span-5">
+                <div className="relative">
+                  <div
+                    aria-hidden
+                    className="folha-alt absolute -bottom-5 -left-5 h-full w-full bg-oliva/25"
+                  />
+                  <Image
+                    src="/clara-2.jpeg"
+                    alt="Clara Biscarde com jogos usados nas sessões"
+                    width={1200}
+                    height={1600}
+                    className="folha-alt relative h-full w-full object-cover"
+                  />
+                </div>
+              </div>
+
               <div className="col-span-12 md:col-span-7">
                 <Etiqueta>Atendimento</Etiqueta>
 
@@ -276,30 +293,15 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-
-              {/* A foto com os jogos mostra literalmente o material da sessão */}
-              <div className="col-span-12 md:col-span-5">
-                <div className="relative">
-                  <div
-                    aria-hidden
-                    className="folha-alt absolute -bottom-5 -right-5 h-full w-full bg-oliva/25"
-                  />
-                  <Image
-                    src="/clara-2.jpeg"
-                    alt="Clara Biscarde com jogos usados nas sessões"
-                    width={1200}
-                    height={1600}
-                    className="folha-alt relative h-full w-full object-cover"
-                  />
-                </div>
-              </div>
             </SectionReveal>
           </Faixa>
         </section>
 
+        <CenaTransicao variante="meio" />
+
         {/* ══════════ Áreas. Só com dado confirmado. ══════════ */}
         {areas.length > 0 && (
-          <section id="areas" className="bg-salvia py-[var(--space-normal)]">
+          <section id="areas" className="py-[var(--space-normal)]">
             <Faixa>
               <Etiqueta>Áreas</Etiqueta>
               <RevealLista className="mt-10 grid grid-cols-12 gap-y-8 md:gap-x-10">
@@ -321,16 +323,24 @@ export default function Home() {
         {/* ══════════ Isso é fase? · agrupado por faixa etária ══════════ */}
         <section id="pais" className="bg-salvia py-[var(--space-normal)]">
           <Faixa>
-            <SectionReveal className="flex flex-wrap items-end justify-between gap-6">
-              <div>
+            <SectionReveal className="grid grid-cols-12 items-end gap-y-6 md:gap-x-10">
+              <div className="col-span-12 md:col-span-8">
                 <Etiqueta>Para os pais</Etiqueta>
                 <h2 className="mt-6 max-w-[20ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
                   Isso é fase ou já é hora de procurar?
                 </h2>
               </div>
-              <p className="max-w-[34ch] text-mini leading-[1.7] text-tinta-media">
-                Toque para abrir. Nenhum item fecha diagnóstico sozinho.
-              </p>
+
+              <div className="col-span-12 flex justify-center md:col-span-4 md:justify-end">
+                <Parallax speed={0.15}>
+                  <RetratoCircular
+                    src="/clara-4.jpeg"
+                    alt={clara.nome}
+                    lado="direita"
+                    className="h-40 w-40 md:h-48 md:w-48"
+                  />
+                </Parallax>
+              </div>
             </SectionReveal>
 
             <div className="mt-10 grid grid-cols-12 gap-y-10 md:gap-x-14">
@@ -352,7 +362,7 @@ export default function Home() {
         </section>
 
         {/* ══════════ A jornada ══════════ */}
-        <section className="py-[var(--space-normal)]">
+        <section className="bg-rose py-[var(--space-normal)]">
           <Faixa>
             <SectionReveal>
               <Etiqueta>O caminho até virar rotina</Etiqueta>
@@ -371,175 +381,175 @@ export default function Home() {
           </Faixa>
         </section>
 
-        {/* ══════════ Antes da primeira conversa ══════════ */}
-        <section className="bg-salvia py-[var(--space-apertado)]">
+        <CenaTransicao variante="fim" />
+
+        {/* ══════════ Vamos conversar? · fotos e contato juntos, fechando no WhatsApp ══════════ */}
+        <section id="contato" className="bg-salvia py-[var(--space-largo)]">
           <Faixa>
-            <SectionReveal>
-              <h2 className="max-w-[36ch] font-display text-grande font-normal leading-[1.25] tracking-[-0.01em]">
-                Vale separar antes da primeira conversa
+            <SectionReveal className="mx-auto max-w-[38rem] text-center">
+              <Etiqueta>Contato</Etiqueta>
+              <h2 className="mt-6 font-display text-titulo font-normal leading-[1.1] tracking-[-0.015em]">
+                Vamos conversar sobre seu filho?
               </h2>
+              <p className="mt-5 leading-[1.7] text-tinta-media">
+                Manda mensagem contando o que está acontecendo. Pode ser em
+                duas linhas, do jeito que sair. Quem responde sou eu.
+              </p>
             </SectionReveal>
 
-            <RevealLista className="mt-8 grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-3 lg:grid-cols-5">
-              {antesDaConversa.map((item, i) => (
-                <RevealItem key={item.titulo}>
-                  <p className="font-display text-medio leading-[1.15] text-coral-texto">
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
-                  <p className="mt-2 text-mini font-semibold uppercase tracking-[0.1em] text-oliva-texto">
-                    {item.titulo}
-                  </p>
-                  <p className="mt-1.5 text-mini leading-[1.6] text-tinta-media">
-                    {item.texto}
-                  </p>
+            <RevealLista className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+              {[
+                { src: "/clara-1.jpeg", alt: clara.nome },
+                {
+                  src: "/clara-2.jpeg",
+                  alt: "Clara Biscarde com jogos usados nas sessões",
+                },
+                { src: "/clara-3.jpeg", alt: `${clara.nome} no consultório` },
+                { src: "/clara-4.jpeg", alt: clara.nome },
+              ].map((foto, i) => (
+                <RevealItem key={foto.src}>
+                  <Parallax
+                    speed={0.1 + (i % 2) * 0.08}
+                    direction={i % 2 ? "down" : "up"}
+                  >
+                    <div className="relative aspect-[3/4] overflow-hidden rounded-bloco">
+                      <Image
+                        src={foto.src}
+                        alt={foto.alt}
+                        fill
+                        sizes="(min-width: 640px) 25vw, 50vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </Parallax>
                 </RevealItem>
               ))}
             </RevealLista>
-          </Faixa>
-        </section>
 
-        {/* ══════════ Contato. Central de canais. Zero movimento aqui. ══════════ */}
-        <section id="contato" className="bg-salvia py-[var(--space-largo)]">
-          <Faixa>
-            <div className="grid grid-cols-12 gap-y-10 md:gap-x-14">
-              <div className="col-span-12 md:col-span-5">
-                <Etiqueta>Contato</Etiqueta>
-
-                <h2 className="mt-6 max-w-[18ch] font-display text-titulo font-normal leading-[1.1] tracking-[-0.015em]">
-                  Vamos conversar sobre seu filho?
-                </h2>
-
-                <p className="mt-5 max-w-[38ch] leading-[1.7] text-tinta-media">
-                  Manda mensagem contando o que está acontecendo. Pode ser em
-                  duas linhas, do jeito que sair. Quem responde sou eu.
-                </p>
-
-                {agendar && (
-                  <div className="mt-9 flex flex-wrap gap-3.5">
-                    <a
-                      href={agendar}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="rounded-botao bg-coral px-7 py-3.5 text-mini font-semibold uppercase tracking-[0.1em] text-tinta transition-transform duration-300 hover:scale-[1.03]"
-                    >
-                      Falar pelo WhatsApp
-                    </a>
-                    {links.whatsappWeb && (
-                      <a
-                        href={links.whatsappWeb}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-botao border border-tinta/25 px-7 py-3.5 text-mini font-semibold uppercase tracking-[0.1em] text-tinta transition-colors duration-300 hover:border-tinta/60"
-                      >
-                        Abrir no WhatsApp Web
-                      </a>
-                    )}
-                  </div>
+            {agendar && (
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-3.5">
+                <a
+                  href={agendar}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-botao bg-coral px-7 py-3.5 text-mini font-semibold uppercase tracking-[0.1em] text-tinta transition-transform duration-300 hover:scale-[1.03]"
+                >
+                  Falar pelo WhatsApp
+                </a>
+                {links.whatsappWeb && (
+                  <a
+                    href={links.whatsappWeb}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-botao border border-tinta/25 px-7 py-3.5 text-mini font-semibold uppercase tracking-[0.1em] text-tinta transition-colors duration-300 hover:border-tinta/60"
+                  >
+                    Abrir no WhatsApp Web
+                  </a>
                 )}
               </div>
+            )}
 
-              {/* Central de canais. Cada linha só existe se o dado existir. */}
-              <div className="col-span-12 md:col-span-6 md:col-start-7">
-                {temContato ? (
-                  <dl className="divide-y divide-borda border-y border-borda">
-                    {links.whatsapp && (
-                      <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:gap-8">
-                        <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
-                          WhatsApp
-                        </dt>
-                        <dd>
-                          <a
-                            href={links.whatsapp}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-tinta underline decoration-coral decoration-2 underline-offset-4"
-                          >
-                            {telefoneLegivel(clara.whatsapp)}
-                          </a>
-                        </dd>
-                      </div>
-                    )}
+            {/* Central de canais, secundária. Cada linha só existe se o dado existir. */}
+            <div className="mx-auto mt-14 max-w-[34rem]">
+              {temContato ? (
+                <dl className="divide-y divide-borda border-y border-borda">
+                  {links.whatsapp && (
+                    <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:justify-center sm:gap-8">
+                      <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
+                        WhatsApp
+                      </dt>
+                      <dd>
+                        <a
+                          href={links.whatsapp}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-tinta underline decoration-coral decoration-2 underline-offset-4"
+                        >
+                          {telefoneLegivel(clara.whatsapp)}
+                        </a>
+                      </dd>
+                    </div>
+                  )}
 
-                    {links.telefone && (
-                      <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:gap-8">
-                        <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
-                          Telefone
-                        </dt>
-                        <dd>
-                          <a href={links.telefone} className="text-tinta">
-                            {telefoneLegivel(clara.telefone)}
-                          </a>
-                        </dd>
-                      </div>
-                    )}
+                  {links.telefone && (
+                    <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:justify-center sm:gap-8">
+                      <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
+                        Telefone
+                      </dt>
+                      <dd>
+                        <a href={links.telefone} className="text-tinta">
+                          {telefoneLegivel(clara.telefone)}
+                        </a>
+                      </dd>
+                    </div>
+                  )}
 
-                    {links.email && (
-                      <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:gap-8">
-                        <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
-                          E-mail
-                        </dt>
-                        <dd>
-                          <a href={links.email} className="text-tinta">
-                            {clara.email}
-                          </a>
-                        </dd>
-                      </div>
-                    )}
+                  {links.email && (
+                    <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:justify-center sm:gap-8">
+                      <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
+                        E-mail
+                      </dt>
+                      <dd>
+                        <a href={links.email} className="text-tinta">
+                          {clara.email}
+                        </a>
+                      </dd>
+                    </div>
+                  )}
 
-                    {links.instagram && (
-                      <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:gap-8">
-                        <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
-                          Instagram
-                        </dt>
-                        <dd>
-                          <a
-                            href={links.instagram}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-tinta"
-                          >
-                            @{clara.instagram}
-                          </a>
-                        </dd>
-                      </div>
-                    )}
+                  {links.instagram && (
+                    <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:justify-center sm:gap-8">
+                      <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
+                        Instagram
+                      </dt>
+                      <dd>
+                        <a
+                          href={links.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-tinta"
+                        >
+                          @{clara.instagram}
+                        </a>
+                      </dd>
+                    </div>
+                  )}
 
-                    {clara.endereco && (
-                      <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:gap-8">
-                        <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
-                          Endereço
-                        </dt>
-                        <dd className="whitespace-pre-line text-tinta">
-                          {clara.endereco}
-                          {clara.cidade ? `\n${clara.cidade}` : ""}
-                          {clara.estado ? `, ${clara.estado}` : ""}
-                        </dd>
-                      </div>
-                    )}
+                  {clara.endereco && (
+                    <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:justify-center sm:gap-8">
+                      <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
+                        Endereço
+                      </dt>
+                      <dd className="whitespace-pre-line text-tinta">
+                        {clara.endereco}
+                        {clara.cidade ? `\n${clara.cidade}` : ""}
+                        {clara.estado ? `, ${clara.estado}` : ""}
+                      </dd>
+                    </div>
+                  )}
 
-                    {clara.horario && (
-                      <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:gap-8">
-                        <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
-                          Horários
-                        </dt>
-                        <dd className="text-tinta">{clara.horario}</dd>
-                      </div>
-                    )}
-                  </dl>
-                ) : (
-                  /* Sem nenhum canal cadastrado, o bloco não inventa contato. */
-                  <div className="rounded-bloco border border-dashed border-coral/60 p-8">
-                    <p className="text-micro uppercase tracking-[0.18em] text-coral-texto">
-                      Canais de atendimento
-                    </p>
-                    <p className="mt-3 max-w-[40ch] leading-[1.7] text-tinta-media">
-                      WhatsApp, e-mail e Instagram entram aqui assim que forem
-                      cadastrados em <code>lib/clara.ts</code>. Enquanto não
-                      existirem, nenhum contato é exibido nem inventado.
-                    </p>
-                  </div>
-                )}
-              </div>
+                  {clara.horario && (
+                    <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:justify-center sm:gap-8">
+                      <dt className="shrink-0 text-micro uppercase tracking-[0.18em] text-coral-texto sm:w-[11ch]">
+                        Horários
+                      </dt>
+                      <dd className="text-tinta">{clara.horario}</dd>
+                    </div>
+                  )}
+                </dl>
+              ) : (
+                /* Sem nenhum canal cadastrado, o bloco não inventa contato. */
+                <div className="rounded-bloco border border-dashed border-coral/60 p-8 text-center">
+                  <p className="text-micro uppercase tracking-[0.18em] text-coral-texto">
+                    Canais de atendimento
+                  </p>
+                  <p className="mx-auto mt-3 max-w-[40ch] leading-[1.7] text-tinta-media">
+                    WhatsApp, e-mail e Instagram entram aqui assim que forem
+                    cadastrados em <code>lib/clara.ts</code>. Enquanto não
+                    existirem, nenhum contato é exibido nem inventado.
+                  </p>
+                </div>
+              )}
             </div>
           </Faixa>
         </section>

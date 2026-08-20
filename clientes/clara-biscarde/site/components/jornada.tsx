@@ -23,6 +23,7 @@ import {
   Bandeira,
   Trilha,
 } from "@/components/desenhos";
+import { TrilhaDragao } from "@/components/trilha-dragao";
 
 export interface ParadaJornada {
   desenho: "castelo" | "dragao" | "ponte" | "bussola" | "bandeira";
@@ -84,6 +85,7 @@ export function Jornada({ paradas }: { paradas: ParadaJornada[] }) {
       <div className="hidden md:block">
         <div className="relative">
           <Trilha className="absolute inset-x-0 top-0 h-[4.5rem] w-full" />
+          <TrilhaDragao className="absolute inset-x-0 top-0 h-[4.5rem] w-full" />
 
           <ol className="relative flex items-start justify-between gap-2">
             {paradas.map((p, i) => {

@@ -8,8 +8,9 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { clara, menu, agendar } from "@/lib/clara";
+import { clara, links, menu, agendar } from "@/lib/clara";
 import { cn } from "@/lib/utils";
+import { IconeWhatsapp, IconeInstagram } from "@/components/icones-sociais";
 
 export function Cabecalho() {
   const [encolhido, setEncolhido] = useState(false);
@@ -87,6 +88,40 @@ export function Cabecalho() {
             >
               Agendar
             </a>
+          )}
+
+          {/* Canto superior direito, a ponta mais visível do cabeçalho */}
+          {(links.whatsapp || links.instagram) && (
+            <div className="hidden items-center gap-2 sm:flex">
+              {links.whatsapp && (
+                <a
+                  href={links.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="WhatsApp"
+                  className={cn(
+                    "flex items-center justify-center rounded-full border border-borda text-tinta-media transition-[height,width] duration-[250ms] ease-out hover:border-coral hover:text-coral-texto",
+                    encolhido ? "h-8 w-8" : "h-9 w-9"
+                  )}
+                >
+                  <IconeWhatsapp className="h-4 w-4" />
+                </a>
+              )}
+              {links.instagram && (
+                <a
+                  href={links.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className={cn(
+                    "flex items-center justify-center rounded-full border border-borda text-tinta-media transition-[height,width] duration-[250ms] ease-out hover:border-coral hover:text-coral-texto",
+                    encolhido ? "h-8 w-8" : "h-9 w-9"
+                  )}
+                >
+                  <IconeInstagram className="h-4 w-4" />
+                </a>
+              )}
+            </div>
           )}
 
           <button
