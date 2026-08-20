@@ -202,7 +202,7 @@ export default function Home() {
         <section id="sobre" className="bg-salvia py-[var(--space-normal)]">
           <Faixa>
             <SectionReveal className="grid grid-cols-12 items-center gap-y-10 md:gap-x-14">
-              <div className="col-span-12 md:col-span-7">
+              <div className="col-span-12 border-l-4 border-oliva pl-7 md:col-span-7">
                 <Etiqueta>Sobre mim</Etiqueta>
 
                 <h2 className="mt-6 max-w-[22ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
@@ -232,16 +232,22 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Foto simples, sem máscara, mesmo tratamento da capa */}
+              {/* Foto com massa de oliva atrás, o verde institucional do manual */}
               <div className="col-span-12 md:col-span-5">
-                <div className="relative aspect-[4/5] w-full overflow-hidden">
-                  <Image
-                    src="/clara-3.jpeg"
-                    alt={`${clara.nome} no consultório`}
-                    fill
-                    sizes="(min-width: 768px) 40vw, 100vw"
-                    className="object-cover"
+                <div className="relative">
+                  <div
+                    aria-hidden
+                    className="folha-alt absolute -bottom-5 -right-5 h-full w-full bg-oliva"
                   />
+                  <div className="relative aspect-[4/5] w-full overflow-hidden">
+                    <Image
+                      src="/clara-3.jpeg"
+                      alt={`${clara.nome} no consultório`}
+                      fill
+                      sizes="(min-width: 768px) 40vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
               </div>
             </SectionReveal>
