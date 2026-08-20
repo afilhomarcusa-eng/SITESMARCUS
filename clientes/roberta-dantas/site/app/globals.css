@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/*
+  Tokens. Nenhum valor de cor, tamanho ou espaço fica hardcoded em componente.
+  Paleta tirada do material que a Roberta já usa: papel creme, tinta verde escura, folha sage.
+*/
+
+@theme {
+  /* Cor */
+  --color-papel: #f7f4ee;
+  --color-papel-fundo: #efeae0;
+  --color-papel-borda: #e2dccf;
+  --color-tinta: #232a1e;
+  --color-tinta-media: #4d5544;
+  /* Calibrados para 4.5:1 sobre papel e sobre papel-fundo. Não clarear. */
+  --color-tinta-fraca: #616a55;
+  --color-sage: #5f6e4d;
+  --color-sage-escuro: #56634a;
+  --color-sage-claro: #dbe1d0;
+  /* Só decoração, nunca texto. */
+  --color-sage-tenue: #b6c2a4;
+
+  /* Tipografia */
+  --font-display: var(--fonte-display), Georgia, serif;
+  --font-corpo: var(--fonte-corpo), system-ui, sans-serif;
+
+  /* Escala fluida. Do menor ao maior: 13px a 108px, razão de 8x no topo. */
+  --text-micro: 0.75rem;
+  --text-mini: 0.8125rem;
+  --text-base: 1.0625rem;
+  --text-medio: clamp(1.1875rem, 0.4vw + 1.1rem, 1.375rem);
+  --text-grande: clamp(1.5rem, 1.2vw + 1.2rem, 2rem);
+  --text-titulo: clamp(2rem, 2.6vw + 1.4rem, 3.25rem);
+  --text-display: clamp(2.75rem, 6.2vw + 1rem, 6.75rem);
+
+  /* Raio. Varia por tipo de elemento, de propósito. */
+  --radius-nenhum: 0px;
+  --radius-marca: 2px;
+  --radius-campo: 4px;
+  --radius-botao: 999px;
+
+  /* Ritmo vertical irregular. Seção densa, seção arejada. */
+  --space-apertado: clamp(3rem, 5vw, 4.5rem);
+  --space-normal: clamp(5rem, 9vw, 8rem);
+  --space-largo: clamp(7.5rem, 14vw, 13rem);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-papel);
+    color: var(--color-tinta);
+    font-family: var(--font-corpo);
+    font-size: var(--text-base);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-sage-claro);
+    color: var(--color-tinta);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-sage-escuro);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  /* Grão de papel. Substitui gradiente de fundo. */
+  .grao {
+    position: relative;
+  }
+
+  .grao::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.32;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+  }
+
+  /* Regra fina que separa blocos sem virar linha de tabela */
+  .fio {
+    border-top: 1px solid var(--color-papel-borda);
+  }
+}
+
+/* Sem movimento para quem pediu sem movimento. Vale para tudo. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,28 @@
+# Dependências e build. Reconstroem com npm install e npm run build.
+node_modules/
+.next/
+out/
+build/
+dist/
+.vercel/
+next-env.d.ts
+
+# Segredos
+.env
+.env.local
+.env.*.local
+
+# Sistema e editor
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# Sobras de outras ferramentas de IA dentro da biblioteca.
+# São 55 pastas ocultas com 54 mil arquivos, todas cópias da mesma coisa que
+# já está em motion-primitives-website/skills/. Nenhuma precisa versionar.
+motion-primitives-website/.*/
+
+# Cache local do Claude Code. As skills em .claude/skills entram no repositório.
+.claude/settings.local.json
+.claude/plugins/cache/

@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/*
+  Tokens da identidade, conforme o Manual de Identidade Visual v1.0.
+
+  Paleta oficial do manual:
+    Oliva principal #958F62 · Oliva apoio #A39B66 · Coral #E39380
+    Rosé suave #E6CEBF · Creme #FFF8F0 · Sálvia clara #F3F5EC
+
+  Nenhuma das três cores de marca passa 4.5:1 como texto sobre os fundos do
+  próprio manual (dão 3.12, 2.68 e 2.28 sobre o creme). Por isso cada uma tem
+  duas versões: a de marca, que só preenche superfície, e a escurecida, que é a
+  única autorizada em texto. As cores do lettering da assinatura nunca mudam,
+  conforme a página 03 do manual.
+*/
+
+@theme {
+  /* Superfícies. O manual manda priorizar fundo claro. */
+  --color-creme: #fff8f0;
+  --color-salvia: #f3f5ec;
+  --color-rose: #e6cebf;
+  --color-rose-claro: #f2e4d9;
+  --color-borda: #e8ddd0;
+
+  /* Marca. Só preenchimento, nunca texto. */
+  --color-oliva: #958f62;
+  --color-oliva-apoio: #a39b66;
+  --color-coral: #e39380;
+
+  /* Texto. Todas acima de 4.5:1 sobre creme, sálvia e rosé. */
+  --color-tinta: #332e1f;
+  --color-tinta-media: #5e573c;
+  --color-oliva-texto: #4f4a30;
+  --color-coral-texto: #8f4634;
+
+  /* Tipografia */
+  --font-display: var(--fonte-display), Georgia, serif;
+  --font-corpo: var(--fonte-corpo), system-ui, sans-serif;
+
+  /* Escala reduzida. Menor: 12px. Maior: 52px no hero. Razão de 4.3x. */
+  --text-micro: 0.75rem;
+  --text-mini: 0.8125rem;
+  --text-base: 1rem;
+  --text-medio: clamp(1.125rem, 0.3vw + 1.05rem, 1.25rem);
+  --text-grande: clamp(1.3125rem, 0.85vw + 1.1rem, 1.625rem);
+  --text-titulo: clamp(1.625rem, 1.9vw + 1.2rem, 2.5rem);
+  --text-hero: clamp(2rem, 2.6vw + 1rem, 3.25rem);
+
+  /* Raio. Varia por tipo de elemento. O manual pede formas curvas. */
+  --radius-nenhum: 0px;
+  --radius-marca: 2px;
+  --radius-campo: 6px;
+  --radius-bloco: 1.25rem;
+  --radius-botao: 999px;
+
+  --space-apertado: clamp(2.75rem, 4vw, 3.5rem);
+  --space-normal: clamp(4rem, 6vw, 5.5rem);
+  --space-largo: clamp(5.5rem, 8.5vw, 7.5rem);
+
+  --altura-cabecalho: 5.5rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-creme);
+    color: var(--color-tinta);
+    font-family: var(--font-corpo);
+    font-size: var(--text-base);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  [id] {
+    scroll-margin-top: calc(var(--altura-cabecalho) + 1.5rem);
+  }
+
+  ::selection {
+    background-color: var(--color-coral);
+    color: var(--color-tinta);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-coral-texto);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .fio {
+    border-top: 1px solid var(--color-borda);
+  }
+
+  /* Forma orgânica do manual, usada como massa de cor de baixa opacidade */
+  .folha {
+    border-radius: 62% 38% 46% 54% / 54% 46% 54% 46%;
+  }
+
+  .folha-alt {
+    border-radius: 38% 62% 58% 42% / 46% 58% 42% 54%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
