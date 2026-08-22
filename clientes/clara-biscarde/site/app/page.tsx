@@ -17,9 +17,8 @@ import { Jornada } from "@/components/jornada";
 import { BotaoFlutuante } from "@/components/botao-flutuante";
 import { ScrollSuave } from "@/components/scroll-suave";
 import { Entrada } from "@/components/entrada";
-import { Parallax } from "@/components/parallax";
-import { RetratoCircular } from "@/components/retrato-circular";
 import { FaixaInfo } from "@/components/faixa-info";
+import { QuebraSimples } from "@/components/quebra-simples";
 import { FotoFlutuante } from "@/components/foto-flutuante";
 import { FormularioContato } from "@/components/formulario-contato";
 import {
@@ -150,6 +149,8 @@ export default function Home() {
           </div>
         </section>
 
+        {/* A faixa com os dados dela roda só aqui, na primeira quebra. Repetir
+            os mesmos três itens a cada seção cansava e gastava o efeito. */}
         <FaixaInfo />
 
         {/*
@@ -208,7 +209,7 @@ export default function Home() {
           </Faixa>
         </section>
 
-        <FaixaInfo />
+        <QuebraSimples />
 
         {/* ══════════ O que trouxe você aqui ══════════ */}
         <section id="comeco" className="py-[var(--space-normal)]">
@@ -261,7 +262,7 @@ export default function Home() {
           </Faixa>
         </section>
 
-        <FaixaInfo />
+        <QuebraSimples />
 
         {/* ══════════ Atendimento ══════════ */}
         <section id="atendimento" className="bg-rose py-[var(--space-largo)]">
@@ -333,29 +334,45 @@ export default function Home() {
           </section>
         )}
 
-        <FaixaInfo />
+        <QuebraSimples />
+
+        {/*
+          ══════════ O caminho até virar rotina ══════════
+          Passou para antes de "Isso é fase?": primeiro a pessoa vê como o
+          caminho funciona, e só depois encara a lista de sinais.
+
+          Trocou de sálvia com a seção seguinte junto com a posição, senão
+          ficaria rosé colada em rosé com Atendimento logo acima.
+        */}
+        <section className="bg-salvia py-[var(--space-normal)]">
+          <Faixa>
+            <SectionReveal>
+              <Etiqueta>O caminho até virar rotina</Etiqueta>
+              <h2 className="mt-6 max-w-[26ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
+                De contar pra ele até a terapia virar parte da semana
+              </h2>
+              <p className="mt-5 max-w-[54ch] text-mini leading-[1.7] text-tinta-media">
+                Seis paradas, com dois dragões pelo caminho. Clique em cada uma
+                para ver as recomendações.
+              </p>
+            </SectionReveal>
+
+            <SectionReveal className="mt-14">
+              <Jornada paradas={jornada} />
+            </SectionReveal>
+          </Faixa>
+        </section>
+
+        <QuebraSimples />
 
         {/* ══════════ Isso é fase? · agrupado por faixa etária ══════════ */}
-        <section id="pais" className="bg-salvia py-[var(--space-normal)]">
+        <section id="pais" className="bg-rose py-[var(--space-normal)]">
           <Faixa>
-            <SectionReveal className="grid grid-cols-12 items-end gap-y-6 md:gap-x-10">
-              <div className="col-span-12 md:col-span-8">
-                <Etiqueta>Para os pais</Etiqueta>
-                <h2 className="mt-6 max-w-[20ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
-                  Isso é fase ou já é hora de procurar?
-                </h2>
-              </div>
-
-              <div className="col-span-12 flex justify-center md:col-span-4 md:justify-end">
-                <FotoFlutuante duracao={6.5} atraso={1.2}>
-                  <RetratoCircular
-                    src="/clara-4.jpeg"
-                    alt={clara.nome}
-                    lado="direita"
-                    className="h-40 w-40 md:h-48 md:w-48"
-                  />
-                </FotoFlutuante>
-              </div>
+            <SectionReveal>
+              <Etiqueta>Para os pais</Etiqueta>
+              <h2 className="mt-6 max-w-[20ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
+                Isso é fase ou já é hora de procurar?
+              </h2>
             </SectionReveal>
 
             <div className="mt-10 grid grid-cols-12 gap-y-10 md:gap-x-14">
@@ -376,29 +393,7 @@ export default function Home() {
           </Faixa>
         </section>
 
-        <FaixaInfo />
-
-        {/* ══════════ A jornada ══════════ */}
-        <section className="bg-rose py-[var(--space-normal)]">
-          <Faixa>
-            <SectionReveal>
-              <Etiqueta>O caminho até virar rotina</Etiqueta>
-              <h2 className="mt-6 max-w-[26ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
-                De contar pra ele até a terapia virar parte da semana
-              </h2>
-              <p className="mt-5 max-w-[54ch] text-mini leading-[1.7] text-tinta-media">
-                Seis paradas, com dois dragões pelo caminho. Clique em cada uma
-                para ver as recomendações.
-              </p>
-            </SectionReveal>
-
-            <SectionReveal className="mt-14">
-              <Jornada paradas={jornada} />
-            </SectionReveal>
-          </Faixa>
-        </section>
-
-        <FaixaInfo />
+        <QuebraSimples />
 
         {/* ══════════ Vamos conversar? · fotos e contato juntos, fechando no WhatsApp ══════════ */}
         <section id="contato" className="bg-salvia py-[var(--space-largo)]">
@@ -413,35 +408,6 @@ export default function Home() {
                 linhas, do jeito que sair. Quem responde sou eu.
               </p>
             </SectionReveal>
-
-            <RevealLista className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
-              {[
-                { src: "/clara-1.jpeg", alt: clara.nome },
-                {
-                  src: "/clara-2.jpeg",
-                  alt: "Clara Biscarde com jogos usados nas sessões",
-                },
-                { src: "/clara-3.jpeg", alt: `${clara.nome} no consultório` },
-                { src: "/clara-4.jpeg", alt: clara.nome },
-              ].map((foto, i) => (
-                <RevealItem key={foto.src}>
-                  <Parallax
-                    speed={0.1 + (i % 2) * 0.08}
-                    direction={i % 2 ? "down" : "up"}
-                  >
-                    <div className="relative aspect-[3/4] overflow-hidden rounded-bloco">
-                      <Image
-                        src={foto.src}
-                        alt={foto.alt}
-                        fill
-                        sizes="(min-width: 640px) 25vw, 50vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  </Parallax>
-                </RevealItem>
-              ))}
-            </RevealLista>
 
             {/*
               O formulário substituiu os dois botões grandes que ficavam aqui:

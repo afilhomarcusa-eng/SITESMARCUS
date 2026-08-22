@@ -21,15 +21,16 @@
  * A duração acompanha a quantidade de itens para a velocidade de leitura ficar
  * igual: mais informação cadastrada não deixa a faixa mais apressada.
  *
- * Cor: oliva de apoio com texto tinta, os dois do manual. É o par da paleta que
- * passa em 4.79:1. O oliva principal com o mesmo texto dá 4.11 e não fecha os
- * 4.5 exigidos, e com creme por cima cai para 3.12.
+ * Fundo creme, igual ao das outras quebras. A faixa era uma tarja em oliva de
+ * apoio, mas ela cortava a página em duas e puxava atenção demais para um
+ * respiro entre seções. Sem a tarja, o texto tinta sobre creme é o mesmo par
+ * do corpo do site, folgado em contraste, e a faixa vira parte do papel.
  */
 
+import Image from "next/image";
 import { motion } from "motion/react";
 import { usePrefersReducedMotion } from "@/lib/reduced-motion";
 import { faixaInfo } from "@/lib/clara";
-import { Peao } from "@/components/desenhos";
 
 /** Cópias lado a lado. O bastante para passar da largura de qualquer tela. */
 const COPIAS = 6;
@@ -46,8 +47,14 @@ function Passada() {
             A defasagem tira o ar de engrenagem: com todos no mesmo compasso a
             faixa inteira pisca junto, e o olho lê como falha.
           */}
-          <Peao
-            className="peao-gira h-5 w-auto shrink-0 text-oliva-texto"
+          <Image
+            src="/marca.png"
+            alt=""
+            aria-hidden
+            width={429}
+            height={564}
+            sizes="32px"
+            className="peao-gira h-5 w-auto shrink-0"
             style={{ animationDelay: `${(i % 3) * -0.8}s` }}
           />
           <span className="whitespace-nowrap text-mini text-tinta">{item}</span>
@@ -65,7 +72,7 @@ export function FaixaInfo() {
   /* Parada, a faixa vira uma tira de texto centrada. Continua informando. */
   if (prefersReduced) {
     return (
-      <div className="overflow-hidden bg-oliva-apoio py-2.5">
+      <div className="overflow-hidden bg-creme py-3">
         <div className="flex justify-center">
           <Passada />
         </div>
@@ -74,7 +81,7 @@ export function FaixaInfo() {
   }
 
   return (
-    <div className="overflow-hidden bg-oliva-apoio py-2.5">
+    <div className="overflow-hidden bg-creme py-3">
       <motion.div
         className="flex w-max"
         animate={{ x: ["0%", `${-100 / COPIAS}%`] }}

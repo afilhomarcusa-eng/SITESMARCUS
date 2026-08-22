@@ -6,7 +6,8 @@ Pasta de produção de sites para clientes. Um site por cliente, cada um com Nex
 
 ```
 SITES/
-├── _modelos/BRIEFING.md          modelo, nunca preencher aqui
+├── _modelos/BRIEFING.md          modelo interno, nunca preencher aqui
+├── _modelos/BRIEFING-CLIENTE.md  o que vai pro cliente responder
 ├── clientes/<nome>/              um por cliente
 │   ├── BRIEFING.md               cópia preenchida
 │   ├── assets/                   logo, fotos, material do cliente
@@ -40,6 +41,20 @@ cd site && npm i motion
 ```
 
 Depois preenche o BRIEFING e me manda.
+
+## Os dois briefings
+
+`_modelos/BRIEFING-CLIENTE.md` é o que o cliente recebe, colado direto no WhatsApp. O
+arquivo inteiro é a mensagem, sem cabeçalho nem instrução: é só copiar tudo e enviar. Os
+`*asteriscos*` viram negrito sozinhos lá. Nove perguntas, três delas travam o começo
+(WhatsApp, cidade e fotos), montadas a partir do que de fato travou o site da Clara.
+
+Não crescer esse arquivo. A primeira versão tinha 148 linhas e foi recusada por isso:
+briefing que parece formulário de cartório não volta respondido.
+
+`_modelos/BRIEFING.md` é interno. Proibições visuais, coreografia de scroll, regras de copy
+e a tabela do Bloco 10. O cliente nunca vê esse. Ele é preenchido com as respostas do outro
+mais as decisões de projeto.
 
 ## Regras que valem para todo site desta pasta
 
