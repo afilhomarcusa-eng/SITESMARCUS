@@ -65,288 +65,191 @@ export function telefoneLegivel(numero: string | null): string | null {
 /** Destino de todo botão de agendar. Sem canal, o botão não existe. */
 export const agendar = links.whatsapp ?? links.instagram ?? null;
 
-/**
- * Queixas que ela atende. Vazio de propósito.
- * Afirmar escopo clínico sem confirmação dela é inventar dado.
- * Preencher com a resposta da pergunta 2 do Bloco 7 e a seção Áreas aparece.
- */
-export const areas: { titulo: string; texto: string }[] = [];
 
 /**
- * Faixa etária, abordagem, duração e frequência da sessão.
- * Todos dependem de resposta dela. Enquanto forem null, a seção Atendimento
- * não renderiza.
+ * Atendimento. Preenchido com o que ela confirmou junto com a copy definitiva.
+ * Duração da sessão e faixa etária exata seguem sem resposta.
  */
 export const atendimento = {
   idadeMinima: null as number | null,
   idadeMaxima: null as number | null,
-  abordagem: null as string | null,
+  abordagem: "Terapia Cognitivo-Comportamental" as string | null,
   duracaoMinutos: null as number | null,
-  frequencia: null as string | null,
-  online: null as boolean | null,
-  presencial: null as boolean | null,
+  frequencia: "Uma vez por semana, ajustável ao longo do acompanhamento",
+  online: true,
+  presencial: true,
 } as const;
 
 /**
- * Objeções. Só entra no site o par que tem resposta.
- * As respostas marcadas como null envolvem conduta clínica ou sigilo de menor
- * e são obrigação ética dela. O agente não escreve por ela.
+ * Faixa que corre logo depois da capa.
+ *
+ * Ela pediu só dois itens: o que faz e o registro. Cidade e público já
+ * aparecem em outras seções da página, então repetir aqui virou redundância
+ * aos olhos dela depois de ver o site rodando.
  */
-export const objecoes: { pergunta: string; resposta: string | null }[] = [
+export const faixaInfo: string[] = [
+  "Atendimento Infantojuvenil",
+  clara.registro,
+];
+
+/**
+ * Os quatro focos do acompanhamento. Texto da Clara, sem alteração.
+ *
+ * O layout segue a referência que ela mandou: quatro cartões com ícone,
+ * salvia e rosé alternados. Ver components/desenhos.tsx (Coracao, Alvo,
+ * Raio, Estrela) e a seção #fases em app/page.tsx.
+ */
+export const focos = [
   {
-    pergunta: "Meu filho vai achar que tem alguma coisa errada com ele.",
-    resposta:
-      "Criança não entende terapia como castigo quando o assunto é apresentado sem mistério. Vale dizer que é um lugar de conversar e brincar, com alguém que ajuda quando as coisas ficam difíceis de explicar.",
+    titulo: "Emoções",
+    texto:
+      "Um espaço para acolher, compreender e expressar o que se sente.",
   },
   {
-    pergunta: "Ele não fala nem comigo. Não vai falar com uma estranha.",
-    resposta:
-      "Quase nenhuma criança chega falando, e o consultório não depende disso para funcionar. A diferença é que ali ninguém cobra resposta nem tem pressa.",
+    titulo: "Comportamentos",
+    texto:
+      "Um espaço para compreender o que os comportamentos estão tentando comunicar.",
   },
   {
-    pergunta: "Isso é fase ou é caso pra psicóloga?",
-    resposta:
-      "Uma conversa inicial serve exatamente pra isso. Se for fase, você sai sabendo o que observar. Se não for, você já saiu do lugar de dúvida.",
+    titulo: "Relações",
+    texto:
+      "Um olhar cuidadoso para os vínculos construídos em casa, na escola e no dia a dia.",
   },
-  // Pendentes. Só a Clara responde.
-  { pergunta: "Eu preciso ficar na sala junto?", resposta: null },
-  { pergunta: "Com que idade dá pra começar?", resposta: null },
   {
-    pergunta: "Eu vou ficar sabendo o que ele falou na sessão?",
-    resposta: null,
+    titulo: "Desenvolvimento",
+    texto:
+      "Acompanhamento das mudanças e desafios de cada fase do desenvolvimento.",
+  },
+];
+
+/** Para quem ela atende. Texto da Clara, sem alteração. */
+export const publicos = [
+  {
+    titulo: "Crianças",
+    texto:
+      "O brincar também é uma forma de expressão. Jogos, desenhos, histórias e outros recursos podem fazer parte do processo, respeitando a idade e as necessidades de cada criança.",
+  },
+  {
+    titulo: "Adolescentes",
+    texto:
+      "Um espaço de escuta e diálogo para questões emocionais, relacionais e desafios próprios desta etapa do desenvolvimento.",
+  },
+  {
+    titulo: "Famílias",
+    texto:
+      "A orientação familiar pode contribuir para a compreensão das necessidades da criança e do adolescente e para o diálogo sobre situações do cotidiano.",
   },
 ];
 
 /**
- * Conteúdo de apoio para o pai ou a mãe.
+ * Modalidades. Só entram porque ela confirmou as duas junto com a copy.
  *
- * Nada aqui afirma protocolo, técnica ou escopo da Clara. São orientações
- * gerais dirigidas a quem cuida, sem valor diagnóstico. Mesmo assim ela deve
- * ler antes de publicar, porque sai no site com o nome dela.
+ * O layout é a faixa cheia, borda a borda, que ela mandou como referência
+ * (site da Lorena Lorenzo). Mesmo texto de sempre, salvia para Online e rosé
+ * para Presencial no lugar das cores da referência.
  */
-
-export const quandoProcurarCrianca = [
+export const modalidades = [
   {
-    titulo: "Voltou a fazer xixi na cama",
+    titulo: "Online",
     texto:
-      "Voltar a um jeito de funcionar já abandonado costuma aparecer quando alguma coisa saiu do lugar. Não é manha, e brigar costuma piorar.",
+      "Atendimento online, com acolhimento, segurança e sigilo, para que você possa cuidar da saúde emocional de onde estiver. Disponível para todo o Brasil.",
   },
   {
-    titulo: "Toda manhã de aula dói alguma coisa",
-    texto:
-      "Dor que aparece antes da escola e some no sábado diz alguma coisa. A dor é real, o gatilho é que não é físico.",
-  },
-  {
-    titulo: "As birras não diminuíram com a idade",
-    texto:
-      "O esperado é que a crise vá perdendo força com o tempo. Quando a intensidade fica igual ou aumenta, vale olhar.",
-  },
-  {
-    titulo: "A noite virou uma batalha",
-    texto:
-      "Sono é dos primeiros lugares onde a angústia infantil aparece. Vale para pesadelo que repete, medo do escuro e recusa de dormir sozinho.",
-  },
-];
-
-export const quandoProcurarAdolescente = [
-  {
-    titulo: "Não sai mais do quarto",
-    texto:
-      "Recolher um pouco é esperado. Parar de ver os amigos e largar o que gostava de fazer, por semanas, é outra coisa.",
-  },
-  {
-    titulo: "As notas caíram de repente",
-    texto:
-      "Queda sem mudança de escola ou de professor costuma ter causa fora da sala. Concentração é das primeiras coisas que o sofrimento leva.",
-  },
-  {
-    titulo: "Se irrita com tudo e a casa anda pisando em ovos",
-    texto:
-      "Irritação constante é sintoma tanto quanto tristeza, e bem mais fácil de confundir com falta de educação.",
-  },
-  {
-    titulo: "Vi marcas no corpo ou ouvi falar em morrer",
-    alerta: true,
-    texto:
-      "Aqui não vale esperar a agenda abrir. Procure atendimento imediatamente. O CVV atende de graça, 24 horas, no 188. Em risco imediato, o SAMU é o 192. Falar sobre o assunto não aumenta o risco.",
-  },
-];
-
-/** Mantido por compatibilidade com a versão anterior da seção. */
-export const quandoProcurar = [
-  {
-    faixa: "Criança",
-    titulo: "Voltou a fazer xixi na cama depois de anos sem fazer",
-    texto:
-      "Voltar a um jeito de funcionar que já tinha sido abandonado costuma aparecer quando alguma coisa saiu do lugar. Vale para o xixi, para o dedo na boca, para falar como bebê e para querer dormir na cama dos pais de novo. Não é manha nem preguiça, e brigar costuma piorar.",
-  },
-  {
-    faixa: "Criança",
-    titulo: "Toda manhã de aula dói alguma coisa",
-    texto:
-      "Dor de barriga e dor de cabeça que aparecem antes da escola e somem no sábado dizem alguma coisa. O corpo da criança costuma falar antes da boca, e ela não está inventando a dor. A dor é real, o gatilho é que não é físico.",
-  },
-  {
-    faixa: "Criança",
-    titulo: "As birras não diminuíram com a idade",
-    texto:
-      "Crise faz parte do desenvolvimento e o esperado é que vá perdendo força com o tempo. Quando a intensidade fica igual ou aumenta, e quando a crise passa a acontecer fora de casa também, vale olhar com atenção.",
-  },
-  {
-    faixa: "Criança",
-    titulo: "A noite virou uma batalha",
-    texto:
-      "Não conseguir dormir sozinho, pesadelo que repete o mesmo enredo, medo de apagar a luz, acordar toda madrugada. Sono é dos primeiros lugares onde a angústia infantil aparece.",
-  },
-  {
-    faixa: "Criança",
-    titulo: "A professora falou que ele fica sozinho no recreio",
-    texto:
-      "Entrar num grupo é uma habilidade, e algumas crianças precisam de ajuda para aprender. Quando a queixa vem da escola e você também percebe em festa e em casa de parente, os dois lugares estão apontando para o mesmo ponto.",
-  },
-  {
-    faixa: "Adolescente",
-    titulo: "Ela não sai mais do quarto",
-    texto:
-      "Adolescente se recolher um pouco é esperado. Parar de ver os amigos, largar o que gostava de fazer e passar o dia inteiro de porta fechada é outra coisa, principalmente quando dura semanas.",
-  },
-  {
-    faixa: "Adolescente",
-    titulo: "As notas caíram de um semestre para o outro",
-    texto:
-      "Queda de rendimento sem mudança de escola, de professor ou de matéria costuma ter causa fora da sala de aula. Concentração é das primeiras coisas que a ansiedade e o sofrimento levam embora.",
-  },
-  {
-    faixa: "Adolescente",
-    titulo: "Ele se irrita com tudo e eu ando pisando em ovos",
-    texto:
-      "Irritação constante em adolescente é sintoma tanto quanto tristeza, e é bem mais fácil de confundir com falta de educação. Quando a casa inteira começa a se organizar para não provocar crise, o problema já não é só dele.",
-  },
-  {
-    faixa: "Procure ajuda agora",
-    titulo: "Vi marcas no corpo dela ou ele falou em morrer",
-    texto:
-      "Essa é a única situação desta lista em que não vale esperar a agenda abrir. Procure atendimento imediatamente. O CVV atende de graça, 24 horas, no telefone 188 e no site cvv.org.br. Em caso de risco imediato, o SAMU é o 192. Falar sobre o assunto com seu filho não aumenta o risco, e o silêncio não protege ninguém.",
-  },
-  {
-    faixa: "Quem cuida",
-    titulo: "Você está no limite",
-    texto:
-      "O cansaço de quem cuida também é motivo. Não precisa esperar a criança piorar para procurar ajuda, e chegar antes costuma encurtar o caminho.",
+    titulo: "Presencial",
+    texto: `Atendimento presencial em ${clara.cidade}, em um espaço pensado para acolher crianças, adolescentes e suas famílias.`,
   },
 ];
 
 /**
- * A jornada do pai ou da mãe, do momento de contar até a terapia virar rotina.
+ * Do primeiro contato ao acompanhamento. Texto da Clara, sem alteração.
  *
- * Castelo e bandeira marcam conquista, dragão marca o momento difícil, ponte
- * marca travessia, bússola marca preparo. Tudo aqui é orientação geral para
- * quem cuida, sem valor diagnóstico e sem descrever protocolo da Clara.
+ * Os desenhos aqui deixaram de ser castelo e dragão junto com a troca da copy:
+ * a versão anterior tratava o processo como aventura, com "desafio" e
+ * "travessia", e o texto dela é outro. Agora são cinco marcos neutros.
  */
-export const jornada = [
+export const caminho = [
   {
-    desenho: "bussola" as const,
-    tipo: "Preparo",
-    rotulo: "Antes de abrir o assunto",
-    titulo: "O tom pesa mais do que a frase",
+    desenho: "conversa" as const,
+    tipo: "Passo 1",
+    rotulo: "Primeiro contato",
+    titulo: "Primeiro contato",
     texto:
-      "Criança presta menos atenção nas palavras e mais no tom. Tenso demais soa grave. Leve demais soa enrolação.",
-    dicas: [
-      "Escolha um momento neutro: no carro, numa caminhada.",
-      "Nunca logo depois de uma briga.",
-      "Se forem dois cuidadores, combinem antes o que vão dizer.",
-    ],
-  },
-  {
-    desenho: "castelo" as const,
-    tipo: "Parada",
-    rotulo: "A conversa",
-    titulo: "O objetivo não é convencer, é informar",
-    texto:
-      "Frase simples deixa menos espaço para ele imaginar que tem algo errado. Explicação longa demais soa como justificativa.",
-    dicas: [
-      "Diga o que é: um lugar de conversar e brincar com quem ajuda.",
-      "Evite “você vai adorar”. Ele pode não adorar.",
-      "Se vier “eu sou doido?”, responda que não — gente saudável também vai.",
-    ],
-  },
-  {
-    desenho: "dragao" as const,
-    tipo: "Desafio",
-    rotulo: "O “eu não quero ir”",
-    titulo: "Recusar não quer dizer que não está funcionando",
-    texto:
-      "Quase toda criança trava em algum momento — geralmente quando o assunto ficou próximo demais. A recusa é informação, não fracasso.",
-    dicas: [
-      "Não negocie com prêmio: sorvete depois vira obrigação paga.",
-      "Não ameace tirar a terapia como castigo.",
-      "Leve a recusa para a psicóloga. É material de trabalho.",
-    ],
+      "Você pode entrar em contato pelo WhatsApp, telefone ou Instagram.",
   },
   {
     desenho: "ponte" as const,
-    tipo: "Travessia",
-    rotulo: "A primeira sessão",
-    titulo: "Sair igual a como entrou também é normal",
+    tipo: "Passo 2",
+    rotulo: "Conversa com responsáveis",
+    titulo: "Conversa com responsáveis",
     texto:
-      "Vínculo não se forma em uma hora. Sair sem comentar nada não diz nada sobre como foi. As primeiras semanas servem pra ela descobrir que o lugar é seguro.",
-    dicas: [
-      "Chegue com minutos de folga — correndo já começa tenso.",
-      "Não ensaie no caminho o que ele deve falar.",
-      "Se ele quiser levar um brinquedo, deixe.",
-    ],
+      "Antes de iniciar o atendimento com a criança ou adolescente, realizamos uma conversa para conhecer sua história, compreender as principais preocupações da família e entender melhor o momento vivido.",
   },
   {
-    desenho: "dragao" as const,
-    tipo: "Desafio",
-    rotulo: "O silêncio depois",
-    titulo: "A parte mais desconfortável para quem cuida",
+    desenho: "bussola" as const,
+    tipo: "Passo 3",
+    rotulo: "Conhecendo a criança ou adolescente",
+    titulo: "Conhecendo a criança ou adolescente",
     texto:
-      "Você não vai saber em detalhe o que acontece lá dentro. O sigilo protege a confiança dela no espaço — não deixa você de fora, só muda a porta.",
-    dicas: [
-      "Evite perguntar “o que fizeram hoje?” toda semana.",
-      "Prefira “como você está?” e aceite “bem” como resposta.",
-      "Quando precisar de resposta, procure a psicóloga.",
-    ],
+      "Os primeiros encontros são construídos de forma acolhedora e respeitando o tempo de cada um. É um momento de criação de vínculo e de compreensão das emoções, comportamentos, relações e necessidades.",
   },
   {
     desenho: "bandeira" as const,
-    tipo: "Chegada",
-    rotulo: "Quando vira rotina",
-    titulo: "Deixa de ser assunto e começa a render",
+    tipo: "Passo 4",
+    rotulo: "Construímos o caminho juntos",
+    titulo: "Construímos o caminho juntos",
     texto:
-      "Depois de algumas semanas a terapia vira parte da semana, como aula de natação. É aí que costuma começar a render de verdade.",
-    dicas: [
-      "Mantenha a frequência mesmo quando parece que está tudo bem.",
-      "Avise sobre mudanças grandes em casa: mudança, separação, luto.",
-      "Falta frequente trava o vínculo mais do que parece.",
-    ],
+      "A partir do que for sendo compreendido ao longo dos encontros, o acompanhamento é pensado de forma individualizada, de acordo com as necessidades de cada criança ou adolescente.",
+  },
+  {
+    desenho: "casa" as const,
+    tipo: "Passo 5",
+    rotulo: "A família também faz parte",
+    titulo: "A família também faz parte",
+    texto:
+      "Quando necessário, realizamos momentos de orientação com os responsáveis, ajudando a compreender o que está acontecendo e construindo possibilidades para os desafios do dia a dia.",
   },
 ];
 
 /**
- * Faixa que corre entre uma seção e outra. Cada item é um fato curto sobre o
- * atendimento, do tipo que a pessoa lê de relance enquanto rola a página.
+ * Dúvidas. Texto da Clara, sem alteração, tirando um "que situação" repetido
+ * na primeira resposta.
  *
- * Só entra aqui o que já está confirmado. Bairro do consultório e se ela
- * atende online ainda não foram, e nada disso se chuta: assim que ela
- * responder, cada um vira uma linha aqui e aparece sozinho na faixa.
+ * Diferente da versão anterior do site, aqui não existe pergunta sem resposta:
+ * ela escreveu as cinco.
  */
-export const faixaInfo: string[] = [
-  `Psicóloga em ${clara.cidade}`,
-  clara.registro,
-  "Atende criança e adolescente",
-  // Descomentar conforme ela confirmar, trocando o que está entre < >:
-  // `Presencial no <bairro>`,
-  // "Online para todo o Brasil",
-  // "Atendimento particular",
+export const duvidas = [
+  {
+    titulo: "Como saber se é o momento de procurar o acompanhamento psicológico?",
+    texto:
+      "Não existe uma única situação que determine essa procura. Mudanças emocionais, comportamentais, dificuldades nas relações ou dúvidas da própria família podem motivar uma conversa com uma profissional. O primeiro contato também pode servir para entender melhor a necessidade apresentada.",
+  },
+  {
+    titulo: "Os pais participam do processo?",
+    texto:
+      "Sim. A família ocupa um lugar importante no acompanhamento. São realizados momentos de orientação com os responsáveis sempre que necessário, preservando também o espaço de confiança e privacidade da criança ou do adolescente.",
+  },
+  {
+    titulo: "Com que frequência acontecem as sessões?",
+    texto:
+      "Geralmente, os atendimentos acontecem uma vez por semana. A frequência pode ser ajustada de acordo com as necessidades identificadas ao longo do acompanhamento.",
+  },
+  {
+    titulo: "E se meu filho não quiser falar na terapia?",
+    texto:
+      "Tudo bem. Crianças e adolescentes não precisam chegar ao consultório sabendo explicar o que sentem. O vínculo é construído aos poucos, respeitando o tempo e a forma de expressão de cada um, seja pela conversa, pela brincadeira, pelo desenho, pelo silêncio ou por outros recursos.",
+  },
+  {
+    titulo: "A terapia infantil é só brincar?",
+    texto:
+      "Não. Brincar é uma das principais formas de expressão da criança e, por isso, pode fazer parte do processo terapêutico. Por meio das brincadeiras, jogos, desenhos e outros recursos, a criança pode comunicar sentimentos, experiências e dificuldades que ainda não consegue colocar em palavras. Na terapia, o brincar não acontece “por brincar”: ele é utilizado de forma intencional, respeitando a idade, as necessidades e os objetivos de cada criança.",
+  },
 ];
 
 /** Menu do cabeçalho. Só entra âncora de seção que existe de fato. */
 export const menu = [
   { rotulo: "Sobre mim", href: "#sobre" },
-  ...(areas.length ? [{ rotulo: "Áreas", href: "#areas" }] : []),
   { rotulo: "Atendimento", href: "#atendimento" },
-  { rotulo: "Para os pais", href: "#pais" },
+  { rotulo: "Como começa", href: "#caminho" },
+  { rotulo: "Dúvidas", href: "#duvidas" },
   { rotulo: "Contato", href: "#contato" },
 ];

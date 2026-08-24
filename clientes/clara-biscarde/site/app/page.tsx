@@ -5,10 +5,11 @@ import {
   clara,
   links,
   agendar,
-  areas,
-  quandoProcurarCrianca,
-  quandoProcurarAdolescente,
-  jornada,
+  focos,
+  publicos,
+  modalidades,
+  caminho,
+  duvidas,
   telefoneLegivel,
 } from "@/lib/clara";
 import { Cabecalho } from "@/components/cabecalho";
@@ -21,6 +22,15 @@ import { FaixaInfo } from "@/components/faixa-info";
 import { QuebraSimples } from "@/components/quebra-simples";
 import { FotoFlutuante } from "@/components/foto-flutuante";
 import { FormularioContato } from "@/components/formulario-contato";
+import {
+  Coracao,
+  Alvo,
+  Raio,
+  Estrela,
+  Monitor,
+  Local,
+} from "@/components/desenhos";
+import { cn } from "@/lib/utils";
 import {
   SectionReveal,
   RevealLista,
@@ -78,7 +88,7 @@ export default function Home() {
       <BotaoFlutuante href={agendar ?? "#contato"} />
 
       <main id="topo">
-        {/* ══════════ Hero ══════════ */}
+        {/* ══════════ Capa ══════════ */}
         <section className="grid min-h-[34rem] grid-cols-1 pt-[var(--altura-cabecalho)] lg:min-h-[42rem] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:pt-0">
           <div className="relative flex items-end justify-center overflow-hidden bg-salvia lg:pt-[var(--altura-cabecalho)]">
             {retrato ? (
@@ -115,14 +125,17 @@ export default function Home() {
 
               <Entrada delay={0.08}>
                 <h1 className="mt-6 font-display text-hero font-normal leading-[1.08] tracking-[-0.02em] text-tinta">
-                  Brincar é a forma mais séria que uma criança tem de dizer o
-                  que sente.
+                  Da brincadeira ao silêncio, existem muitas formas de dizer o
+                  que se sente.
                 </h1>
               </Entrada>
 
               <Entrada delay={0.16}>
-                <p className="mt-6 max-w-[42ch] leading-[1.6] text-tinta-media">
-                  Psicoterapia para crianças e adolescentes.
+                <p className="mt-6 max-w-[46ch] leading-[1.7] text-tinta-media">
+                  Atendimento psicológico para crianças e adolescentes, além de
+                  orientação às famílias, com um olhar acolhedor para as
+                  emoções, os comportamentos, as relações e os desafios que
+                  fazem parte do crescer.
                 </p>
               </Entrada>
 
@@ -149,15 +162,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* A faixa com os dados dela roda só aqui, na primeira quebra. Repetir
-            os mesmos três itens a cada seção cansava e gastava o efeito. */}
+        {/* A faixa com os dados dela roda só aqui, na primeira quebra. */}
         <FaixaInfo />
 
-        {/*
-          ══════════ Sobre mim ══════════
-          Subiu para logo depois da capa: quem chega quer saber com quem vai
-          falar antes de ouvir sobre o método.
-        */}
+        {/* ══════════ Sobre mim ══════════ */}
         <section id="sobre" className="bg-salvia py-[var(--space-normal)]">
           <Faixa>
             <SectionReveal className="grid grid-cols-12 items-center gap-y-10 md:gap-x-14">
@@ -165,33 +173,41 @@ export default function Home() {
                 <Etiqueta>Sobre mim</Etiqueta>
 
                 <h2 className="mt-6 max-w-[22ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
-                  Sou {clara.nome} e atendo criança e adolescente
+                  Entre descobertas, mudanças e formas de crescer
                 </h2>
 
                 <div className="mt-6 space-y-5 leading-[1.7] text-tinta-media">
                   <p>
-                    No meu consultório tem caixa de brinquedo, jogo de
-                    tabuleiro, papel e lápis de cor espalhados. Isso não é
-                    decoração de sala de espera. É com isso que a gente
-                    trabalha.
+                    A Psicologia transformou a minha forma de enxergar a
+                    infância e a adolescência. Ela me ensinou a olhar para além
+                    do que aparece: para os sentimentos por trás dos
+                    comportamentos, para o que uma brincadeira comunica e para
+                    aquilo que ainda não encontrou palavras.
                   </p>
                   <p>
-                    Criança não senta na poltrona e explica o que está sentindo.
-                    Ela mostra. No jogo que escolhe, no personagem que inventa,
-                    no desenho que rasga no meio antes de terminar.
+                    Ao longo da minha trajetória, especialmente nas experiências
+                    com crianças e adolescentes no ambiente escolar, esse olhar
+                    ganhou ainda mais sentido. Passei a me interessar pelas
+                    diferentes formas de expressão, pelos vínculos e pelos
+                    desafios de cada etapa do crescer.
+                  </p>
+                  <p>
+                    No consultório, busco oferecer um espaço de acolhimento e
+                    segurança, respeitando a singularidade de cada criança e
+                    adolescente e ajudando-os a compreender suas emoções,
+                    relações e experiências. A orientação às famílias também faz
+                    parte desse processo, construindo caminhos possíveis para os
+                    desafios do cotidiano.
                   </p>
                   <p className="text-tinta">
-                    Meu trabalho é entender o que está sendo dito ali, e
-                    traduzir isso junto com quem cuida dela.
+                    Sou psicóloga formada pela Escola Bahiana de Medicina e
+                    Saúde Pública e pós-graduanda em Terapia
+                    Cognitivo-Comportamental pelo INTCC. Atuo com crianças,
+                    adolescentes e orientação de famílias.
                   </p>
                 </div>
-
-                <p className="mt-7 text-mini uppercase tracking-[0.16em] text-coral-texto">
-                  {clara.profissao} · {clara.registro}
-                </p>
               </div>
 
-              {/* Sem massa de cor atrás: a foto sozinha, respirando. */}
               <div className="col-span-12 md:col-span-5">
                 <FotoFlutuante duracao={7.5}>
                   <div className="relative aspect-[4/5] w-full overflow-hidden">
@@ -211,15 +227,17 @@ export default function Home() {
 
         <QuebraSimples />
 
-        {/* ══════════ O que trouxe você aqui ══════════ */}
-        <section id="comeco" className="py-[var(--space-normal)]">
+        {/*
+          ══════════ Cada fase ══════════
+          A cliente avisou que vai mandar uma referência de layout para esta
+          seção. Grade de quatro sem hierarquia até ela chegar.
+        */}
+        <section id="fases" className="py-[var(--space-normal)]">
           <Faixa>
             <SectionReveal className="grid grid-cols-12 items-center gap-y-10 md:gap-x-14">
               <div className="col-span-12 md:col-span-4">
-                <Etiqueta>Talvez você tenha chegado assim</Etiqueta>
-
                 <FotoFlutuante
-                  className="mt-8 hidden md:block"
+                  className="hidden md:block"
                   duracao={8.5}
                   atraso={0.8}
                 >
@@ -235,186 +253,218 @@ export default function Home() {
               </div>
 
               <div className="col-span-12 md:col-span-8">
-                <h2 className="font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
-                  Alguma coisa mudou e ninguém consegue nomear o quê
+                <h2 className="max-w-[24ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
+                  Cada fase traz descobertas, mudanças e desafios
                 </h2>
-
-                <div className="mt-7 space-y-5 leading-[1.7] text-tinta-media">
-                  <p>
-                    A professora pediu uma conversa. Ou não foi a escola, foi
-                    você percebendo em casa que o clima virou e não sabendo
-                    explicar direito desde quando.
-                  </p>
-                  <p>
-                    Ele dorme diferente e explode por motivo pequeno. Ficou
-                    calado num assunto que antes rendia a tarde inteira. Você já
-                    perguntou de vários jeitos e recebeu “nada” de resposta.
-                  </p>
-                  <p className="text-tinta">
-                    Isso raramente quer dizer que você errou em alguma coisa.
-                    Costuma querer dizer que ele ainda não tem palavra para o
-                    que está sentindo, e o que não vira palavra acaba virando
-                    comportamento.
-                  </p>
-                </div>
+                <p className="mt-7 max-w-[60ch] leading-[1.7] text-tinta-media">
+                  Nem sempre é fácil entender o que está acontecendo com uma
+                  criança ou adolescente. Mudanças nas emoções, nos
+                  comportamentos ou nas relações podem gerar dúvidas e
+                  preocupações na família. O acompanhamento psicológico oferece
+                  um espaço de escuta e compreensão, respeitando a história, a
+                  fase do desenvolvimento e as necessidades de cada um.
+                </p>
               </div>
             </SectionReveal>
-          </Faixa>
-        </section>
 
-        <QuebraSimples />
+            {/*
+              Quatro cartões com ícone, cores exatas da paleta (oliva e
+              coral) alternadas, como na referência que ela mandou. Texto é
+              o dela, sem alteração.
 
-        {/* ══════════ Atendimento ══════════ */}
-        <section id="atendimento" className="bg-rose py-[var(--space-largo)]">
-          <Faixa>
-            <SectionReveal className="grid grid-cols-12 items-center gap-y-10 md:gap-x-14">
-              {/* A foto com os jogos mostra literalmente o material da sessão */}
-              <div className="col-span-12 md:col-span-5">
-                <FotoFlutuante duracao={8} atraso={0.4}>
-                  <Image
-                    src="/clara-2.jpeg"
-                    sizes="(min-width: 768px) 40vw, 100vw"
-                    alt="Clara Biscarde com jogos usados nas sessões"
-                    width={1200}
-                    height={1600}
-                    className="folha-alt h-full w-full object-cover"
-                  />
-                </FotoFlutuante>
-              </div>
+              O oliva sólido (#958f62) não fecha 4.5:1 com nenhum texto do
+              site — é tom médio demais, meio do caminho entre preto e
+              branco. bg-oliva/92 é o mesmo hex a 92% de opacidade: passa em
+              4.6:1 e a olho nu não se distingue do sólido. O coral
+              (#e39380) já passa liso, sem precisar disso.
 
-              <div className="col-span-12 md:col-span-7">
-                <Etiqueta>Atendimento</Etiqueta>
-
-                <h2 className="mt-6 max-w-[24ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
-                  Com criança, o trabalho começa antes da fala
-                </h2>
-
-                <div className="mt-6 space-y-5 leading-[1.7] text-tinta-media">
-                  <p>
-                    Adulto entra na sala e conta. Criança quase nunca faz isso,
-                    e não é por falta de vontade. É que a experiência dela ainda
-                    não passou pela palavra.
-                  </p>
-                  <p>
-                    Então o material da sessão é outro. Desenho, brinquedo,
-                    jogo, história inventada. É por ali que aparece o que não
-                    coube numa frase.
-                  </p>
-                  <p className="text-tinta">
-                    Falar vem depois, quando vem. E quando vem, costuma vir com
-                    muito menos esforço do que em casa.
-                  </p>
-                </div>
-              </div>
-            </SectionReveal>
-          </Faixa>
-        </section>
-
-        {/* ══════════ Áreas. Só com dado confirmado. ══════════ */}
-        {areas.length > 0 && (
-          <section id="areas" className="py-[var(--space-normal)]">
-            <Faixa>
-              <Etiqueta>Áreas</Etiqueta>
-              <RevealLista className="mt-10 grid grid-cols-12 gap-y-8 md:gap-x-10">
-                {areas.map((a) => (
+              O corpo do texto usa text-tinta em vez do text-tinta-media
+              padrão do site: tinta-media é claro demais para essas duas
+              cores de fundo (passa em sálvia e rosé, mas não aqui).
+            */}
+            <RevealLista className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {focos.map((foco, i) => {
+                const Icone = [Coracao, Alvo, Raio, Estrela][i];
+                return (
                   <RevealItem
-                    key={a.titulo}
-                    className="col-span-12 md:col-span-6"
+                    key={foco.titulo}
+                    className={cn(
+                      "rounded-bloco p-7 md:p-8",
+                      i % 2 === 0 ? "bg-oliva/92" : "bg-coral"
+                    )}
                   >
-                    <p className="font-display text-grande leading-[1.25] text-oliva-texto">
-                      {a.titulo}
+                    <Icone className="h-7 w-7 text-oliva-texto" />
+                    <p className="mt-5 font-display text-grande leading-[1.25] text-tinta">
+                      {foco.titulo}
                     </p>
-                    <p className="mt-2 max-w-[44ch] leading-[1.7] text-tinta-media">
-                      {a.texto}
+                    <p className="mt-2 max-w-[38ch] leading-[1.7] text-tinta">
+                      {foco.texto}
                     </p>
                   </RevealItem>
-                ))}
-              </RevealLista>
-            </Faixa>
-          </section>
-        )}
+                );
+              })}
+            </RevealLista>
+          </Faixa>
+        </section>
 
         <QuebraSimples />
 
         {/*
-          ══════════ O caminho até virar rotina ══════════
-          Passou para antes de "Isso é fase?": primeiro a pessoa vê como o
-          caminho funciona, e só depois encara a lista de sinais.
-
-          Trocou de sálvia com a seção seguinte junto com a posição, senão
-          ficaria rosé colada em rosé com Atendimento logo acima.
+          ══════════ Atendimento ══════════
+          A faixa de modalidades no fim da seção também espera modelo dela.
         */}
-        <section className="bg-salvia py-[var(--space-normal)]">
+        {/*
+          Uma faixa só, fundo único, foto no meio sem moldura: layout da
+          referência que ele mandou. A foto entra com mix-blend-multiply, que
+          faz o fundo branco do estúdio virar a própria cor da seção — é o que
+          dá o efeito de recorte sem eu ter o arquivo com fundo removido.
+        */}
+        <section id="atendimento" className="bg-rose-claro py-[var(--space-largo)]">
+          <Faixa>
+            <div className="grid items-center gap-y-14 md:grid-cols-[1fr_1.05fr_1fr] md:gap-x-10">
+              <SectionReveal>
+                <Etiqueta>Atendimento</Etiqueta>
+
+                <h2 className="mt-7 max-w-[16ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
+                  Um espaço que conversa com{" "}
+                  <span className="italic text-oliva-texto">cada fase</span>
+                </h2>
+
+                <span
+                  aria-hidden
+                  className="mt-8 block h-[2px] w-12 bg-oliva-texto/70"
+                />
+
+                <p className="mt-7 max-w-[34ch] leading-[1.75] text-tinta-media">
+                  Acolhimento, escuta e cuidado para você e sua família
+                  atravessarem cada momento com mais leveza.
+                </p>
+
+                <a
+                  href={agendar ?? "#contato"}
+                  {...(agendar
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                  className="mt-9 inline-block rounded-botao bg-oliva-texto px-8 py-4 text-mini font-semibold uppercase tracking-[0.12em] text-creme transition-transform duration-300 hover:scale-[1.03]"
+                >
+                  Agendar consulta
+                </a>
+              </SectionReveal>
+
+              <div className="relative mx-auto aspect-[3/4] w-full max-w-[26rem]">
+                <Image
+                  src="/clara-2.jpeg"
+                  alt="Clara Biscarde"
+                  fill
+                  sizes="(min-width: 768px) 34vw, 100vw"
+                  className="object-cover object-top mix-blend-multiply"
+                />
+              </div>
+
+              <SectionReveal>
+                {modalidades.map((modalidade, i) => {
+                  const Selo = i === 0 ? Monitor : Local;
+                  return (
+                    <div
+                      key={modalidade.titulo}
+                      className={
+                        i === 0 ? "" : "mt-8 border-t border-oliva/25 pt-8"
+                      }
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-coral/25 text-coral-texto">
+                          <Selo className="h-5 w-5" />
+                        </span>
+                        <p className="text-mini font-semibold uppercase tracking-[0.14em] text-oliva-texto">
+                          {modalidade.titulo}
+                        </p>
+                      </div>
+                      <p className="mt-3 max-w-[34ch] leading-[1.75] text-tinta-media">
+                        {modalidade.texto}
+                      </p>
+                    </div>
+                  );
+                })}
+              </SectionReveal>
+            </div>
+
+            <RevealLista className="mt-[var(--space-normal)] grid grid-cols-12 gap-y-9 md:gap-x-12">
+              {publicos.map((publico) => (
+                <RevealItem
+                  key={publico.titulo}
+                  className="col-span-12 border-t-2 border-oliva pt-5 md:col-span-4"
+                >
+                  <p className="font-display text-grande leading-[1.25] text-oliva-texto">
+                    {publico.titulo}
+                  </p>
+                  <p className="mt-2.5 leading-[1.7] text-tinta-media">
+                    {publico.texto}
+                  </p>
+                </RevealItem>
+              ))}
+            </RevealLista>
+          </Faixa>
+        </section>
+
+        <QuebraSimples />
+
+        {/* ══════════ Por onde começamos ══════════ */}
+        <section id="caminho" className="bg-salvia py-[var(--space-normal)]">
           <Faixa>
             <SectionReveal>
-              <Etiqueta>O caminho até virar rotina</Etiqueta>
+              <Etiqueta>Por onde começamos?</Etiqueta>
               <h2 className="mt-6 max-w-[26ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
-                De contar pra ele até a terapia virar parte da semana
+                Do primeiro contato ao acompanhamento
               </h2>
-              <p className="mt-5 max-w-[54ch] text-mini leading-[1.7] text-tinta-media">
-                Seis paradas, com dois dragões pelo caminho. Clique em cada uma
-                para ver as recomendações.
+              <p className="mt-5 max-w-[60ch] leading-[1.7] text-tinta-media">
+                O acompanhamento é construído passo a passo, desde o primeiro
+                contato com a família até os encontros com a criança ou
+                adolescente, sempre respeitando a história, o tempo e as
+                necessidades de cada um.
               </p>
             </SectionReveal>
 
             <SectionReveal className="mt-14">
-              <Jornada paradas={jornada} />
+              <Jornada paradas={caminho} />
             </SectionReveal>
           </Faixa>
         </section>
 
         <QuebraSimples />
 
-        {/* ══════════ Isso é fase? · agrupado por faixa etária ══════════ */}
-        <section id="pais" className="bg-rose py-[var(--space-normal)]">
+        {/* ══════════ Dúvidas ══════════ */}
+        <section id="duvidas" className="bg-rose py-[var(--space-normal)]">
           <Faixa>
             <SectionReveal>
-              <Etiqueta>Para os pais</Etiqueta>
-              <h2 className="mt-6 max-w-[20ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
-                Isso é fase ou já é hora de procurar?
+              <Etiqueta>Dúvidas</Etiqueta>
+              <h2 className="mt-6 max-w-[24ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
+                Perguntas que costumam vir antes da primeira conversa
               </h2>
             </SectionReveal>
 
-            <div className="mt-10 grid grid-cols-12 gap-y-10 md:gap-x-14">
-              <SectionReveal className="col-span-12 md:col-span-6">
-                <p className="mb-2 border-b border-coral pb-3 text-micro uppercase tracking-[0.18em] text-coral-texto">
-                  Criança
-                </p>
-                <Acordeao itens={quandoProcurarCrianca} />
-              </SectionReveal>
-
-              <SectionReveal className="col-span-12 md:col-span-6">
-                <p className="mb-2 border-b border-oliva pb-3 text-micro uppercase tracking-[0.18em] text-oliva-texto">
-                  Adolescente
-                </p>
-                <Acordeao itens={quandoProcurarAdolescente} />
-              </SectionReveal>
-            </div>
+            <SectionReveal className="mx-auto mt-10 max-w-[52rem]">
+              <Acordeao itens={duvidas} />
+            </SectionReveal>
           </Faixa>
         </section>
 
         <QuebraSimples />
 
-        {/* ══════════ Vamos conversar? · fotos e contato juntos, fechando no WhatsApp ══════════ */}
+        {/* ══════════ Vamos conversar? ══════════ */}
         <section id="contato" className="bg-salvia py-[var(--space-largo)]">
           <Faixa>
             <SectionReveal className="mx-auto max-w-[38rem] text-center">
               <Etiqueta>Contato</Etiqueta>
               <h2 className="mt-6 font-display text-titulo font-normal leading-[1.1] tracking-[-0.015em]">
-                Vamos conversar sobre seu filho?
+                Vamos conversar?
               </h2>
               <p className="mt-5 leading-[1.7] text-tinta-media">
-                Manda mensagem contando o que está acontecendo. Pode ser em duas
-                linhas, do jeito que sair. Quem responde sou eu.
+                Se deseja saber mais sobre o atendimento psicológico para
+                crianças, adolescentes ou orientação de famílias, entre em
+                contato.
               </p>
             </SectionReveal>
 
-            {/*
-              O formulário substituiu os dois botões grandes que ficavam aqui:
-              com "Enviar via WhatsApp" logo abaixo dos campos, mais um par de
-              botões com o mesmo destino só dividia a atenção. Quem prefere ir
-              direto tem o link discreto no rodapé do bloco.
-            */}
             <div className="mx-auto mt-12 max-w-[42rem] rounded-bloco border border-borda bg-creme p-7 sm:p-9">
               <h3 className="font-display text-grande font-normal leading-[1.25]">
                 Envie uma mensagem

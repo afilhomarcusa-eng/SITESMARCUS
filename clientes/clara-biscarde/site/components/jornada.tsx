@@ -16,8 +16,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { usePrefersReducedMotion } from "@/lib/reduced-motion";
 import { cn, curva } from "@/lib/utils";
 import {
-  Castelo,
-  Dragao,
+  Conversa,
+  Casa,
   Ponte,
   Bussola,
   Bandeira,
@@ -26,17 +26,18 @@ import {
 import { TrilhaDragao } from "@/components/trilha-dragao";
 
 export interface ParadaJornada {
-  desenho: "castelo" | "dragao" | "ponte" | "bussola" | "bandeira";
+  desenho: "conversa" | "casa" | "ponte" | "bussola" | "bandeira";
   tipo: string;
   rotulo: string;
   titulo: string;
   texto: string;
-  dicas: string[];
+  /** Opcional: a copy da Clara descreve o passo sem desdobrar em lista. */
+  dicas?: string[];
 }
 
 const desenhos = {
-  castelo: Castelo,
-  dragao: Dragao,
+  conversa: Conversa,
+  casa: Casa,
   ponte: Ponte,
   bussola: Bussola,
   bandeira: Bandeira,
@@ -54,8 +55,9 @@ function Painel({ parada }: { parada: ParadaJornada }) {
         {parada.texto}
       </p>
 
+      {parada.dicas?.length ? (
       <ul className="mt-7 space-y-3.5">
-        {parada.dicas.map((dica) => (
+        {(parada.dicas ?? []).map((dica) => (
           <li key={dica} className="flex gap-3.5">
             {/* marcador de traço, não bolinha de lista padrão */}
             <span
@@ -68,6 +70,7 @@ function Painel({ parada }: { parada: ParadaJornada }) {
           </li>
         ))}
       </ul>
+      ) : null}
     </div>
   );
 }
@@ -138,7 +141,10 @@ export function Jornada({ paradas }: { paradas: ParadaJornada[] }) {
           </ol>
         </div>
 
-        <div className="mt-14 min-h-[20rem] border-l-2 border-coral pl-8">
+        {/* min-h calibrado para o texto mais longo dos passos, para o
+           painel não pular de tamanho ao trocar de passo, sem sobrar o
+           vão vazio que 20rem deixava nos passos mais curtos. */}
+        <div className="mt-14 min-h-[11rem] border-l-2 border-coral pl-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={ativa}

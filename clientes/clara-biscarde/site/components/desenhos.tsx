@@ -21,54 +21,105 @@ export const traco = {
 export const TRILHA_D =
   "M0,40 C 90,26 150,50 250,34 S 420,24 520,40 S 700,50 800,32 S 940,26 1000,38";
 
-export function Castelo({ className }: Props) {
+export function Conversa({ className }: Props) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden>
       <g {...traco} stroke="currentColor">
-        {/* torres laterais com ameias */}
-        <path d="M10 54V28h12v26" />
-        <path d="M10 28v-5h3v3h3v-3h3v3h3v-3h0v5" />
-        <path d="M42 54V28h12v26" />
-        <path d="M42 28v-5h3v3h3v-3h3v3h3v-3h0v5" />
-        {/* corpo central */}
-        <path d="M22 54V36h20v18" />
-        <path d="M22 36v-4h3v2h3v-2h3v2h3v-2h3v2h3v-2h2v4" />
-        {/* portão em arco */}
-        <path d="M28 54V45a4 4 0 0 1 8 0v9" />
-        {/* janelinhas */}
-        <path d="M15 36v4M48 36v4" />
-        {/* mastro e bandeira */}
-        <path d="M32 32V18" />
-        <path d="M32 19h9l-3 3 3 3h-9" />
-        {/* chão */}
-        <path d="M4 54h56" />
+        {/* balão de quem escreve primeiro */}
+        <path d="M8 14h30a4 4 0 0 1 4 4v14a4 4 0 0 1-4 4H20l-8 7v-7H8a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4z" />
+        <path d="M13 22h20M13 28h13" />
+        {/* balão da resposta, atrás e deslocado */}
+        <path d="M48 26h8a4 4 0 0 1 4 4v12a4 4 0 0 1-4 4h-2v6l-7-6h-9" />
       </g>
     </svg>
   );
 }
 
-export function Dragao({ className }: Props) {
+export function Casa({ className }: Props) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden>
       <g {...traco} stroke="currentColor">
-        {/* corpo e pescoço */}
-        <path d="M14 50c0-8 6-12 13-12 6 0 9 3 12 3 3 0 5-2 5-5 0-4-4-6-8-5" />
-        {/* cabeça */}
-        <path d="M36 31c-3-1-5-4-4-7 1-4 5-6 9-5 4 1 6 4 6 7l4 2-4 2c-1 3-4 4-7 4" />
-        {/* olho */}
-        <circle cx="43" cy="26" r="1.4" fill="currentColor" stroke="none" />
-        {/* chifres */}
-        <path d="M42 19l2-5M46 20l4-3" />
-        {/* asa */}
-        <path d="M22 40c2-8 8-13 14-12-4 3-5 8-4 12" />
-        <path d="M27 39l3-5M31 40l2-6" />
-        {/* patas */}
-        <path d="M18 50v4M26 51v3M34 49v5" />
-        {/* cauda com espinho */}
-        <path d="M14 50c-5 0-8-3-8-7 0-3 2-5 4-5" />
-        <path d="M8 41l-4-3 5-1" />
+        {/* telhado e paredes */}
+        <path d="M10 30 32 12l22 18" />
+        <path d="M16 27v25h32V27" />
+        {/* porta e janela */}
+        <path d="M27 52V38h10v14" />
+        <path d="M20 33h6v6h-6z" />
         {/* chão */}
-        <path d="M4 56h56" />
+        <path d="M6 52h52" />
+      </g>
+    </svg>
+  );
+}
+
+/**
+ * Coração, alvo, raio e estrela: os quatro ícones da seção "Cada fase",
+ * pedidos por ela numa referência de design (mockup em cartões coloridos).
+ * Mesma família de traço dos outros desenhos, para não destoar do resto.
+ */
+
+export function Coracao({ className }: Props) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden>
+      <g {...traco} stroke="currentColor">
+        <path d="M32 52C20 43 9 33 9 21c0-7 6-13 13-13 4 0 8 2 10 6 2-4 6-6 10-6 7 0 13 6 13 13 0 12-11 22-23 31z" />
+      </g>
+    </svg>
+  );
+}
+
+export function Alvo({ className }: Props) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden>
+      <g {...traco} stroke="currentColor">
+        <circle cx="32" cy="32" r="19" />
+        <circle cx="32" cy="32" r="10" />
+        <circle cx="32" cy="32" r="2" fill="currentColor" stroke="none" />
+      </g>
+    </svg>
+  );
+}
+
+export function Raio({ className }: Props) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden>
+      <g {...traco} stroke="currentColor" strokeLinejoin="round">
+        <path d="M34 4 14 36h14l-6 24 28-34H32z" />
+      </g>
+    </svg>
+  );
+}
+
+export function Estrela({ className }: Props) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden>
+      <g {...traco} stroke="currentColor" strokeLinejoin="round">
+        <path d="M32 4 40 26 60 32 40 38 32 60 24 38 4 32 24 26Z" />
+      </g>
+    </svg>
+  );
+}
+
+/** Tela e alfinete de mapa: os selos de Online e Presencial. */
+
+export function Monitor({ className }: Props) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden>
+      <g {...traco} stroke="currentColor">
+        <rect x="8" y="14" width="48" height="32" rx="4" />
+        <path d="M24 54h16" />
+        <path d="M32 46v8" />
+      </g>
+    </svg>
+  );
+}
+
+export function Local({ className }: Props) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden>
+      <g {...traco} stroke="currentColor">
+        <path d="M32 56c10-12 16-20 16-27a16 16 0 1 0-32 0c0 7 6 15 16 27z" />
+        <circle cx="32" cy="28" r="6" />
       </g>
     </svg>
   );
