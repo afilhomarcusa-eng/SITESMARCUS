@@ -20,7 +20,6 @@ import { ScrollSuave } from "@/components/scroll-suave";
 import { Entrada } from "@/components/entrada";
 import { FaixaInfo } from "@/components/faixa-info";
 import { QuebraSimples } from "@/components/quebra-simples";
-import { FotoFlutuante } from "@/components/foto-flutuante";
 import { FormularioContato } from "@/components/formulario-contato";
 import {
   Coracao,
@@ -199,7 +198,7 @@ export default function Home() {
                     parte desse processo, construindo caminhos possíveis para os
                     desafios do cotidiano.
                   </p>
-                  <p className="text-tinta">
+                  <p>
                     Sou psicóloga formada pela Escola Bahiana de Medicina e
                     Saúde Pública e pós-graduanda em Terapia
                     Cognitivo-Comportamental pelo INTCC. Atuo com crianças,
@@ -209,17 +208,16 @@ export default function Home() {
               </div>
 
               <div className="col-span-12 md:col-span-5">
-                <FotoFlutuante duracao={7.5}>
-                  <div className="relative aspect-[4/5] w-full overflow-hidden">
-                    <Image
-                      src="/clara-3.jpeg"
-                      alt={`${clara.nome} no consultório`}
-                      fill
-                      sizes="(min-width: 768px) 40vw, 100vw"
-                      className="object-cover"
-                    />
-                  </div>
-                </FotoFlutuante>
+                {/* Foto parada. A flutuação daqui foi retirada a pedido dela. */}
+                <div className="relative aspect-[4/5] w-full overflow-hidden">
+                  <Image
+                    src="/clara-3.jpeg"
+                    alt={`${clara.nome} no consultório`}
+                    fill
+                    sizes="(min-width: 768px) 40vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
               </div>
             </SectionReveal>
           </Faixa>
@@ -236,20 +234,15 @@ export default function Home() {
           <Faixa>
             <SectionReveal className="grid grid-cols-12 items-center gap-y-10 md:gap-x-14">
               <div className="col-span-12 md:col-span-4">
-                <FotoFlutuante
-                  className="hidden md:block"
-                  duracao={8.5}
-                  atraso={0.8}
-                >
-                  <Image
-                    src="/clara-1.jpeg"
-                    sizes="(min-width: 768px) 30vw, 100vw"
-                    alt={clara.nome}
-                    width={960}
-                    height={1280}
-                    className="folha-alt h-full w-full object-cover"
-                  />
-                </FotoFlutuante>
+                {/* Foto parada. A flutuação daqui foi retirada a pedido dela. */}
+                <Image
+                  src="/clara-1.jpeg"
+                  sizes="(min-width: 768px) 30vw, 100vw"
+                  alt={clara.nome}
+                  width={960}
+                  height={1280}
+                  className="folha-alt hidden h-full w-full object-cover md:block"
+                />
               </div>
 
               <div className="col-span-12 md:col-span-8">
@@ -438,7 +431,7 @@ export default function Home() {
             <SectionReveal>
               <Etiqueta>Dúvidas</Etiqueta>
               <h2 className="mt-6 max-w-[24ch] font-display text-titulo font-normal leading-[1.12] tracking-[-0.015em]">
-                Perguntas que costumam vir antes da primeira conversa
+                Antes de começar…
               </h2>
             </SectionReveal>
 
@@ -505,9 +498,10 @@ export default function Home() {
               )}
             </div>
 
-            {/* Central de canais, secundária. Cada linha só existe se o dado existir. */}
-            <div className="mx-auto mt-14 max-w-[34rem]">
-              {temContato ? (
+            {/* Central de canais, secundária. Cada linha só existe se o dado existir.
+                Sem nenhum canal cadastrado a lista inteira some, sem aviso no lugar. */}
+            {temContato && (
+              <div className="mx-auto mt-14 max-w-[34rem]">
                 <dl className="divide-y divide-borda border-y border-borda">
                   {links.whatsapp && (
                     <div className="flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:justify-center sm:gap-8">
@@ -521,7 +515,10 @@ export default function Home() {
                           rel="noopener noreferrer"
                           className="text-tinta underline decoration-coral decoration-2 underline-offset-4"
                         >
-                          {telefoneLegivel(clara.whatsapp)}
+                          {/* Sem o número dela, o link não vira texto vazio:
+                              vira o convite para abrir a conversa. */}
+                          {telefoneLegivel(clara.whatsapp) ??
+                            "Abrir a conversa"}
                         </a>
                       </dd>
                     </div>
@@ -593,20 +590,8 @@ export default function Home() {
                     </div>
                   )}
                 </dl>
-              ) : (
-                /* Sem nenhum canal cadastrado, o bloco não inventa contato. */
-                <div className="rounded-bloco border border-dashed border-coral/60 p-8 text-center">
-                  <p className="text-micro uppercase tracking-[0.18em] text-coral-texto">
-                    Canais de atendimento
-                  </p>
-                  <p className="mx-auto mt-3 max-w-[40ch] leading-[1.7] text-tinta-media">
-                    WhatsApp, e-mail e Instagram entram aqui assim que forem
-                    cadastrados em <code>lib/clara.ts</code>. Enquanto não
-                    existirem, nenhum contato é exibido nem inventado.
-                  </p>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </Faixa>
         </section>
 

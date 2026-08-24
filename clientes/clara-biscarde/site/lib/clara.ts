@@ -14,10 +14,19 @@ export const clara = {
   cidade: "Salvador" as string | null,
   estado: "BA" as string | null,
 
-  whatsapp: null as string | null, // "5571999999999"
+  /** Número puro, só dígitos com DDI. */
+  whatsapp: "5571999132904" as string | null,
+
+  /**
+   * Link de convite do WhatsApp, o que veio do QR code. Fica de reserva:
+   * com o número acima preenchido, o wa.me clássico tem prioridade porque
+   * é o único formato que garante a mensagem já escrita.
+   */
+  whatsappLink: "https://wa.me/qr/6KU5S74BUCQOA1" as string | null,
+
   telefone: null as string | null,
   email: null as string | null,
-  instagram: null as string | null, // só o usuário, sem @
+  instagram: "psiclarabiscarde" as string | null, // só o usuário, sem @
   endereco: null as string | null,
   horario: null as string | null,
 
@@ -26,20 +35,34 @@ export const clara = {
    * Enquanto não existir, o hero renderiza o painel de reserva.
    */
   retrato: "/clara.jpg" as string | null,
-  retratoLargura: 1280,
-  retratoAltura: 1280,
+  retratoLargura: 1600,
+  retratoAltura: 1600,
 } as const;
 
 const MENSAGEM =
   "Oi Clara, vim pelo site e queria saber sobre atendimento pro meu filho";
 
+/**
+ * Monta o destino do WhatsApp com a mensagem já escrita.
+ *
+ * Com o número, é o wa.me clássico e o texto chega garantido. Sem ele, sobra o
+ * link de convite do QR: abre a conversa certa, e o `text` vai junto na
+ * tentativa de aproveitar, mas o WhatsApp pode descartar nesse formato. Quando
+ * o número dela chegar, preencher `clara.whatsapp` resolve os dois casos.
+ */
+export function whatsappCom(texto: string): string | null {
+  const parametro = `?text=${encodeURIComponent(texto)}`;
+  if (clara.whatsapp) return `https://wa.me/${clara.whatsapp}${parametro}`;
+  if (clara.whatsappLink) return `${clara.whatsappLink}${parametro}`;
+  return null;
+}
+
 export const links = {
   /** wa.me abre o app no celular e o WhatsApp Web no computador. */
-  whatsapp: clara.whatsapp
-    ? `https://wa.me/${clara.whatsapp}?text=${encodeURIComponent(MENSAGEM)}`
-    : null,
+  whatsapp: whatsappCom(MENSAGEM),
 
-  /** Força o WhatsApp Web, para quem está no computador sem o app. */
+  /** Força o WhatsApp Web, para quem está no computador sem o app.
+      Só existe com o número: essa rota não aceita link de convite. */
   whatsappWeb: clara.whatsapp
     ? `https://web.whatsapp.com/send?phone=${clara.whatsapp}&text=${encodeURIComponent(MENSAGEM)}`
     : null,
@@ -170,7 +193,6 @@ export const modalidades = [
 export const caminho = [
   {
     desenho: "conversa" as const,
-    tipo: "Passo 1",
     rotulo: "Primeiro contato",
     titulo: "Primeiro contato",
     texto:
@@ -178,7 +200,6 @@ export const caminho = [
   },
   {
     desenho: "ponte" as const,
-    tipo: "Passo 2",
     rotulo: "Conversa com responsáveis",
     titulo: "Conversa com responsáveis",
     texto:
@@ -186,7 +207,6 @@ export const caminho = [
   },
   {
     desenho: "bussola" as const,
-    tipo: "Passo 3",
     rotulo: "Conhecendo a criança ou adolescente",
     titulo: "Conhecendo a criança ou adolescente",
     texto:
@@ -194,7 +214,6 @@ export const caminho = [
   },
   {
     desenho: "bandeira" as const,
-    tipo: "Passo 4",
     rotulo: "Construímos o caminho juntos",
     titulo: "Construímos o caminho juntos",
     texto:
@@ -202,7 +221,6 @@ export const caminho = [
   },
   {
     desenho: "casa" as const,
-    tipo: "Passo 5",
     rotulo: "A família também faz parte",
     titulo: "A família também faz parte",
     texto:

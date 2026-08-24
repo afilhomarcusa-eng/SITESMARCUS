@@ -27,7 +27,8 @@ import { TrilhaDragao } from "@/components/trilha-dragao";
 
 export interface ParadaJornada {
   desenho: "conversa" | "casa" | "ponte" | "bussola" | "bandeira";
-  tipo: string;
+  /** Opcional. Sem ele a parada mostra só o rótulo, sem "Passo N" em cima. */
+  tipo?: string;
   rotulo: string;
   titulo: string;
   texto: string;
@@ -117,14 +118,16 @@ export function Jornada({ paradas }: { paradas: ParadaJornada[] }) {
                     </motion.span>
 
                     <span className="flex flex-col items-center gap-1">
-                      <span
-                        className={cn(
-                          "text-micro uppercase tracking-[0.14em] transition-colors",
-                          atual ? "text-coral-texto" : "text-tinta-media"
-                        )}
-                      >
-                        {p.tipo}
-                      </span>
+                      {p.tipo && (
+                        <span
+                          className={cn(
+                            "text-micro uppercase tracking-[0.14em] transition-colors",
+                            atual ? "text-coral-texto" : "text-tinta-media"
+                          )}
+                        >
+                          {p.tipo}
+                        </span>
+                      )}
                       <span
                         className={cn(
                           "max-w-[15ch] text-center text-mini leading-[1.3] transition-colors",
@@ -194,10 +197,12 @@ export function Jornada({ paradas }: { paradas: ParadaJornada[] }) {
                 </span>
 
                 <span className="min-w-0 flex-1">
-                  <span className="block text-micro uppercase tracking-[0.14em] text-coral-texto">
-                    {p.tipo}
-                  </span>
-                  <span className="mt-0.5 block font-display text-medio leading-[1.25] text-oliva-texto">
+                  {p.tipo && (
+                    <span className="block text-micro uppercase tracking-[0.14em] text-coral-texto">
+                      {p.tipo}
+                    </span>
+                  )}
+                  <span className="block font-display text-medio leading-[1.25] text-oliva-texto">
                     {p.rotulo}
                   </span>
                 </span>

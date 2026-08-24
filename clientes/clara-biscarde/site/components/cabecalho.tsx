@@ -113,7 +113,10 @@ export function Cabecalho() {
                 encolhido ? "h-9" : "h-12",
               )}
             />
-            <span className="hidden border-l border-borda pl-3.5 leading-[1.35] sm:block">
+            {/* Some na faixa em que o menu horizontal disputa espaço: a profissão
+                e o CRP já aparecem na capa e no rodapé, o menu não tem onde
+                mais aparecer. */}
+            <span className="hidden border-l border-borda pl-3.5 leading-[1.35] sm:max-[1099px]:block 2xl:block">
               <span className="block text-micro uppercase tracking-[0.16em] text-tinta-media">
                 {clara.profissao}
               </span>
@@ -126,12 +129,21 @@ export function Cabecalho() {
           <Redes encolhido={encolhido} />
         </div>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        {/*
+          whitespace-nowrap para "Sobre mim" e "Como começa" não quebrarem em
+          duas linhas.
+
+          Em linha única os cinco itens pedem 589px fixos, e isso muda onde o
+          menu horizontal cabe. Abaixo de 1100px não cabe de jeito nenhum ao
+          lado da assinatura e do botão, então ali é o hambúrguer que atende.
+          Daí para cima o gap abre junto com a tela.
+        */}
+        <nav className="hidden items-center gap-4 min-[1100px]:flex xl:gap-6 2xl:gap-8">
           {menu.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="text-mini uppercase tracking-[0.14em] text-tinta-media transition-colors hover:text-coral-texto"
+              className="whitespace-nowrap text-mini uppercase tracking-[0.14em] text-tinta-media transition-colors hover:text-coral-texto"
             >
               {item.rotulo}
             </a>
@@ -156,7 +168,7 @@ export function Cabecalho() {
             aria-expanded={aberto}
             aria-label="Abrir menu"
             /* 44px é o mínimo confortável para o dedo. Antes eram 36. */
-            className="-mr-2 flex h-11 w-11 flex-col items-center justify-center gap-[5px] lg:hidden"
+            className="-mr-2 flex h-11 w-11 flex-col items-center justify-center gap-[5px] min-[1100px]:hidden"
           >
             <span className="h-px w-5 bg-tinta" />
             <span className="h-px w-5 bg-tinta" />
@@ -165,7 +177,7 @@ export function Cabecalho() {
       </div>
 
       {aberto && (
-        <nav className="mt-3 border-t border-borda px-6 pb-2 pt-4 lg:hidden">
+        <nav className="mt-3 border-t border-borda px-6 pb-2 pt-4 min-[1100px]:hidden">
           <ul className="flex flex-col gap-4">
             {menu.map((item) => (
               <li key={item.href}>

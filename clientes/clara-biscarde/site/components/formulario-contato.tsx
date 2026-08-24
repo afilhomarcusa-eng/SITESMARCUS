@@ -17,7 +17,7 @@
  */
 
 import { useId, useState } from "react";
-import { clara } from "@/lib/clara";
+import { whatsappCom } from "@/lib/clara";
 
 const ATENDIMENTOS = ["Criança", "Adolescente", "Ainda não sei"];
 
@@ -34,11 +34,6 @@ export function FormularioContato() {
 
   const enviar = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!clara.whatsapp) {
-      setPendente(true);
-      return;
-    }
 
     const dados = new FormData(e.currentTarget);
     const valor = (nome: string) => String(dados.get(nome) ?? "").trim();
@@ -57,9 +52,12 @@ export function FormularioContato() {
     const recado = valor("mensagem");
     if (recado) blocos.push(recado);
 
-    const url = `https://wa.me/${clara.whatsapp}?text=${encodeURIComponent(
-      blocos.join("\n\n"),
-    )}`;
+    const url = whatsappCom(blocos.join("\n\n"));
+    if (!url) {
+      setPendente(true);
+      return;
+    }
+
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
