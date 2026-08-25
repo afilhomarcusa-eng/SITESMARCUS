@@ -39,8 +39,15 @@ export const clara = {
   retratoAltura: 1600,
 } as const;
 
+/**
+ * O que já vem escrito quando a conversa abre pelos botões de agendar.
+ *
+ * O formulário da seção de contato não usa esta: lá a pessoa preenche nome,
+ * para quem é o atendimento e o recado, e a abertura precisa ser curta para
+ * não repetir o que os campos já dizem. Ver `FormularioContato`.
+ */
 const MENSAGEM =
-  "Oi Clara, vim pelo site e queria saber sobre atendimento pro meu filho";
+  "Oi, Clara! Cheguei até você pelo site e queria conversar sobre meu filho(a). Gostaria de conhecer melhor seu trabalho e entender como funciona o acompanhamento.";
 
 /**
  * Monta o destino do WhatsApp com a mensagem já escrita.
