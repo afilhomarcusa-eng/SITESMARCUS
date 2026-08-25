@@ -8,6 +8,8 @@ import {
   focos,
   publicos,
   modalidades,
+  sobre,
+  formacao,
   caminho,
   duvidas,
   telefoneLegivel,
@@ -28,6 +30,8 @@ import {
   Estrela,
   Monitor,
   Local,
+  Livro,
+  Labirinto,
 } from "@/components/desenhos";
 import { cn } from "@/lib/utils";
 import {
@@ -176,35 +180,43 @@ export default function Home() {
                 </h2>
 
                 <div className="mt-6 space-y-5 leading-[1.7] text-tinta-media">
-                  <p>
-                    A Psicologia transformou a minha forma de enxergar a
-                    infância e a adolescência. Ela me ensinou a olhar para além
-                    do que aparece: para os sentimentos por trás dos
-                    comportamentos, para o que uma brincadeira comunica e para
-                    aquilo que ainda não encontrou palavras.
-                  </p>
-                  <p>
-                    Ao longo da minha trajetória, especialmente nas experiências
-                    com crianças e adolescentes no ambiente escolar, esse olhar
-                    ganhou ainda mais sentido. Passei a me interessar pelas
-                    diferentes formas de expressão, pelos vínculos e pelos
-                    desafios de cada etapa do crescer.
-                  </p>
-                  <p>
-                    No consultório, busco oferecer um espaço de acolhimento e
-                    segurança, respeitando a singularidade de cada criança e
-                    adolescente e ajudando-os a compreender suas emoções,
-                    relações e experiências. A orientação às famílias também faz
-                    parte desse processo, construindo caminhos possíveis para os
-                    desafios do cotidiano.
-                  </p>
-                  <p>
-                    Sou psicóloga formada pela Escola Bahiana de Medicina e
-                    Saúde Pública e pós-graduanda em Terapia
-                    Cognitivo-Comportamental pelo INTCC. Atuo com crianças,
-                    adolescentes e orientação de famílias.
-                  </p>
+                  {sobre.map((paragrafo) => (
+                    <p key={paragrafo.slice(0, 40)}>{paragrafo}</p>
+                  ))}
                 </div>
+
+                {/*
+                  A formação sai da prosa e vira faixa com ícone. São linhas
+                  largas, não o grid de cartão com ícone em quadradinho que o
+                  briefing proíbe, e o raio é o de campo, menor que o dos
+                  cartões de foco, para as duas listas não se confundirem.
+                */}
+                <RevealLista className="mt-9 space-y-3">
+                  {formacao.map((item) => {
+                    const Icone = item.desenho === "livro" ? Livro : Labirinto;
+                    return (
+                      <RevealItem
+                        key={item.titulo}
+                        className="flex items-center gap-4 rounded-campo border-l-2 border-coral bg-creme py-3.5 pl-4 pr-5"
+                      >
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-claro text-coral-texto">
+                          <Icone className="h-[1.4rem] w-[1.4rem]" />
+                        </span>
+                        {/* No celular o detalhe desce para a linha de baixo:
+                            correndo ao lado do título, os dois quebram no meio
+                            e deixam de se distinguir. */}
+                        <p className="leading-[1.45]">
+                          <span className="font-semibold text-tinta">
+                            {item.titulo}
+                          </span>{" "}
+                          <span className="block text-mini text-tinta-media sm:inline">
+                            {item.detalhe}
+                          </span>
+                        </p>
+                      </RevealItem>
+                    );
+                  })}
+                </RevealLista>
               </div>
 
               <div className="col-span-12 md:col-span-5">

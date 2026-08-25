@@ -198,3 +198,62 @@ export function Trilha({ className }: Props) {
     </svg>
   );
 }
+
+/*
+ * Livro e Labirinto, os dois da lista de formação.
+ *
+ * Aqui o viewBox é 24, não o 64 dos desenhos da trilha. Eles rodam a 22px
+ * dentro da faixa, e nesse tamanho o traço de 2 sobre 64 vira borrão: o
+ * detalhe fecha e some. Menos linha e proporção maior é o que mantém a forma
+ * legível pequena.
+ *
+ * A beca de formatura e a medalha de fita que vieram antes foram recusadas
+ * por parecerem ícone de banco genérico, e eram mesmo: qualquer biblioteca
+ * entrega as duas iguais. Estes partem do que ela de fato tem escrito.
+ */
+const tracoMiudo = {
+  fill: "none",
+  strokeWidth: 1.5,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+};
+
+/**
+ * Livro aberto, para a formação acadêmica.
+ *
+ * As páginas são arcos irregulares e a lombada não desce reta, que é o que
+ * separa isto de um livro de biblioteca de ícone. Duas linhas de texto, não
+ * quatro: a 22px, quatro linhas encostam umas nas outras e viram mancha.
+ */
+export function Livro({ className }: Props) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden>
+      <g {...tracoMiudo} stroke="currentColor">
+        <path d="M12 7.3C9.6 5.4 6.3 4.9 3.5 5.8c-.4.1-.6.5-.6.9l.4 10.4c0 .5.5.8.9.7 2.6-.7 5.6-.2 7.8 1.3" />
+        <path d="M12 7.3c2.3-1.9 5.6-2.5 8.4-1.6.4.1.6.5.6.9l-.5 10.4c0 .5-.5.8-.9.6-2.6-.7-5.5-.1-7.6 1.4" />
+        <path d="M12.1 7.4c-.3 4-.2 8 0 12" />
+        <path d="M6 11.2c1.5-.4 3-.3 4.4 0" />
+        <path d="M17.9 11c-1.4-.3-2.9-.2-4.3.2" />
+      </g>
+    </svg>
+  );
+}
+
+/**
+ * Labirinto, para o treinamento na Escala LABIRINTO.
+ *
+ * É o nome da escala desenhado, não um selo de curso concluído: o caminho
+ * entra pelo topo e dá duas voltas até o centro.
+ */
+export function Labirinto({ className }: Props) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden>
+      <g {...tracoMiudo} stroke="currentColor">
+        <path d="M10.3 3.4H4.5c-.7 0-1.1.5-1.1 1.2l.1 14.7c0 .7.5 1.2 1.1 1.2h14.9c.6 0 1.1-.6 1.1-1.2l-.1-14.7c0-.7-.5-1.2-1.2-1.2h-5.6" />
+        <path d="M13.8 6.9h2.9c.6 0 1.1.5 1.1 1.1v8c0 .6-.5 1.1-1.1 1.1H7.4c-.6 0-1.1-.5-1.1-1.1l.1-8c0-.6.5-1.1 1.1-1.1h3" />
+        <path d="M13.7 10.4h.9c.6 0 1 .4 1 1l-.1 2c0 .6-.4 1-1 1h-5" />
+        <path d="M12 3.5v6.9" />
+      </g>
+    </svg>
+  );
+}

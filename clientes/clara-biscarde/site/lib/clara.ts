@@ -116,6 +116,45 @@ export const faixaInfo: string[] = [
 ];
 
 /**
+ * Sobre mim. Texto da Clara, sem alteração, tirando os dois pontos depois de
+ * "não aparece em palavras": no original faltava a pontuação e as duas orações
+ * ficavam emendadas.
+ *
+ * A terceira frase da versão anterior, a que listava a formação em prosa,
+ * saiu daqui: virou a lista `formacao` logo abaixo.
+ */
+export const sobre = [
+  "A Psicologia me ensinou que, muitas vezes, o que uma criança ou adolescente sente não aparece em palavras: aparece no comportamento, na brincadeira, no silêncio, nas relações e até na forma como pede ajuda. Foi a partir desse olhar, construído especialmente nas minhas experiências com crianças e adolescentes no ambiente escolar, que encontrei sentido em acompanhar de perto as descobertas, os desafios e as transformações que fazem parte do crescer.",
+  "No consultório, meu trabalho é oferecer um espaço seguro, acolhedor e respeitoso, onde cada criança e adolescente possa ser compreendido em sua própria forma de existir e se expressar. Através da escuta, do brincar e de recursos adequados a cada fase do desenvolvimento, busco ajudá-los a reconhecer emoções, fortalecer vínculos e construir novas formas de lidar com suas experiências. E como ninguém cresce sozinho, a família também faz parte desse caminho, com orientações e apoio para tornar os desafios do cotidiano mais compreensíveis e possíveis de atravessar juntos.",
+];
+
+/**
+ * Formação, em faixas com ícone abaixo do texto de Sobre mim.
+ *
+ * `livro` é formação acadêmica, `labirinto` é o treinamento na escala de
+ * mesmo nome: a distinção é o que impede a lista de virar três linhas
+ * idênticas. O `detalhe` entra em tom mais claro ao lado
+ * do título, sem travessão no meio, que o briefing proíbe.
+ */
+export const formacao = [
+  {
+    desenho: "livro" as const,
+    titulo: "Formação EBMSP",
+    detalhe: "Escola Bahiana de Medicina e Saúde Pública",
+  },
+  {
+    desenho: "livro" as const,
+    titulo: "Pós-graduanda em TCC",
+    detalhe: "Terapia Cognitivo-Comportamental, no INTCC",
+  },
+  {
+    desenho: "labirinto" as const,
+    titulo: "Treinamento na Escala LABIRINTO",
+    detalhe: "Avaliação de sinais de TEA",
+  },
+];
+
+/**
  * Os quatro focos do acompanhamento. Texto da Clara, sem alteração.
  *
  * O layout segue a referência que ela mandou: quatro cartões com ícone,
