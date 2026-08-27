@@ -26,8 +26,6 @@ const amenities = [
   { icon: "wifi" as const, where: "Áreas da pousada", title: "Wi-Fi", text: "Conexão disponível nas áreas da pousada." },
   { icon: "air" as const, where: "Em todos os quartos", title: "Ar-condicionado", text: "Mais conforto para descansar em qualquer época." },
   { icon: "car" as const, where: "No local", title: "Estacionamento", text: "Comodidade para quem chega de carro." },
-  { icon: "pool" as const, where: "Área de lazer", title: "Piscina", text: "Aberta aos hóspedes, para o fim de tarde depois do compromisso." },
-  { icon: "games" as const, where: "Área de lazer", title: "Salão de jogos", text: "Momentos de lazer sem precisar sair da pousada." },
 ];
 
 function Arrow() {
@@ -37,24 +35,22 @@ function Arrow() {
 function Brand() {
   return (
     <span className="brand" aria-label="Pousada Nossa Senhora Aparecida">
-      <svg viewBox="0 0 76 76" aria-hidden="true">
-        <path className="brand__building" d="M23 47V23h30v24M29 23V12h18v11M34 12V5h8v7M17 47h42" />
-        <path className="brand__green" d="M8 51c17-8 36-8 58 0" />
-        <path className="brand__red" d="M13 57c17-5 34-4 51 2" />
+      <svg viewBox="0 0 64 70" aria-hidden="true">
+        <path className="brand__building" d="M18 53V17c0-1.1.9-2 2-2h24c1.1 0 2 .9 2 2v36M11 53h42M24 23h16M24 32h16M24 41h16M28 53v-7h8v7" />
+        <path className="brand__green" d="M15 58c11-3 24-3 34 0" />
+        <path className="brand__red" d="M20 63c8-2 17-2 24 0" />
       </svg>
       <span><strong>Pousada</strong><small>Nossa Senhora Aparecida</small></span>
     </span>
   );
 }
 
-function Icon({ name }: { name: "coffee" | "wifi" | "air" | "car" | "pool" | "games" | "pin" }) {
+function Icon({ name }: { name: "coffee" | "wifi" | "air" | "car" | "pin" }) {
   const paths = {
     coffee: <><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5V9Z"/><path d="M16 11h2a2 2 0 1 1 0 4h-2M8 5c0-1 1-1 1-2M12 5c0-1 1-1 1-2"/></>,
     wifi: <><path d="M4 10a12 12 0 0 1 16 0M7 14a8 8 0 0 1 10 0M10 18a3 3 0 0 1 4 0"/><circle cx="12" cy="21" r="1"/></>,
     air: <><rect x="3" y="5" width="18" height="8" rx="1.6"/><path d="M6.5 10.2h11"/><path d="M7.5 16.5c1.6 0 1.6 2 3.2 2M13.3 16.5c1.6 0 1.6 2 3.2 2"/></>,
     car: <><path d="M3.5 16.5v-4l1.8-4.6c.2-.6.8-.9 1.4-.9h10.6c.6 0 1.2.3 1.4.9l1.8 4.6v4"/><path d="M3.5 12.5h17"/><path d="M3.5 16.5h3v2h-3zM17.5 16.5h3v2h-3z"/><path d="M6.8 14.6h1.4M15.8 14.6h1.4"/></>,
-    pool: <><path d="M7.5 14V5.5c0-1.1.9-2 2-2s2 .9 2 2V14M15 14V5.5c0-1.1.9-2 2-2s2 .9 2 2"/><path d="M7.5 8.2h4M7.5 11.3h4"/><path d="M2.5 17.6c1.9-1.9 3.7 1.6 5.6 0 1.9-1.6 3.7 1.6 5.6 0s3.7 1.6 5.6 0"/><path d="M2.5 20.4c1.9-1.9 3.7 1.6 5.6 0 1.9-1.6 3.7 1.6 5.6 0s3.7 1.6 5.6 0"/></>,
-    games: <><path d="M8.5 8h7c2.6 0 4.2 2 4.7 4.4l.6 3.3c.4 2.2-2.3 3.4-3.7 1.7l-1.6-2h-6l-1.6 2c-1.4 1.7-4.1.5-3.7-1.7l.6-3.3C5.3 10 6.9 8 8.5 8Z"/><path d="M8.6 11.4v2.4M7.4 12.6h2.4"/><circle cx="15.6" cy="11.9" r=".9"/><circle cx="17.4" cy="14.1" r=".9"/></>,
     pin: <><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></>,
   };
   return <svg className="icon" viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>;
@@ -85,8 +81,19 @@ export function PousadaSite() {
 
   function reserve(event: FormEvent) {
     event.preventDefault();
-    const message = `Olá! Gostaria de consultar uma hospedagem na Pousada Nossa Senhora Aparecida.%0A%0ACheck-in: ${arrival || "a definir"}%0ACheck-out: ${departure || "a definir"}%0AHóspedes: ${guests}`;
-    window.open(`${whatsapp}?text=${encodeURI(message)}`, "_blank", "noopener,noreferrer");
+    const data = (iso: string) => {
+      if (!iso) return "a definir";
+      const [ano, mes, dia] = iso.split("-");
+      return `${dia}/${mes}/${ano}`;
+    };
+    const message = [
+      "Olá! Gostaria de consultar uma hospedagem na Pousada Nossa Senhora Aparecida.",
+      "",
+      `Check-in: ${data(arrival)}`,
+      `Check-out: ${data(departure)}`,
+      `Hóspedes: ${guests}`,
+    ].join("\n");
+    window.open(`${whatsapp}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -162,7 +169,7 @@ export function PousadaSite() {
 
       <section className="amenities section" id="experiencia">
         <div className="container">
-          <div className="amenities-intro" data-reveal><span className="eyebrow">Na diária</span><h2>O que já está incluído.</h2><p>Nada aqui é cobrado à parte: café, vaga, piscina e salão já vêm com a diária.</p></div>
+          <div className="amenities-intro" data-reveal><span className="eyebrow">Na diária</span><h2>O que já está incluído.</h2><p>Nada aqui é cobrado à parte: o café da manhã e a vaga já vêm com a diária.</p></div>
           <div className="amenities-grid" data-reveal>
             {amenities.map(item => <article key={item.title}><Icon name={item.icon}/><span>{item.where}</span><h3>{item.title}</h3><p>{item.text}</p></article>)}
           </div>
