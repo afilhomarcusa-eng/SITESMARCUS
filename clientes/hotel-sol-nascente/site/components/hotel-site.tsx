@@ -234,6 +234,7 @@ const hours = [
   {
     time: "05h",
     label: "Nascente",
+    horizon: "#0a1f11",
     sky: "linear-gradient(178deg,#0a1f11 0%,#173d22 34%,#5a6330 62%,#b57438 84%,#e79950 100%)",
     bright: false,
     title: "O sol chega antes de todo mundo.",
@@ -247,6 +248,7 @@ const hours = [
   {
     time: "07h",
     label: "Café",
+    horizon: "#27632f",
     sky: "linear-gradient(178deg,#27632f 0%,#68a75b 30%,#dfc38d 72%,#f8eed2 100%)",
     bright: true,
     title: "Café da manhã já está na diária.",
@@ -260,6 +262,7 @@ const hours = [
   {
     time: "10h",
     label: "Cidade",
+    horizon: "#317a39",
     sky: "linear-gradient(178deg,#317a39 0%,#84bd6a 28%,#cfe2ac 64%,#f0f5e2 100%)",
     bright: true,
     title: "Arapiraca resolve rápido.",
@@ -273,6 +276,7 @@ const hours = [
   {
     time: "12h",
     label: "Almoço",
+    horizon: "#2f9e3f",
     sky: "linear-gradient(178deg,#2f9e3f 0%,#8ec46e 26%,#cfe0a8 62%,#f4f6e4 100%)",
     bright: true,
     title: "O restaurante não é só para hóspede.",
@@ -286,6 +290,7 @@ const hours = [
   {
     time: "15h",
     label: "Piscina",
+    horizon: "#31783a",
     sky: "linear-gradient(178deg,#31783a 0%,#8fbd68 26%,#d8dfa8 60%,#f2ead0 100%)",
     bright: true,
     title: "A tarde do agreste pede sombra e água.",
@@ -299,6 +304,7 @@ const hours = [
   {
     time: "19h",
     label: "Auditório",
+    horizon: "#17331e",
     sky: "linear-gradient(178deg,#17331e 0%,#5c5730 42%,#c96b45 76%,#efa25c 100%)",
     bright: false,
     title: "O auditório acende quando a cidade desacelera.",
@@ -312,6 +318,7 @@ const hours = [
   {
     time: "22h",
     label: "Silêncio",
+    horizon: "#06150c",
     sky: "linear-gradient(178deg,#06150c 0%,#102a17 52%,#1b3d24 100%)",
     bright: false,
     title: "Ar-condicionado ligado e a rodovia longe.",
@@ -414,6 +421,13 @@ export function HotelSite() {
   const [party, setParty] = useState<string | null>(null);
   const [stay, setStay] = useState<string | null>(null);
   const [dockHidden, setDockHidden] = useState(false);
+  const [name, setName] = useState("");
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [eventKind, setEventKind] = useState("Congresso ou treinamento");
+  const [eventDate, setEventDate] = useState("");
+  const [eventGuests, setEventGuests] = useState("Até 50 pessoas");
+  const [note, setNote] = useState("");
 
   const moment = hours[hour];
   const t = hours.length > 1 ? hour / (hours.length - 1) : 0;
@@ -461,18 +475,43 @@ export function HotelSite() {
     return () => observer.disconnect();
   }, []);
 
+  const isEvent = purpose === "evento";
+
+  /* O input date devolve aaaa-mm-dd. Quem le no WhatsApp espera dd/mm/aaaa. */
+  const brDate = (iso: string) => {
+    if (!iso) return "a definir";
+    const [y, m, d] = iso.split("-");
+    return `${d}/${m}/${y}`;
+  };
+
   const planMessage = useMemo(() => {
     const chosenPurpose = purposes.find((item) => item.id === purpose);
     const chosenParty = parties.find((item) => item.id === party);
     const chosenStay = nights.find((item) => item.id === stay);
-    return [
-      "Olá! Vim pelo site do Hotel Sol Nascente e queria consultar disponibilidade.",
+    const who = name.trim();
+    const lines = [
+      who ? `Olá! Aqui é ${who}. Vim pelo site do Hotel Sol Nascente.` : "Olá! Vim pelo site do Hotel Sol Nascente.",
       "",
-      `Motivo da viagem: ${chosenPurpose ? chosenPurpose.label : "a combinar"}`,
-      `Pessoas: ${chosenParty ? chosenParty.label : "a combinar"}`,
-      `Tempo de estadia: ${chosenStay ? chosenStay.label : "a combinar"}`,
-    ].join("\n");
-  }, [purpose, party, stay]);
+      `Motivo: ${chosenPurpose ? chosenPurpose.label : "a combinar"}`,
+    ];
+    if (isEvent) {
+      lines.push(
+        `Tipo de evento: ${eventKind}`,
+        `Data prevista: ${brDate(eventDate)}`,
+        `Convidados: ${eventGuests}`,
+        `Hospedagem para a equipe: ${chosenParty ? chosenParty.label : "a combinar"}`,
+      );
+    } else {
+      lines.push(
+        `Hóspedes: ${chosenParty ? chosenParty.label : "a combinar"}`,
+        `Tempo de estadia: ${chosenStay ? chosenStay.label : "a combinar"}`,
+        `Entrada: ${brDate(checkIn)}`,
+        `Saída: ${brDate(checkOut)}`,
+      );
+    }
+    if (note.trim()) lines.push("", `Observação: ${note.trim()}`);
+    return lines.join("\n");
+  }, [purpose, party, stay, name, checkIn, checkOut, eventKind, eventDate, eventGuests, note, isEvent]);
 
   const navItems: [string, string][] = [
     ["O dia aqui", "dia"],
@@ -524,7 +563,7 @@ export function HotelSite() {
         </nav>
       </div>
 
-      <section className="hero" id="topo">
+      <section className="hero" id="topo" style={{ "--horizon": moment.horizon } as React.CSSProperties}>
         <div className="hero-stars" aria-hidden="true" />
         <div className="hero-sun" aria-hidden="true" />
         <div className="shell hero-grid">
@@ -875,11 +914,11 @@ export function HotelSite() {
       <section className="plan section" id="reservar">
         <div className="shell plan-grid">
           <div className="plan-copy" data-reveal>
-            <span className="eyebrow eyebrow--light">Monte sua estadia</span>
-            <h2>Três perguntas e a conversa já começa pronta.</h2>
+            <span className="eyebrow eyebrow--light">Reserva e eventos</span>
+            <h2>Você responde. A gente monta a mensagem.</h2>
             <p>
-              Não temos motor de reserva online e não vamos fingir que temos. Você responde três coisas, a gente monta a
-              mensagem e a recepção continua no WhatsApp com a sua data em mãos.
+              Não temos motor de reserva online e não vamos fingir que temos. Responda o essencial, a gente monta a
+              mensagem e a recepção continua no WhatsApp já com a sua data em mãos.
             </p>
             <div className="plan-contact">
               <a href={`tel:+${phone}`}>
@@ -896,8 +935,8 @@ export function HotelSite() {
 
           <div className="builder" data-reveal>
             <div className="builder-steps">
-              <span>Passo {Math.min(step + 1, 3)} de 3</span>
-              {[0, 1, 2].map((index) => (
+              <span>Passo {Math.min(step + 1, isEvent ? 2 : 3)} de {isEvent ? 2 : 3}</span>
+              {(isEvent ? [0, 1] : [0, 1, 2]).map((index) => (
                 <i key={index} className={step > index ? "is-done" : ""} />
               ))}
             </div>
@@ -931,8 +970,12 @@ export function HotelSite() {
 
             {step === 1 && (
               <>
-                <h3>Quantas pessoas?</h3>
-                <p className="builder-q">Conta as crianças também, elas ocupam cama.</p>
+                <h3>{isEvent ? "Quantas pessoas vão se hospedar?" : "Quantas pessoas?"}</h3>
+                <p className="builder-q">
+                  {isEvent
+                    ? "Só quem dorme no hotel. O número de convidados do evento vem no próximo passo."
+                    : "Conta as crianças também, elas ocupam cama."}
+                </p>
                 <div className="builder-options is-tight">
                   {parties.map((item) => (
                     <button
@@ -941,7 +984,7 @@ export function HotelSite() {
                       className={party === item.id ? "opt is-on" : "opt"}
                       onClick={() => {
                         setParty(item.id);
-                        setStep(2);
+                        setStep(purpose === "evento" ? 3 : 2);
                       }}
                     >
                       <Icon name="users" />
@@ -984,24 +1027,104 @@ export function HotelSite() {
             )}
 
             {step === 3 && (
-              <div className="builder-summary">
-                <h3>Sua mensagem está pronta.</h3>
-                <dl>
-                  <dt>Motivo</dt>
-                  <dd>{purposes.find((item) => item.id === purpose)?.label}</dd>
-                  <dt>Pessoas</dt>
-                  <dd>{parties.find((item) => item.id === party)?.label}</dd>
-                  <dt>Estadia</dt>
-                  <dd>{nights.find((item) => item.id === stay)?.label}</dd>
-                </dl>
-                <a className="btn btn--sun" href={wa(planMessage)} target="_blank" rel="noreferrer">
-                  Enviar no WhatsApp <Icon name="wa" />
-                </a>
-                <button className="builder-back" type="button" onClick={() => setStep(0)}>
-                  Começar de novo
+              <form
+                className="builder-form"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  window.open(wa(planMessage), "_blank", "noopener,noreferrer");
+                }}
+              >
+                <h3>{isEvent ? "Conte do seu evento." : "Falta só o básico."}</h3>
+                <p className="builder-q">
+                  {isEvent
+                    ? "Com essas informações o setor de eventos já responde com disponibilidade da data."
+                    : "Com a data em mãos a recepção já responde com disponibilidade e valor."}
+                </p>
+
+                <label className="field field--wide">
+                  <span>Nome</span>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    placeholder="Como podemos chamar você?"
+                    autoComplete="name"
+                  />
+                </label>
+
+                {isEvent ? (
+                  <>
+                    <label className="field field--wide">
+                      <span>Tipo de evento</span>
+                      <select value={eventKind} onChange={(event) => setEventKind(event.target.value)}>
+                        <option>Congresso ou treinamento</option>
+                        <option>Formatura</option>
+                        <option>Casamento</option>
+                        <option>Aniversário ou confraternização</option>
+                        <option>Reunião de empresa</option>
+                        <option>Outro</option>
+                      </select>
+                    </label>
+                    <label className="field">
+                      <span>Data prevista</span>
+                      <input type="date" value={eventDate} onChange={(event) => setEventDate(event.target.value)} />
+                    </label>
+                    <label className="field">
+                      <span>Convidados</span>
+                      <select value={eventGuests} onChange={(event) => setEventGuests(event.target.value)}>
+                        <option>Até 50 pessoas</option>
+                        <option>50 a 100 pessoas</option>
+                        <option>100 a 200 pessoas</option>
+                        <option>Mais de 200 pessoas</option>
+                        <option>Ainda não sei</option>
+                      </select>
+                    </label>
+                  </>
+                ) : (
+                  <>
+                    <label className="field">
+                      <span>Entrada</span>
+                      <input type="date" value={checkIn} onChange={(event) => setCheckIn(event.target.value)} />
+                    </label>
+                    <label className="field">
+                      <span>Saída</span>
+                      <input type="date" value={checkOut} onChange={(event) => setCheckOut(event.target.value)} />
+                    </label>
+                  </>
+                )}
+
+                <label className="field field--wide">
+                  <span>Alguma observação? <i>opcional</i></span>
+                  <textarea
+                    rows={2}
+                    value={note}
+                    onChange={(event) => setNote(event.target.value)}
+                    placeholder={isEvent ? "Coffee break, montagem, equipamento…" : "Berço, chegada de madrugada, pet…"}
+                  />
+                </label>
+
+                <div className="builder-recap">
+                  {[
+                    purposes.find((item) => item.id === purpose)?.label,
+                    parties.find((item) => item.id === party)?.label,
+                    !isEvent ? nights.find((item) => item.id === stay)?.label : null,
+                  ]
+                    .filter(Boolean)
+                    .map((chip) => (
+                      <span key={chip as string}>{chip}</span>
+                    ))}
+                  <button type="button" onClick={() => setStep(0)}>
+                    Refazer
+                  </button>
+                </div>
+
+                <button className="btn btn--green field--wide" type="submit">
+                  Consultar pelo WhatsApp <Icon name="wa" />
                 </button>
-                <small>Enviar a mensagem não confirma reserva. A recepção responde com disponibilidade e valor.</small>
-              </div>
+                <small className="field--wide">
+                  Enviar não confirma reserva. A mensagem abre no WhatsApp já preenchida e a recepção responde de lá.
+                </small>
+              </form>
             )}
           </div>
         </div>
