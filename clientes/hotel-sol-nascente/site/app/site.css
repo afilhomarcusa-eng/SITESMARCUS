@@ -11,10 +11,13 @@
   --dawn-soft: #f8d7a4;
   --ember: #c8552e;
   --clay: #8f4b2e;
-  --olive: #5d6b4a;
-  --olive-deep: #3f4a33;
-  --night: #171d33;
-  --night-soft: #2a3150;
+  /* Verde da placa e do simbolo do hotel, medido na foto da fachada. */
+  --green: #2f9e3f;
+  --green-deep: #1b6b2b;
+  --olive: #3f8a45;
+  --olive-deep: #1d4a27;
+  --night: #12301c;
+  --night-soft: #1e4429;
   --sand: #fbf4e8;
   --sand-deep: #f2e6d3;
   --ink: #2b2119;
@@ -75,6 +78,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .btn--sun { background: var(--dawn); color: #3a2109; box-shadow: 0 12px 26px rgba(200, 85, 46, .26); }
 .btn--sun:hover { background: #f7b070; }
 .btn--ink { background: var(--night); color: var(--sand); }
+.btn--green { background: var(--green-deep); color: #f2fbf1; box-shadow: 0 12px 26px rgba(18, 48, 28, .3); }
+.btn--green:hover { background: #23833a; }
 .btn--ink:hover { background: var(--night-soft); }
 .btn--line { background: transparent; color: inherit; box-shadow: inset 0 0 0 1px currentColor; }
 .btn--line:hover { background: rgba(255, 255, 255, .1); }
@@ -91,7 +96,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   padding: 16px 0;
   transition: background .3s ease, padding .3s ease, box-shadow .3s ease;
 }
-.topbar.is-stuck { padding: 9px 0; background: rgba(23, 29, 51, .93); backdrop-filter: blur(10px); box-shadow: 0 1px 0 rgba(255,255,255,.09); }
+.topbar.is-stuck { padding: 9px 0; background: rgba(18, 48, 28, .94); backdrop-filter: blur(10px); box-shadow: 0 1px 0 rgba(255,255,255,.09); }
 .topbar-inner { display: flex; align-items: center; gap: 26px; }
 .mark { display: flex; align-items: center; gap: 11px; color: var(--sand); }
 .mark svg { width: 34px; height: 34px; flex: 0 0 auto; }
@@ -122,7 +127,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .hero {
   position: relative; overflow: hidden;
   padding: 148px 0 132px;
-  background: linear-gradient(178deg, #12172b 0%, #23294a 26%, #6a4159 54%, #b95f33 76%, #ea9a54 100%);
+  background: linear-gradient(178deg, #0c2314 0%, #173d22 26%, #4d6a33 54%, #b07a35 78%, #ea9a54 100%);
   color: var(--sand);
 }
 .hero::after {
@@ -161,8 +166,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ---------- slot de foto ---------- */
 .slot { position: relative; overflow: hidden; display: grid; place-items: end start; padding: 16px; border-radius: var(--radius-photo); background: linear-gradient(160deg, #f4c58c, #d97e46 52%, #8f4b2e); }
 .slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.slot--night { background: linear-gradient(160deg, #59618f, #333c6b 55%, #1e2647); }
-.slot--olive { background: linear-gradient(160deg, #8a9770, #5d6b4a 55%, #3f4a33); }
+.slot--night { background: linear-gradient(160deg, #3f7a4a, #245231 55%, #143020); }
+.slot--olive { background: linear-gradient(160deg, #6fb862, #3f8a45 55%, #1d4a27); }
 .slot--clay { background: linear-gradient(160deg, #e0a172, #b8603a 55%, #7d4028); }
 .slot::before { content: ""; position: absolute; inset: 0; opacity: .3; background-image: radial-gradient(circle at 30% 30%, rgba(255,255,255,.5) 0 1px, transparent 1.5px); background-size: 22px 22px; }
 .slot__tag {
@@ -175,12 +180,12 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ---------- linha do sol ---------- */
 .sunline { position: relative; overflow: hidden; color: var(--sand); transition: background 1s ease; }
 .sunline-inner { position: relative; z-index: 2; }
-.sunline.is-bright { color: #21303c; }
-.sunline.is-bright .eyebrow { color: #8a4425; }
-.sunline.is-bright .sunline-rail { background: rgba(30, 40, 50, .16); }
-.sunline.is-bright .sunline-stop { color: #21303c; }
-.sunline.is-bright .sunline-stop::after { background: rgba(30,40,50,.4); }
-.sunline.is-bright .sunline-hint { color: rgba(33,48,60,.62); }
+.sunline.is-bright { color: #1c3421; }
+.sunline.is-bright .eyebrow { color: #14401f; }
+.sunline.is-bright .sunline-rail { background: rgba(28, 52, 33, .18); }
+.sunline.is-bright .sunline-stop { color: #1c3421; }
+.sunline.is-bright .sunline-stop::after { background: rgba(28,52,33,.42); }
+.sunline.is-bright .sunline-hint { color: rgba(28,52,33,.64); }
 
 .sunline-head { display: grid; grid-template-columns: 1.05fr .95fr; align-items: end; gap: 40px; margin-bottom: 46px; }
 .sunline-head h2 { font-size: clamp(32px, 4vw, 52px); }
@@ -292,7 +297,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .city-photo .slot { height: 430px; border-radius: 24px 24px 160px 160px; place-items: start start; }
 
 /* ---------- monte sua estadia ---------- */
-.plan { background: linear-gradient(168deg, #1a2039, #2c2340 45%, #7a3f2c 100%); color: var(--sand); }
+.plan { background: linear-gradient(168deg, #102b18, #1d4a27 42%, #7a4a2c 100%); color: var(--sand); }
 .plan-grid { display: grid; grid-template-columns: .92fr 1.08fr; gap: 52px; align-items: start; }
 .plan-copy h2 { font-size: clamp(31px, 4vw, 49px); margin-bottom: 18px; }
 .plan-copy > p { color: rgba(251,244,232,.82); font-size: 15.5px; line-height: 1.65; }
@@ -433,3 +438,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 640px) {
   .dock a.dock--ig { display: none; }
 }
+
+/* o botao flutuante do WhatsApp usa a marca cheia, que pede um pouco mais de corpo */
+.dock .ico { width: 23px; height: 23px; }

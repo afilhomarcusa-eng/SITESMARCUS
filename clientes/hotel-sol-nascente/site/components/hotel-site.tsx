@@ -163,24 +163,35 @@ const glyphs = {
     </>
   ),
   heart: <path d="M12 20s-7.5-4.6-7.5-9.4A4.1 4.1 0 0 1 12 8a4.1 4.1 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20Z" />,
+  /* Marca oficial do WhatsApp, cheia. A versao anterior era um contorno
+     aproximado e nao lia bem nos 22px do botao flutuante. */
   wa: (
-    <>
-      <path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.3-4.7A8.5 8.5 0 1 1 20.5 11.7Z" />
-      <path d="M8.4 8.1c.2-.4.4-.4.6-.4h.5c.2 0 .4 0 .5.4l.6 1.5c.1.2 0 .4-.1.6l-.5.6c-.1.2-.1.3 0 .5.5 1 1.3 1.8 2.3 2.3.2.1.3.1.5 0l.7-.9c.2-.2.3-.2.6-.1l1.6.7c.2.1.4.2.4.4 0 .3-.1 1.2-.6 1.7-.5.5-1.3.8-2.2.5-1-.3-2.4-.8-4.1-2.3-1.3-1.2-2.3-2.8-2.6-3.9-.2-.8 0-1.4.3-1.7Z" />
-    </>
+    <path d="M12.04 2.02c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.33 4.95L2.05 22l5.25-1.38a9.87 9.87 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.44 9.9-9.9a9.82 9.82 0 0 0-2.9-7.01 9.82 9.82 0 0 0-7.01-2.9Zm0 18.05h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.39c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.41a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.69 8.24-8.24 8.24Zm4.52-6.17c-.25-.13-1.47-.72-1.69-.8-.23-.09-.39-.13-.56.12-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06a6.73 6.73 0 0 1-1.98-1.22 7.42 7.42 0 0 1-1.37-1.71c-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.3-.02-.43-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.47c-.16 0-.43.06-.65.31-.23.25-.85.83-.85 2.02s.87 2.35.99 2.51c.12.17 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.19 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.16.2-.57.2-1.05.14-1.16-.06-.11-.22-.17-.47-.3Z" />
   ),
+  /* Instagram com as proporcoes reais: moldura 16 de lado, raio 4.8,
+     lente de raio 4 e o ponto na diagonal superior direita. */
   ig: (
     <>
-      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
-      <circle cx="12" cy="12" r="3.8" />
-      <circle cx="17" cy="7" r="1" fill="currentColor" stroke="none" />
+      <rect x="3" y="3" width="18" height="18" rx="5.2" strokeWidth="1.8" />
+      <circle cx="12" cy="12" r="4" strokeWidth="1.8" />
+      <circle cx="16.9" cy="7.1" r="1.15" fill="currentColor" stroke="none" />
     </>
   ),
 } as const;
 
 type IconName = keyof typeof glyphs;
 
+/** Icones desenhados com preenchimento em vez de contorno. */
+const solidIcons = new Set<IconName>(["wa"]);
+
 function Icon({ name }: { name: IconName }) {
+  if (solidIcons.has(name)) {
+    return (
+      <svg className="ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        {glyphs[name]}
+      </svg>
+    );
+  }
   return <svg {...iconBase}>{glyphs[name]}</svg>;
 }
 
@@ -205,9 +216,9 @@ function Mark() {
 /* --------------------------------------------------------------- conteudo */
 
 /**
- * O slot de foto. O cliente ainda nao enviou imagens, e as do Instagram so
- * carregam logado. Enquanto nao chegam, o slot desenha o ceu daquela hora do
- * dia e diz o que vai ali. E ASSETS.md lista arquivo por arquivo.
+ * O slot de foto. Sem `src` ele desenha um degrade da paleta e diz o que vai
+ * ali, entao um espaco vazio nunca vira buraco branco. Hoje todos tem foto:
+ * ASSETS.md lista arquivo por arquivo e de onde veio cada um.
  */
 function Slot({ tone, tag, src, alt }: { tone?: "night" | "olive" | "clay"; tag: string; src?: string; alt?: string }) {
   return (
@@ -223,7 +234,7 @@ const hours = [
   {
     time: "05h",
     label: "Nascente",
-    sky: "linear-gradient(178deg,#0f1428 0%,#232a4d 34%,#6d4257 62%,#b96038 84%,#e79950 100%)",
+    sky: "linear-gradient(178deg,#0a1f11 0%,#173d22 34%,#5a6330 62%,#b57438 84%,#e79950 100%)",
     bright: false,
     title: "O sol chega antes de todo mundo.",
     text: "A AL-220 ainda está calada e o céu já está trocando de cor por cima do hotel. Quem madruga para pegar estrada sai daqui com o dia começando junto.",
@@ -236,7 +247,7 @@ const hours = [
   {
     time: "07h",
     label: "Café",
-    sky: "linear-gradient(178deg,#3a5c8c 0%,#7fa2c0 38%,#e9be8a 74%,#f6dcaf 100%)",
+    sky: "linear-gradient(178deg,#27632f 0%,#68a75b 30%,#dfc38d 72%,#f8eed2 100%)",
     bright: true,
     title: "Café da manhã já está na diária.",
     text: "Não é item à parte nem cortesia de fim de semana. Está incluído todos os dias, e é uma das coisas que mais aparece nas avaliações de quem dorme aqui.",
@@ -249,7 +260,7 @@ const hours = [
   {
     time: "10h",
     label: "Cidade",
-    sky: "linear-gradient(178deg,#3877b0 0%,#79add4 50%,#cfe2ee 100%)",
+    sky: "linear-gradient(178deg,#317a39 0%,#84bd6a 28%,#cfe2ac 64%,#f0f5e2 100%)",
     bright: true,
     title: "Arapiraca resolve rápido.",
     text: "A segunda maior cidade de Alagoas cabe numa manhã. Reunião, feira, consulta, visita a cliente: dá tempo de fazer o que trouxe você e voltar para almoçar.",
@@ -262,20 +273,20 @@ const hours = [
   {
     time: "12h",
     label: "Almoço",
-    sky: "linear-gradient(178deg,#2a80c2 0%,#77b6de 46%,#e8f0f4 100%)",
+    sky: "linear-gradient(178deg,#2f9e3f 0%,#8ec46e 26%,#cfe0a8 62%,#f4f6e4 100%)",
     bright: true,
     title: "O restaurante não é só para hóspede.",
     text: "Abre para a rua. Quem está de passagem senta na mesma mesa de quem mora aqui, e essa mistura é metade da graça de comer num hotel de cidade média.",
     tags: ["Aberto ao público", "Almoço servido no local"],
     tone: "clay" as const,
-    photo: "Prato servido no restaurante",
+    photo: "Salão do restaurante",
     src: "/images/restaurante-salao.jpg",
     alt: "Salão do restaurante do hotel",
   },
   {
     time: "15h",
     label: "Piscina",
-    sky: "linear-gradient(178deg,#2b7fb8 0%,#6fb4d8 40%,#e6d4a6 100%)",
+    sky: "linear-gradient(178deg,#31783a 0%,#8fbd68 26%,#d8dfa8 60%,#f2ead0 100%)",
     bright: true,
     title: "A tarde do agreste pede sombra e água.",
     text: "A piscina externa é o assunto que mais volta nos comentários depois do preço. Com criança na viagem, ela costuma decidir a hospedagem sozinha.",
@@ -288,7 +299,7 @@ const hours = [
   {
     time: "19h",
     label: "Auditório",
-    sky: "linear-gradient(178deg,#252a52 0%,#6b4468 42%,#c96b45 76%,#efa25c 100%)",
+    sky: "linear-gradient(178deg,#17331e 0%,#5c5730 42%,#c96b45 76%,#efa25c 100%)",
     bright: false,
     title: "O auditório acende quando a cidade desacelera.",
     text: "Congresso, treinamento, formatura, casamento. O espaço tem entrada própria e fica no mesmo terreno do hotel, então quem vem de fora dorme onde o evento acontece.",
@@ -301,7 +312,7 @@ const hours = [
   {
     time: "22h",
     label: "Silêncio",
-    sky: "linear-gradient(178deg,#0b1020 0%,#161d38 52%,#2a3358 100%)",
+    sky: "linear-gradient(178deg,#06150c 0%,#102a17 52%,#1b3d24 100%)",
     bright: false,
     title: "Ar-condicionado ligado e a rodovia longe.",
     text: "O hotel fica fora do miolo barulhento da cidade. À noite isso vira o argumento principal: quarto climatizado, rua quieta e o dia seguinte começando cedo de novo.",
@@ -528,7 +539,7 @@ export function HotelSite() {
               do que traz você à cidade.
             </p>
             <div className="hero-actions">
-              <a className="btn btn--sun" href="#reservar">
+              <a className="btn btn--green" href="#reservar">
                 Consultar uma diária <Icon name="arrow" />
               </a>
               <a className="btn btn--line" href="#auditorio">
@@ -552,10 +563,6 @@ export function HotelSite() {
           </div>
           <div className="hero-card" data-reveal>
             <Slot tag="Entrada do hotel" src="/images/fachada.jpg" alt="Fachada e entrada do Hotel Sol Nascente em Arapiraca" />
-            <div className="hero-badge">
-              <b>Restaurante aberto</b>
-              <span>Não precisa estar hospedado</span>
-            </div>
           </div>
         </div>
       </section>
@@ -587,9 +594,9 @@ export function HotelSite() {
                 left: `calc(${t} * (100% - 46px) + 23px)`,
                 top: `${orbTop}%`,
                 background: isNight
-                  ? "radial-gradient(circle at 38% 34%, #f4f0e2, #cfd3e0 62%, #9aa0b8)"
+                  ? "radial-gradient(circle at 38% 34%, #f8f4e6, #ded7c2 62%, #b0a992)"
                   : "radial-gradient(circle at 38% 34%, #fff3d0, #f6b465 58%, #e08a3c)",
-                boxShadow: isNight ? "0 0 34px rgba(230,236,255,.4)" : "0 0 44px rgba(255,190,110,.62)",
+                boxShadow: isNight ? "0 0 34px rgba(248,240,214,.42)" : "0 0 44px rgba(255,190,110,.62)",
               }}
             />
           </div>
