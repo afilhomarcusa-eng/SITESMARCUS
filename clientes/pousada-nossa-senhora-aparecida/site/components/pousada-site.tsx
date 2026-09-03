@@ -93,7 +93,7 @@ export function PousadaSite() {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
 
   const visibleGallery = gallery.filter((photo) => galleryFilter === "todas" || photo.category === galleryFilter);
-  const galleryWindow = Array.from({ length: Math.min(6, visibleGallery.length) }, (_, offset) => visibleGallery[(galleryStart + offset) % visibleGallery.length]);
+  const currentGalleryPhoto = visibleGallery[galleryStart % visibleGallery.length];
 
   const showPreviousPhoto = () => setSelectedPhoto((current) => current === null ? null : (current - 1 + visibleGallery.length) % visibleGallery.length);
   const showNextPhoto = () => setSelectedPhoto((current) => current === null ? null : (current + 1) % visibleGallery.length);
@@ -223,19 +223,19 @@ export function PousadaSite() {
             <div className="gallery-filters" role="group" aria-label="Filtrar fotos">
               {galleryFilters.map((filter) => <button key={filter.id} className={galleryFilter === filter.id ? "is-active" : ""} type="button" onClick={() => { setGalleryFilter(filter.id); setGalleryStart(0); setSelectedPhoto(null); }} aria-pressed={galleryFilter === filter.id}>{filter.label}</button>)}
             </div>
-            {visibleGallery.length > 6 && <div className="gallery-navigation" aria-label="Navegar pelas fotos">
+            {visibleGallery.length > 1 && <div className="gallery-navigation" aria-label="Navegar pelas fotos">
               <button type="button" onClick={showPreviousGallery} aria-label="Mostrar fotos anteriores">←</button>
               <span>{galleryStart + 1} / {visibleGallery.length}</span>
               <button type="button" onClick={showNextGallery} aria-label="Mostrar próximas fotos">→</button>
             </div>}
           </div>
           <div className="gallery-grid" data-reveal>
-            {galleryWindow.map((photo) => (
-              <button className={photo.featured ? "gallery-photo gallery-photo--featured" : "gallery-photo"} type="button" key={photo.src} onClick={() => setSelectedPhoto(visibleGallery.findIndex((item) => item.src === photo.src))} aria-label={`Ampliar: ${photo.alt}`}>
-                <Image src={photo.src} alt={photo.alt} fill quality={95} sizes="(max-width: 650px) 100vw, (max-width: 1000px) 50vw, 33vw" />
+            {currentGalleryPhoto && (
+              <button className="gallery-photo gallery-photo--single" type="button" key={currentGalleryPhoto.src} onClick={() => setSelectedPhoto(galleryStart % visibleGallery.length)} aria-label={`Ampliar: ${currentGalleryPhoto.alt}`}>
+                <Image src={currentGalleryPhoto.src} alt={currentGalleryPhoto.alt} fill quality={95} sizes="(max-width: 800px) 100vw, 1220px" />
                 <span aria-hidden="true">+</span>
               </button>
-            ))}
+            )}
           </div>
         </div>
       </section>
