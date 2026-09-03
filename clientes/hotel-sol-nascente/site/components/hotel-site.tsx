@@ -230,6 +230,8 @@ const hours = [
     tags: ["Recepção na chegada", "Estacionamento no terreno"],
     tone: "night" as const,
     photo: "Fachada no nascer do sol",
+    src: "/images/fachada-palmeiras.jpg",
+    alt: "Fachada do Hotel Sol Nascente vista da entrada",
   },
   {
     time: "07h",
@@ -241,6 +243,8 @@ const hours = [
     tags: ["Incluído na diária", "Todos os dias"],
     tone: "clay" as const,
     photo: "Mesa do café da manhã",
+    src: "/images/cafe-manha.jpg",
+    alt: "Buffet do café da manhã do hotel",
   },
   {
     time: "10h",
@@ -252,6 +256,8 @@ const hours = [
     tags: ["Traslado do aeroporto", "Wi-Fi em todo o hotel"],
     tone: "olive" as const,
     photo: "Rua de Arapiraca vista do hotel",
+    src: "/images/recepcao.jpg",
+    alt: "Recepção e sala de estar do hotel",
   },
   {
     time: "12h",
@@ -263,6 +269,8 @@ const hours = [
     tags: ["Aberto ao público", "Almoço servido no local"],
     tone: "clay" as const,
     photo: "Prato servido no restaurante",
+    src: "/images/restaurante-salao.jpg",
+    alt: "Salão do restaurante do hotel",
   },
   {
     time: "15h",
@@ -274,6 +282,8 @@ const hours = [
     tags: ["Piscina externa", "Área de lazer"],
     tone: undefined,
     photo: "Piscina externa à tarde",
+    src: "/images/piscina.jpg",
+    alt: "Piscina externa do hotel com palmeiras",
   },
   {
     time: "19h",
@@ -285,6 +295,8 @@ const hours = [
     tags: ["Auditório próprio", "Hospedagem no mesmo terreno"],
     tone: "night" as const,
     photo: "Auditório montado para evento",
+    src: "/images/auditorio.jpg",
+    alt: "Auditório Sol Nascente montado com cadeiras",
   },
   {
     time: "22h",
@@ -296,6 +308,8 @@ const hours = [
     tags: ["Ar-condicionado nos quartos", "Aceita pets"],
     tone: "night" as const,
     photo: "Quarto à noite",
+    src: "/images/quarto-casal.jpg",
+    alt: "Quarto de casal do hotel",
   },
 ];
 
@@ -313,7 +327,9 @@ const rooms = [
     tagline: "Para dois",
     text: "Cama de casal, ambiente reservado e a piscina a poucos passos. É o formato mais pedido por quem fica o fim de semana.",
     meta: ["2 hóspedes", "Cama de casal", "Ar-condicionado", "Wi-Fi"],
-    photo: "Quarto casal",
+    photo: "Quarto de casal",
+    src: "/images/quarto-casal.jpg",
+    alt: "Quarto de casal do Hotel Sol Nascente",
     tone: "clay" as const,
   },
   {
@@ -518,7 +534,7 @@ export function HotelSite() {
             </div>
           </div>
           <div className="hero-card" data-reveal>
-            <Slot tag="Foto: fachada do hotel" />
+            <Slot tag="Entrada do hotel" src="/images/fachada.jpg" alt="Fachada e entrada do Hotel Sol Nascente em Arapiraca" />
             <div className="hero-badge">
               <b>Restaurante aberto</b>
               <span>Não precisa estar hospedado</span>
@@ -595,7 +611,7 @@ export function HotelSite() {
               </a>
             </div>
             <div className="sunline-photo">
-              <Slot tone={moment.tone} tag={`Foto: ${moment.photo}`} />
+              <Slot tone={moment.tone} tag={moment.photo} src={moment.src} alt={moment.alt} />
             </div>
           </div>
 
@@ -620,7 +636,7 @@ export function HotelSite() {
           <div className="room-grid" data-reveal>
             {rooms.map((room) => (
               <article className="room" key={room.name}>
-                <Slot tone={room.tone} tag={`Foto: ${room.photo}`} />
+                <Slot tone={room.tone} tag={room.src ? room.photo : `Foto: ${room.photo}`} src={room.src} alt={room.alt} />
                 <div className="room-body">
                   <span className="eyebrow">{room.tagline}</span>
                   <h3>Quarto {room.name}</h3>
@@ -659,7 +675,7 @@ export function HotelSite() {
           </div>
           <div className="venue-grid" data-reveal>
             <div className="venue-photo">
-              <Slot tone="night" tag="Foto: auditório montado" />
+              <Slot tone="night" tag="Auditório montado" src="/images/auditorio.jpg" alt="Auditório Sol Nascente montado para evento" />
             </div>
             <div>
               <ul className="venue-list">
@@ -708,9 +724,9 @@ export function HotelSite() {
       <section className="dining section" id="restaurante">
         <div className="shell dining-grid">
           <div className="dining-photos" data-reveal>
-            <Slot tone="clay" tag="Foto: salão do restaurante" />
+            <Slot tone="clay" tag="Salão do restaurante" src="/images/restaurante-salao.jpg" alt="Salão do restaurante do hotel com mesas postas" />
             <Slot tag="Foto: prato do dia" />
-            <Slot tone="olive" tag="Foto: café da manhã" />
+            <Slot tone="olive" tag="Café da manhã" src="/images/cafe-manha.jpg" alt="Buffet do café da manhã" />
           </div>
           <div className="dining-copy" data-reveal>
             <span className="eyebrow">Restaurante</span>
@@ -827,7 +843,7 @@ export function HotelSite() {
             </div>
           </div>
           <div className="city-photo" data-reveal>
-            <Slot tone="olive" tag="Foto: vista de Arapiraca" />
+            <Slot tone="olive" tag="Área externa do hotel" src="/images/area-externa.jpg" alt="Área externa do hotel com quiosque e palmeiras" />
           </div>
         </div>
       </section>
