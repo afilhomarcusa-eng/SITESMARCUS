@@ -93,6 +93,9 @@ export function PousadaSite() {
 
   const visibleGallery = gallery.filter((photo) => galleryFilter === "todas" || photo.category === galleryFilter);
 
+  const showPreviousPhoto = () => setSelectedPhoto((current) => current === null ? null : (current - 1 + visibleGallery.length) % visibleGallery.length);
+  const showNextPhoto = () => setSelectedPhoto((current) => current === null ? null : (current + 1) % visibleGallery.length);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 32);
     onScroll();
@@ -102,14 +105,18 @@ export function PousadaSite() {
 
   useEffect(() => {
     if (selectedPhoto === null) return;
-    const close = (event: KeyboardEvent) => event.key === "Escape" && setSelectedPhoto(null);
+    const navigate = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedPhoto(null);
+      if (event.key === "ArrowLeft") setSelectedPhoto((current) => current === null ? null : (current - 1 + visibleGallery.length) % visibleGallery.length);
+      if (event.key === "ArrowRight") setSelectedPhoto((current) => current === null ? null : (current + 1) % visibleGallery.length);
+    };
     document.body.classList.add("has-lightbox");
-    window.addEventListener("keydown", close);
+    window.addEventListener("keydown", navigate);
     return () => {
       document.body.classList.remove("has-lightbox");
-      window.removeEventListener("keydown", close);
+      window.removeEventListener("keydown", navigate);
     };
-  }, [selectedPhoto]);
+  }, [selectedPhoto, visibleGallery.length]);
 
   useEffect(() => {
     const elements = document.querySelectorAll("[data-reveal]");
@@ -225,10 +232,12 @@ export function PousadaSite() {
       {selectedPhoto !== null && visibleGallery[selectedPhoto] && (
         <div className="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" onClick={() => setSelectedPhoto(null)}>
           <button className="lightbox__close" type="button" onClick={() => setSelectedPhoto(null)} aria-label="Fechar foto">×</button>
+          <button className="lightbox__arrow lightbox__arrow--previous" type="button" onClick={(event) => { event.stopPropagation(); showPreviousPhoto(); }} aria-label="Foto anterior">←</button>
           <figure onClick={(event) => event.stopPropagation()}>
             <Image src={visibleGallery[selectedPhoto].src} alt={visibleGallery[selectedPhoto].alt} fill quality={100} sizes="100vw" priority />
-            <figcaption>{visibleGallery[selectedPhoto].alt}</figcaption>
+            <figcaption><span>{visibleGallery[selectedPhoto].alt}</span><small>{selectedPhoto + 1} / {visibleGallery.length}</small></figcaption>
           </figure>
+          <button className="lightbox__arrow lightbox__arrow--next" type="button" onClick={(event) => { event.stopPropagation(); showNextPhoto(); }} aria-label="Próxima foto">→</button>
         </div>
       )}
 
