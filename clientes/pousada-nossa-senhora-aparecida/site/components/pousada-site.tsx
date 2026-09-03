@@ -267,7 +267,10 @@ export function PousadaSite() {
       <section className="location section" id="localizacao">
         <div className="container location-grid">
           <div className="location-copy" data-reveal><span className="eyebrow eyebrow--light">No centro de Itabaiana</span><h2>Perto de tudo o que trouxe você à cidade.</h2><p>Rua Campo do Brito, 344<br/>Centro · Itabaiana/SE</p><ul><li><Icon name="pin"/>Em frente à Praça de Eventos</li><li><Icon name="pin"/>Próxima ao Estádio Presidente Médici</li><li><Icon name="pin"/>A cerca de 850 m da universidade</li></ul><a className="button button--white" href={maps} target="_blank" rel="noreferrer">Traçar rota no Google Maps <Arrow /></a></div>
-          <a className="location-photo" href={maps} target="_blank" rel="noreferrer" data-reveal><Image src="/images/fachada-lateral.jpeg" alt="Rua Campo do Brito, com a entrada da pousada" fill quality={95} sizes="(max-width: 800px) 100vw, 50vw"/><span><Icon name="pin"/><strong>Você chegou</strong>Rua Campo do Brito, 344</span></a>
+          <div className="location-map" data-reveal>
+            <iframe title="Localização da Pousada Nossa Senhora Aparecida no Google Maps" src="https://www.google.com/maps?q=Pousada%20Nossa%20Senhora%20Aparecida%2C%20Rua%20Campo%20do%20Brito%20344%2C%20Itabaiana%20SE&z=16&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
+            <a href={maps} target="_blank" rel="noreferrer"><Icon name="pin"/><span><strong>Ver no Google Maps</strong>Rua Campo do Brito, 344</span><Arrow /></a>
+          </div>
         </div>
       </section>
 
