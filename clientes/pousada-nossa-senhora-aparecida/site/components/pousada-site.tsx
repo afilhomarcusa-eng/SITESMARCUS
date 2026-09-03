@@ -66,12 +66,7 @@ function SocialIcon({ name }: { name: "whatsapp" | "instagram" }) {
 function Brand() {
   return (
     <span className="brand" aria-label="Pousada Nossa Senhora Aparecida">
-      <svg viewBox="0 0 64 70" aria-hidden="true">
-        <path className="brand__building" d="M18 53V17c0-1.1.9-2 2-2h24c1.1 0 2 .9 2 2v36M11 53h42M24 23h16M24 32h16M24 41h16M28 53v-7h8v7" />
-        <path className="brand__green" d="M15 58c11-3 24-3 34 0" />
-        <path className="brand__red" d="M20 63c8-2 17-2 24 0" />
-      </svg>
-      <span><strong>Pousada</strong><small>Nossa Senhora Aparecida</small></span>
+      <Image src="/images/logo-pousada-horizontal.png" alt="" width={292} height={90} quality={100} priority />
     </span>
   );
 }
