@@ -6,14 +6,38 @@ import { FormEvent, useEffect, useState } from "react";
 
 const phone = "5579999538948";
 const whatsapp = `https://wa.me/${phone}`;
-const instagram = "https://www.instagram.com/pousadansaparecida/";
+const instagram = "https://www.instagram.com/pousadansaparecida/?theme=dark";
 const maps = "https://www.google.com/maps/place/Pousada+Nossa+Senhora+Aparecida/@-10.6871599,-37.43191,17z";
 
 const rooms = [
-  { name: "Casal", label: "Para dois", image: "/images/quarto-individual.jpeg", description: "Um ambiente reservado e funcional para descansar com tranquilidade.", capacity: "Até 2 hóspedes" },
-  { name: "Duplo", label: "Duas camas", image: "/images/quarto-duplo.jpeg", description: "Praticidade para colegas de trabalho, amigos ou familiares em passagem pela cidade.", capacity: "Até 2 hóspedes" },
-  { name: "Triplo", label: "Mais espaço", image: "/images/quarto-triplo.jpeg", description: "Acomodação versátil para pequenos grupos, com conforto para todos.", capacity: "Até 3 hóspedes" },
-  { name: "Família", label: "Estadia em grupo", image: "/images/quarto-familia.jpeg", description: "Uma opção acolhedora para compartilhar a viagem sem abrir mão da comodidade.", capacity: "Consulte opções" },
+  { name: "Casal", label: "Para dois", image: "/images/quarto-casal.jpeg", description: "Um ambiente reservado e funcional para descansar com tranquilidade.", capacity: "Até 2 hóspedes", beds: "1 cama de casal" },
+  { name: "Duplo", label: "Duas camas", image: "/images/quarto-duplo.jpeg", description: "Praticidade para colegas de trabalho, amigos ou familiares em passagem pela cidade.", capacity: "Até 2 hóspedes", beds: "2 camas" },
+  { name: "Triplo", label: "Mais espaço", image: "/images/quarto-triplo.jpeg", description: "Acomodação versátil para pequenos grupos, com conforto para todos.", capacity: "Até 3 hóspedes", beds: "3 camas" },
+  { name: "Família", label: "Estadia em grupo", image: "/images/quarto-familia.jpeg", description: "Uma opção acolhedora para compartilhar a viagem sem abrir mão da comodidade.", capacity: "Consulte opções", beds: "Configuração flexível" },
+];
+
+const gallery = [
+  { src: "/images/fachada-principal.jpeg", alt: "Fachada principal da pousada", category: "estrutura", featured: true },
+  { src: "/images/entrada.jpeg", alt: "Entrada da Pousada Nossa Senhora Aparecida", category: "estrutura" },
+  { src: "/images/fachada-lateral.jpeg", alt: "Vista lateral da pousada", category: "estrutura" },
+  { src: "/images/nossa-senhora.jpeg", alt: "Imagem de Nossa Senhora Aparecida na pousada", category: "estrutura" },
+  { src: "/images/quarto-casal.jpeg", alt: "Quarto com cama de casal", category: "quartos", featured: true },
+  { src: "/images/quarto-duplo.jpeg", alt: "Quarto com duas camas", category: "quartos" },
+  { src: "/images/quarto-triplo.jpeg", alt: "Quarto triplo", category: "quartos" },
+  { src: "/images/quarto-familia.jpeg", alt: "Quarto para família", category: "quartos" },
+  { src: "/images/quarto-tv.jpeg", alt: "Quarto equipado com televisão", category: "quartos" },
+  { src: "/images/banheiro.jpeg", alt: "Banheiro privativo da acomodação", category: "quartos" },
+  { src: "/images/cafe-buffet.jpeg", alt: "Buffet do café da manhã", category: "cafe", featured: true },
+  { src: "/images/cafe-frutas.jpeg", alt: "Seleção de frutas no café da manhã", category: "cafe" },
+  { src: "/images/cafe-caseiro.jpeg", alt: "Comidas caseiras servidas no café da manhã", category: "cafe" },
+  { src: "/images/cafe-prato.jpeg", alt: "Prato do café da manhã", category: "cafe" },
+];
+
+const galleryFilters = [
+  { id: "todas", label: "Todas" },
+  { id: "estrutura", label: "Nossa estrutura" },
+  { id: "quartos", label: "Quartos" },
+  { id: "cafe", label: "Café da manhã" },
 ];
 
 /*
@@ -30,6 +54,13 @@ const amenities = [
 
 function Arrow() {
   return <svg className="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
+}
+
+function SocialIcon({ name }: { name: "whatsapp" | "instagram" }) {
+  if (name === "whatsapp") {
+    return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.3-4.7A8.5 8.5 0 1 1 20.5 11.7Z"/><path d="M8.1 7.5c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.5l.7 1.7c.1.3.1.5-.1.7l-.6.7c-.2.2-.1.4 0 .6.6 1.1 1.5 2 2.6 2.6.2.1.4.2.6 0l.8-1c.2-.2.4-.3.7-.2l1.8.8c.3.1.5.3.5.5 0 .3-.1 1.3-.7 1.9-.6.6-1.5.9-2.5.6-1.1-.3-2.7-.9-4.6-2.6-1.5-1.4-2.6-3.2-2.9-4.4-.3-.9 0-1.6.3-2Z"/></svg>;
+  }
+  return <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.7" r="1" className="social-icon__dot"/></svg>;
 }
 
 function Brand() {
@@ -62,6 +93,10 @@ export function PousadaSite() {
   const [arrival, setArrival] = useState("");
   const [departure, setDeparture] = useState("");
   const [guests, setGuests] = useState("2 hóspedes");
+  const [galleryFilter, setGalleryFilter] = useState("todas");
+  const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
+
+  const visibleGallery = gallery.filter((photo) => galleryFilter === "todas" || photo.category === galleryFilter);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 32);
@@ -69,6 +104,17 @@ export function PousadaSite() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (selectedPhoto === null) return;
+    const close = (event: KeyboardEvent) => event.key === "Escape" && setSelectedPhoto(null);
+    document.body.classList.add("has-lightbox");
+    window.addEventListener("keydown", close);
+    return () => {
+      document.body.classList.remove("has-lightbox");
+      window.removeEventListener("keydown", close);
+    };
+  }, [selectedPhoto]);
 
   useEffect(() => {
     const elements = document.querySelectorAll("[data-reveal]");
@@ -101,7 +147,7 @@ export function PousadaSite() {
       <header className={scrolled ? "site-header is-scrolled" : "site-header"}>
         <div className="header-inner">
           <a href="#inicio"><Brand /></a>
-          <nav className="desktop-nav"><a href="#pousada">A pousada</a><a href="#acomodacoes">Acomodações</a><a href="#experiencia">Experiência</a><a href="#localizacao">Localização</a></nav>
+          <nav className="desktop-nav"><a href="#pousada">A pousada</a><a href="#acomodacoes">Acomodações</a><a href="#galeria">Galeria</a><a href="#localizacao">Localização</a></nav>
           <a className="header-cta" href="#reservar">Consultar estadia <Arrow /></a>
           <button className="menu-toggle" onClick={() => setMenuOpen(true)} aria-label="Abrir menu"><span/><span/></button>
         </div>
@@ -109,7 +155,7 @@ export function PousadaSite() {
 
       <div className={menuOpen ? "mobile-menu is-open" : "mobile-menu"} aria-hidden={!menuOpen}>
         <div><Brand /><button onClick={() => setMenuOpen(false)} aria-label="Fechar menu">×</button></div>
-        <nav>{[["A pousada","pousada"],["Acomodações","acomodacoes"],["Experiência","experiencia"],["Localização","localizacao"],["Reservar","reservar"]].map(([label,id], index) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}><span>0{index + 1}</span>{label}</a>)}</nav>
+        <nav>{[["A pousada","pousada"],["Acomodações","acomodacoes"],["Galeria","galeria"],["Localização","localizacao"],["Reservar","reservar"]].map(([label,id], index) => <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}><span>0{index + 1}</span>{label}</a>)}</nav>
       </div>
 
       <section className="hero" id="inicio">
@@ -141,31 +187,55 @@ export function PousadaSite() {
       <section className="rooms section" id="acomodacoes">
         <div className="container">
           <div className="section-heading" data-reveal><div><span className="eyebrow eyebrow--light">Acomodações</span><h2>O quarto certo para cada passagem.</h2></div><p>Ambientes funcionais com ar-condicionado, TV, frigobar e banheiro privativo, em quatro formatos para o tamanho da sua viagem.</p></div>
-          {/*
-            As quatro acomodacoes abertas ao mesmo tempo. Antes eram abas: tres
-            ficavam escondidas atras da que estava aberta, e o cartao de texto
-            pousava por cima da foto, tapando justamente a cama. Aqui cada
-            quarto tem a sua foto inteira e o texto embaixo dela.
-          */}
           <ul className="room-list" data-reveal>
             {rooms.map((item, index) => (
               <li className="room" key={item.name}>
                 <a className="room__photo" href="#reservar" aria-label={`Consultar o quarto ${item.name}`}>
-                  <Image src={item.image} alt={`Quarto ${item.name}`} fill sizes="(max-width: 800px) 86vw, 42vw" />
+                  <Image src={item.image} alt={`Quarto ${item.name}`} fill quality={92} sizes="(max-width: 800px) 88vw, (max-width: 1200px) 44vw, 380px" />
                   <em>0{index + 1}</em>
                 </a>
                 <div className="room__body">
                   <span>{item.label}</span>
                   <h3>Quarto {item.name}</h3>
                   <p>{item.description}</p>
-                  <dl><dt>{item.capacity}</dt><dd>Ar-condicionado · TV · Frigobar</dd></dl>
-                  <a href="#reservar">Consultar esta acomodação <Arrow /></a>
+                  <ul className="room__features"><li>{item.capacity}</li><li>{item.beds}</li><li>Ar-condicionado</li><li>TV</li><li>Frigobar</li><li>Banheiro privativo</li></ul>
+                  <a href="#reservar">Mais detalhes <Arrow /></a>
                 </div>
               </li>
             ))}
           </ul>
         </div>
       </section>
+
+      <section className="photo-gallery section" id="galeria">
+        <div className="container">
+          <div className="gallery-heading" data-reveal>
+            <div><span className="eyebrow">Galeria de fotos</span><h2>Conheça cada detalhe.</h2></div>
+            <p>Quartos, estrutura e um café da manhã preparado com carinho. Selecione uma foto para ampliar.</p>
+          </div>
+          <div className="gallery-filters" role="group" aria-label="Filtrar fotos" data-reveal>
+            {galleryFilters.map((filter) => <button key={filter.id} className={galleryFilter === filter.id ? "is-active" : ""} type="button" onClick={() => setGalleryFilter(filter.id)} aria-pressed={galleryFilter === filter.id}>{filter.label}</button>)}
+          </div>
+          <div className="gallery-grid" data-reveal>
+            {visibleGallery.map((photo, index) => (
+              <button className={photo.featured ? "gallery-photo gallery-photo--featured" : "gallery-photo"} type="button" key={photo.src} onClick={() => setSelectedPhoto(index)} aria-label={`Ampliar: ${photo.alt}`}>
+                <Image src={photo.src} alt={photo.alt} fill quality={92} sizes="(max-width: 650px) 100vw, (max-width: 1000px) 50vw, 33vw" />
+                <span aria-hidden="true">+</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {selectedPhoto !== null && visibleGallery[selectedPhoto] && (
+        <div className="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" onClick={() => setSelectedPhoto(null)}>
+          <button className="lightbox__close" type="button" onClick={() => setSelectedPhoto(null)} aria-label="Fechar foto">×</button>
+          <figure onClick={(event) => event.stopPropagation()}>
+            <Image src={visibleGallery[selectedPhoto].src} alt={visibleGallery[selectedPhoto].alt} fill quality={100} sizes="100vw" priority />
+            <figcaption>{visibleGallery[selectedPhoto].alt}</figcaption>
+          </figure>
+        </div>
+      )}
 
       <section className="amenities section" id="experiencia">
         <div className="container">
@@ -205,11 +275,14 @@ export function PousadaSite() {
       </section>
 
       <footer className="footer">
-        <div className="container footer-top"><Brand/><div><span>Navegue</span><a href="#pousada">A pousada</a><a href="#acomodacoes">Acomodações</a><a href="#experiencia">Experiência</a><a href="#localizacao">Localização</a></div><div><span>Contato</span><a href={`tel:+${phone}`}>+55 79 99953-8948</a><a href="mailto:pousadansa@gmail.com">pousadansa@gmail.com</a><a href={instagram} target="_blank" rel="noreferrer">Instagram ↗</a></div><div><span>Endereço</span><p>Rua Campo do Brito, 344<br/>Centro · Itabaiana/SE<br/>CEP 49500-109</p></div></div>
+        <div className="container footer-top"><Brand/><div><span>Navegue</span><a href="#pousada">A pousada</a><a href="#acomodacoes">Acomodações</a><a href="#galeria">Galeria</a><a href="#localizacao">Localização</a></div><div><span>Contato</span><a href={`tel:+${phone}`}>+55 79 99953-8948</a><a href="mailto:pousadansa@gmail.com">pousadansa@gmail.com</a><a href={instagram} target="_blank" rel="noreferrer">Instagram ↗</a></div><div><span>Endereço</span><p>Rua Campo do Brito, 344<br/>Centro · Itabaiana/SE<br/>CEP 49500-109</p></div></div>
         <div className="container footer-bottom"><span>© 2026 Pousada Nossa Senhora Aparecida</span><Link href="/politica-de-privacidade">Política de Privacidade</Link></div>
       </footer>
 
-      <a className="floating-whatsapp" href={whatsapp} target="_blank" rel="noreferrer" aria-label="Falar com a pousada no WhatsApp"><span>WhatsApp</span><strong>↗</strong></a>
+      <div className="floating-socials" aria-label="Redes sociais e atendimento">
+        <a className="floating-social floating-social--instagram" href={instagram} target="_blank" rel="noreferrer" aria-label="Ver o Instagram da pousada"><span>Instagram</span><SocialIcon name="instagram" /></a>
+        <a className="floating-social floating-social--whatsapp" href={whatsapp} target="_blank" rel="noreferrer" aria-label="Falar com a pousada no WhatsApp"><span>WhatsApp</span><SocialIcon name="whatsapp" /></a>
+      </div>
     </main>
   );
 }
