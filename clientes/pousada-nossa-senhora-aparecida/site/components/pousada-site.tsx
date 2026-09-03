@@ -89,12 +89,16 @@ export function PousadaSite() {
   const [departure, setDeparture] = useState("");
   const [guests, setGuests] = useState("2 hóspedes");
   const [galleryFilter, setGalleryFilter] = useState("todas");
+  const [galleryStart, setGalleryStart] = useState(0);
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
 
   const visibleGallery = gallery.filter((photo) => galleryFilter === "todas" || photo.category === galleryFilter);
+  const galleryWindow = Array.from({ length: Math.min(6, visibleGallery.length) }, (_, offset) => visibleGallery[(galleryStart + offset) % visibleGallery.length]);
 
   const showPreviousPhoto = () => setSelectedPhoto((current) => current === null ? null : (current - 1 + visibleGallery.length) % visibleGallery.length);
   const showNextPhoto = () => setSelectedPhoto((current) => current === null ? null : (current + 1) % visibleGallery.length);
+  const showPreviousGallery = () => setGalleryStart((current) => (current - 1 + visibleGallery.length) % visibleGallery.length);
+  const showNextGallery = () => setGalleryStart((current) => (current + 1) % visibleGallery.length);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 32);
@@ -215,12 +219,19 @@ export function PousadaSite() {
             <div><span className="eyebrow">Galeria de fotos</span><h2>Conheça cada detalhe.</h2></div>
             <p>Quartos, estrutura e um café da manhã preparado com carinho. Selecione uma foto para ampliar.</p>
           </div>
-          <div className="gallery-filters" role="group" aria-label="Filtrar fotos" data-reveal>
-            {galleryFilters.map((filter) => <button key={filter.id} className={galleryFilter === filter.id ? "is-active" : ""} type="button" onClick={() => setGalleryFilter(filter.id)} aria-pressed={galleryFilter === filter.id}>{filter.label}</button>)}
+          <div className="gallery-toolbar" data-reveal>
+            <div className="gallery-filters" role="group" aria-label="Filtrar fotos">
+              {galleryFilters.map((filter) => <button key={filter.id} className={galleryFilter === filter.id ? "is-active" : ""} type="button" onClick={() => { setGalleryFilter(filter.id); setGalleryStart(0); setSelectedPhoto(null); }} aria-pressed={galleryFilter === filter.id}>{filter.label}</button>)}
+            </div>
+            {visibleGallery.length > 6 && <div className="gallery-navigation" aria-label="Navegar pelas fotos">
+              <button type="button" onClick={showPreviousGallery} aria-label="Mostrar fotos anteriores">←</button>
+              <span>{galleryStart + 1} / {visibleGallery.length}</span>
+              <button type="button" onClick={showNextGallery} aria-label="Mostrar próximas fotos">→</button>
+            </div>}
           </div>
           <div className="gallery-grid" data-reveal>
-            {visibleGallery.map((photo, index) => (
-              <button className={photo.featured ? "gallery-photo gallery-photo--featured" : "gallery-photo"} type="button" key={photo.src} onClick={() => setSelectedPhoto(index)} aria-label={`Ampliar: ${photo.alt}`}>
+            {galleryWindow.map((photo) => (
+              <button className={photo.featured ? "gallery-photo gallery-photo--featured" : "gallery-photo"} type="button" key={photo.src} onClick={() => setSelectedPhoto(visibleGallery.findIndex((item) => item.src === photo.src))} aria-label={`Ampliar: ${photo.alt}`}>
                 <Image src={photo.src} alt={photo.alt} fill quality={95} sizes="(max-width: 650px) 100vw, (max-width: 1000px) 50vw, 33vw" />
                 <span aria-hidden="true">+</span>
               </button>
