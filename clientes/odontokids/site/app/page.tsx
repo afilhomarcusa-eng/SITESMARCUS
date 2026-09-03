@@ -4,10 +4,11 @@ import { motion } from "motion/react";
 import MissionBoard from "@/components/mission-board";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
+import { ArrowDown, ArrowDownRight, ArrowUpRight } from "@/components/icons";
 
 const whatsapp = "https://wa.me/5579991471849?text=Olá!%20Gostaria%20de%20agendar%20uma%20consulta%20na%20OdontoKids.";
 
-function Arrow() { return <span aria-hidden="true">↗</span>; }
+function Arrow() { return <span className="ico-slot"><ArrowUpRight /></span>; }
 
 export default function Home() {
   return (
@@ -22,7 +23,7 @@ export default function Home() {
             <p>Uma experiência odontológica leve, cuidadosa e feita para crianças — com escuta para as famílias e uma dose certa de encanto.</p>
             <div className="hero-actions">
               <motion.a whileHover={{ y: -3 }} whileTap={{ scale: 0.98 }} className="primary-btn" href={whatsapp} target="_blank" rel="noreferrer">Quero agendar <Arrow /></motion.a>
-              <a className="play-link" href="#servicos"><b>↓</b> Explorar missões</a>
+              <a className="play-link" href="#servicos"><b><ArrowDown /></b> Explorar missões</a>
             </div>
             <div className="hero-note"><span className="tiny-tooth">✦</span><p><strong>Primeira visita?</strong> A gente prepara cada detalhe para ela ser uma boa lembrança.</p></div>
           </motion.div>
@@ -30,8 +31,6 @@ export default function Home() {
           <motion.div className="hero-art" initial={false} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.65, delay: 0.1 }}>
             <div className="orbit orbit-one" /><div className="orbit orbit-two" />
             <div className="hero-photo-frame"><picture><source media="(max-width:600px)" srcSet="/hero-crianca-mobile.jpg" /><img src="/hero-crianca.jpg" alt="Criança sorrindo durante uma consulta odontológica" width={1400} height={934} fetchPriority="high" decoding="async" /></picture></div>
-            <div className="floating-card card-smile"><span>✦</span><b>Sorriso<br />com coragem</b></div>
-            <div className="floating-card card-map"><span>01</span><b>Mapa do<br />sorriso</b></div>
             <svg className="hero-doodle" viewBox="0 0 180 160" aria-hidden="true"><path d="M16 98c26-55 43 36 69-2s35-61 59-17 22-27 30-28" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeDasharray="5 8" /><circle cx="17" cy="98" r="7" fill="currentColor" /></svg>
           </motion.div>
         </div>
@@ -43,7 +42,7 @@ export default function Home() {
           <p className="eyebrow">A nossa forma de cuidar</p>
           <h2>Menos medo. Mais descobertas.</h2>
           <p>Consultas com tempo, linguagem que a criança entende e profissionais que enxergam o sorriso dentro de uma história maior.</p>
-          <a href="#equipe" className="round-arrow" aria-label="Conhecer a equipe">↘</a>
+          <a href="#equipe" className="round-arrow" aria-label="Conhecer a equipe"><ArrowDownRight /></a>
         </div>
       </section>
 

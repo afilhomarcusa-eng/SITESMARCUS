@@ -47,7 +47,8 @@ img{max-width:100%}
 
 @media(max-width:600px){
 /* hero: recorte proprio da foto no rosto da crianca */
-.hero-art{min-height:335px}
+.hero{padding-bottom:52px}
+.hero-art{min-height:320px}
 .hero-photo-frame{width:80%;right:10%;height:305px;border-width:8px}
 .hero-photo-frame img{object-position:center center}
 .orbit-one{width:298px;height:298px;right:1%;top:5px}
@@ -83,3 +84,12 @@ img{max-width:100%}
 .team-profile-photo{height:400px}
 .team-profile-photo img{object-position:center 12%}
 }
+
+/* === Icones em SVG no lugar de setas de texto (viravam emoji no iOS) === */
+.ico{display:inline-block;width:1em;height:1em;vertical-align:-.14em;flex:0 0 auto}
+.ico-slot{display:inline-flex;align-items:center;justify-content:center}
+.back-link{display:inline-flex!important;align-items:center;gap:7px}
+.back-link .ico{width:1.3em;height:1.3em}
+.map-hint{display:inline-flex;align-items:center;gap:6px}
+.map-hint .ico{width:1.4em;height:1.4em}
+.play-link b .ico{width:.95em;height:.95em}

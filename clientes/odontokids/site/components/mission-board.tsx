@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { services } from "@/lib/services";
+import { ArrowUpRight, Pointer } from "@/components/icons";
 
 function ToothMark({ active }: { active: boolean }) {
   return (
@@ -49,12 +50,12 @@ export default function MissionBoard() {
                 <span className="mission-number">{item.number}</span><ToothMark active={selected === index} /><span><strong>{item.short}</strong><small>{item.title}</small></span>
               </motion.button>
             ))}
-            <div className="map-hint">☝ Escolha uma ilha para abrir a missão</div>
+            <div className="map-hint"><Pointer /> Escolha uma ilha para abrir a missão</div>
           </div>
           <AnimatePresence mode="wait">
             <motion.article className={`mission-card accent-${mission.color}`} key={mission.slug} role="tabpanel" initial={false} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} transition={{ duration: .25 }}>
               <div className="mission-photo-wrap"><img src={mission.image} alt={mission.imageAlt} className="mission-photo" loading="lazy" decoding="async" /><span className="photo-sticker">missão {mission.number}</span></div>
-              <div className="mission-copy"><span className="mini-tag">{mission.tag}</span><h3>{mission.title}</h3><p>{mission.summary}</p><ul>{mission.highlights.map((detail) => <li key={detail}><span>✓</span>{detail}</li>)}</ul><a className="text-link" href={`/servicos/${mission.slug}`}>Abrir página da missão <span>↗</span></a></div>
+              <div className="mission-copy"><span className="mini-tag">{mission.tag}</span><h3>{mission.title}</h3><p>{mission.summary}</p><ul>{mission.highlights.map((detail) => <li key={detail}><span>✓</span>{detail}</li>)}</ul><a className="text-link" href={`/servicos/${mission.slug}`}>Abrir página da missão <span className="ico-slot"><ArrowUpRight /></span></a></div>
             </motion.article>
           </AnimatePresence>
         </div>
