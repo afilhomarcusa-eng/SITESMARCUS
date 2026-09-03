@@ -186,7 +186,7 @@ export function PousadaSite() {
             {rooms.map((item, index) => (
               <li className="room" key={item.name}>
                 <a className="room__photo" href="#reservar" aria-label={`Consultar o quarto ${item.name}`}>
-                  <Image src={item.image} alt={`Quarto ${item.name}`} fill quality={92} sizes="(max-width: 800px) 88vw, (max-width: 1200px) 44vw, 380px" />
+                  <Image src={item.image} alt={`Quarto ${item.name}`} fill quality={95} sizes="(max-width: 800px) 88vw, (max-width: 1200px) 44vw, 380px" />
                   <em>0{index + 1}</em>
                 </a>
                 <div className="room__body">
@@ -214,7 +214,7 @@ export function PousadaSite() {
           <div className="gallery-grid" data-reveal>
             {visibleGallery.map((photo, index) => (
               <button className={photo.featured ? "gallery-photo gallery-photo--featured" : "gallery-photo"} type="button" key={photo.src} onClick={() => setSelectedPhoto(index)} aria-label={`Ampliar: ${photo.alt}`}>
-                <Image src={photo.src} alt={photo.alt} fill quality={92} sizes="(max-width: 650px) 100vw, (max-width: 1000px) 50vw, 33vw" />
+                <Image src={photo.src} alt={photo.alt} fill quality={95} sizes="(max-width: 650px) 100vw, (max-width: 1000px) 50vw, 33vw" />
                 <span aria-hidden="true">+</span>
               </button>
             ))}
@@ -244,7 +244,7 @@ export function PousadaSite() {
       <section className="breakfast section">
         <div className="container breakfast-grid">
           <div className="breakfast-copy" data-reveal><span className="eyebrow eyebrow--light">Bom dia, Itabaiana</span><h2>Café preparado com capricho.</h2><p>Frutas, opções quentes e sabores da nossa mesa. É o que mais aparece nos comentários de quem se hospeda.</p><blockquote>“Café da manhã preparado com capricho e variedade, servido sempre com aquele toque caseiro.”</blockquote></div>
-          <div className="breakfast-gallery" data-reveal><figure className="breakfast-gallery__main"><Image src="/images/cafe-frutas.jpeg" alt="Frutas servidas no café da manhã" fill sizes="(max-width: 800px) 100vw, 40vw"/></figure><figure><Image src="/images/cafe-buffet.jpeg" alt="Buffet de café da manhã da pousada" fill sizes="260px"/></figure><figure><Image src="/images/cafe-caseiro.jpeg" alt="Opções caseiras do café da manhã" fill sizes="260px"/></figure></div>
+          <div className="breakfast-gallery" data-reveal><figure className="breakfast-gallery__main"><Image src="/images/cafe-frutas.jpeg" alt="Frutas servidas no café da manhã" fill quality={95} sizes="(max-width: 800px) 100vw, 40vw"/></figure><figure><Image src="/images/cafe-buffet.jpeg" alt="Buffet de café da manhã da pousada" fill quality={95} sizes="260px"/></figure><figure><Image src="/images/cafe-caseiro.jpeg" alt="Opções caseiras do café da manhã" fill quality={95} sizes="260px"/></figure></div>
         </div>
       </section>
 
@@ -258,7 +258,7 @@ export function PousadaSite() {
       <section className="location section" id="localizacao">
         <div className="container location-grid">
           <div className="location-copy" data-reveal><span className="eyebrow eyebrow--light">No centro de Itabaiana</span><h2>Perto de tudo o que trouxe você à cidade.</h2><p>Rua Campo do Brito, 344<br/>Centro · Itabaiana/SE</p><ul><li><Icon name="pin"/>Em frente à Praça de Eventos</li><li><Icon name="pin"/>Próxima ao Estádio Presidente Médici</li><li><Icon name="pin"/>A cerca de 850 m da universidade</li></ul><a className="button button--white" href={maps} target="_blank" rel="noreferrer">Traçar rota no Google Maps <Arrow /></a></div>
-          <a className="location-photo" href={maps} target="_blank" rel="noreferrer" data-reveal><Image src="/images/fachada-lateral.jpeg" alt="Rua Campo do Brito, com a entrada da pousada" fill sizes="(max-width: 800px) 100vw, 50vw"/><span><Icon name="pin"/><strong>Você chegou</strong>Rua Campo do Brito, 344</span></a>
+          <a className="location-photo" href={maps} target="_blank" rel="noreferrer" data-reveal><Image src="/images/fachada-lateral.jpeg" alt="Rua Campo do Brito, com a entrada da pousada" fill quality={95} sizes="(max-width: 800px) 100vw, 50vw"/><span><Icon name="pin"/><strong>Você chegou</strong>Rua Campo do Brito, 344</span></a>
         </div>
       </section>
 
