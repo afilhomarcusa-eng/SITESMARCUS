@@ -32,3 +32,54 @@
 @media(max-width:900px){.team-grid{grid-template-columns:repeat(2,1fr)}.team-card-main{grid-column:auto}}
 @media(max-width:600px){.team-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.hero-art .card-smile,.hero-art .card-map,.hero-art .orbit-one,.hero-art .orbit-two,.hero-doodle path,.palm-leaf,.pirate-flag,.water-line,.treasure-x,.chest-lock,.mission-stop.is-active,.service-spark{animation:none!important}}
+
+/* === Imagens em telas pequenas === */
+img{max-width:100%}
+.hero-photo-frame picture{display:block;width:100%;height:100%}
+
+@media(max-width:900px){
+.hero-photo-frame{height:352px;width:min(76%,330px);right:12%}
+.team-card img{height:320px;object-position:center 16%}
+.team-card-main img{height:390px}
+.visit-visual img{width:100%;height:335px}
+.mission-photo{object-position:center}
+}
+
+@media(max-width:600px){
+/* hero: recorte proprio da foto no rosto da crianca */
+.hero-art{min-height:335px}
+.hero-photo-frame{width:80%;right:10%;height:305px;border-width:8px}
+.hero-photo-frame img{object-position:center center}
+.orbit-one{width:298px;height:298px;right:1%;top:5px}
+.orbit-two{width:246px;height:246px;right:8%;top:30px}
+.card-smile{left:0;top:36px}
+.card-map{right:0;bottom:14px}
+.hero-doodle{bottom:-6px}
+
+/* mapa das missoes: a ilha deixa de ser esticada e as missoes viram lista */
+.mission-map{min-height:0;padding-bottom:14px}
+.pirate-map-art{position:relative;inset:auto;display:block;width:100%;height:auto;aspect-ratio:700/620;opacity:.9}
+.map-label{position:absolute;left:14px;top:14px;z-index:5;padding:8px 14px 8px 8px;border-radius:16px;background:rgba(255,255,255,.85)}
+.mission-map .mission-stop{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:calc(100% - 28px)!important;margin:0 14px 8px;z-index:4}
+.map-stop-1{margin-top:12px!important}
+.map-hint{position:relative;left:auto;bottom:auto;display:inline-block;margin:2px 12px 0}
+
+/* card da missao */
+.mission-card{grid-template-rows:210px 1fr}
+.photo-sticker{right:11px;bottom:11px}
+
+/* equipe na home */
+.team-card img,.team-card-main img{height:330px;object-position:center 14%}
+
+/* como e a visita */
+.visit-visual{min-height:0}
+.visit-visual img{width:100%;height:275px;box-shadow:11px 11px 0 #e3f8f5}
+.visual-bubble{right:8px;bottom:-12px;padding:16px;font-size:11px}
+
+/* paginas internas */
+.service-hero-visual{min-height:305px}
+.service-photo{inset:0;border-width:7px}
+.service-photo img{object-position:center 42%}
+.team-profile-photo{height:400px}
+.team-profile-photo img{object-position:center 12%}
+}

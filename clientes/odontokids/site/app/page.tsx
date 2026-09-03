@@ -29,7 +29,7 @@ export default function Home() {
 
           <motion.div className="hero-art" initial={false} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.65, delay: 0.1 }}>
             <div className="orbit orbit-one" /><div className="orbit orbit-two" />
-            <div className="hero-photo-frame"><img src="/hero-crianca.jpg" alt="Criança sorrindo durante uma consulta odontológica" /></div>
+            <div className="hero-photo-frame"><picture><source media="(max-width:600px)" srcSet="/hero-crianca-mobile.jpg" /><img src="/hero-crianca.jpg" alt="Criança sorrindo durante uma consulta odontológica" width={1400} height={934} fetchPriority="high" decoding="async" /></picture></div>
             <div className="floating-card card-smile"><span>✦</span><b>Sorriso<br />com coragem</b></div>
             <div className="floating-card card-map"><span>01</span><b>Mapa do<br />sorriso</b></div>
             <svg className="hero-doodle" viewBox="0 0 180 160" aria-hidden="true"><path d="M16 98c26-55 43 36 69-2s35-61 59-17 22-27 30-28" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeDasharray="5 8" /><circle cx="17" cy="98" r="7" fill="currentColor" /></svg>
@@ -51,7 +51,7 @@ export default function Home() {
 
       <section className="visit-section" aria-labelledby="visit-title">
         <div className="shell visit-grid">
-          <div className="visit-visual"><img src="/espaco.jpg" alt="Espaço acolhedor da OdontoKids" /><div className="visual-bubble">a visita pode ser<br /><strong>uma aventura</strong></div></div>
+          <div className="visit-visual"><img src="/espaco.jpg" alt="Espaço acolhedor da OdontoKids" width={400} height={400} loading="lazy" decoding="async" /><div className="visual-bubble">a visita pode ser<br /><strong>uma aventura</strong></div></div>
           <div className="visit-copy">
             <p className="eyebrow">Como é a visita</p>
             <h2 id="visit-title">A criança conduz o ritmo. A gente acompanha.</h2>
@@ -71,10 +71,10 @@ export default function Home() {
             <p>Uma equipe que une odontologia, acolhimento e muita atenção aos detalhes que fazem uma criança se sentir segura.</p>
           </div>
           <div className="team-grid">
-            <motion.article whileHover={{ y: -6 }} className="team-card"><img src="/dr-joaldo.jpeg" alt="Dr. Joaldo" /><div><span>Odontopediatria</span><h3>Dr. Joaldo</h3><p>Cuidado humanizado aliado à odontologia especializada.</p></div></motion.article>
-            <motion.article whileHover={{ y: -6 }} className="team-card team-card-main"><img src="/equipe-2.jpeg" alt="Dra. Maíra Paixão" /><div><span>Odontopediatria</span><h3>Dra. Maíra<br />Paixão</h3><p>Especialista em odontopediatria e sedação consciente.</p></div></motion.article>
-            <motion.article whileHover={{ y: -6 }} className="team-card"><img src="/equipe-3.jpeg" alt="Dra. Edineuza Dantas" /><div><span>Ortodontia</span><h3>Dra. Edineuza<br />Dantas</h3><p>Cuidados para acompanhar cada fase do crescimento.</p></div></motion.article>
-            <motion.article whileHover={{ y: -6 }} className="team-card"><img src="/equipe-1.jpeg" alt="Dra. Renata" /><div><span>Endodontia</span><h3>Dra. Renata</h3><p>Técnica e tranquilidade para preservar cada sorriso.</p></div></motion.article>
+            <motion.article whileHover={{ y: -6 }} className="team-card"><img src="/dr-joaldo.jpeg" alt="Dr. Joaldo" loading="lazy" decoding="async" /><div><span>Odontopediatria</span><h3>Dr. Joaldo</h3><p>Cuidado humanizado aliado à odontologia especializada.</p></div></motion.article>
+            <motion.article whileHover={{ y: -6 }} className="team-card team-card-main"><img src="/equipe-2.jpeg" alt="Dra. Maíra Paixão" loading="lazy" decoding="async" /><div><span>Odontopediatria</span><h3>Dra. Maíra<br />Paixão</h3><p>Especialista em odontopediatria e sedação consciente.</p></div></motion.article>
+            <motion.article whileHover={{ y: -6 }} className="team-card"><img src="/equipe-3.jpeg" alt="Dra. Edineuza Dantas" loading="lazy" decoding="async" /><div><span>Ortodontia</span><h3>Dra. Edineuza<br />Dantas</h3><p>Cuidados para acompanhar cada fase do crescimento.</p></div></motion.article>
+            <motion.article whileHover={{ y: -6 }} className="team-card"><img src="/equipe-1.jpeg" alt="Dra. Renata" loading="lazy" decoding="async" /><div><span>Endodontia</span><h3>Dra. Renata</h3><p>Técnica e tranquilidade para preservar cada sorriso.</p></div></motion.article>
           </div>
         </div>
       </section>
