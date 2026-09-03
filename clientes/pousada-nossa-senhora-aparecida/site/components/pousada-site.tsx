@@ -163,7 +163,7 @@ export function PousadaSite() {
             <div className="hero-rating"><strong>4,5</strong><span>★★★★★<small>Mais de 450 avaliações públicas</small></span></div>
           </div>
           <div className="hero-visual" data-reveal>
-            <div className="hero-photo hero-photo--main"><Image src="/images/fachada-principal.jpeg" alt="Fachada da Pousada Nossa Senhora Aparecida em Itabaiana" fill priority sizes="(max-width: 800px) 100vw, 50vw" /></div>
+            <div className="hero-photo hero-photo--main"><Image src="/images/fachada-principal-hero.png" alt="Fachada da Pousada Nossa Senhora Aparecida em Itabaiana" fill priority quality={95} sizes="(max-width: 800px) 100vw, 55vw" /></div>
             
             
           </div>
