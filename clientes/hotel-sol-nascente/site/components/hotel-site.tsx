@@ -308,8 +308,8 @@ const hours = [
     tags: ["Ar-condicionado nos quartos", "Aceita pets"],
     tone: "night" as const,
     photo: "Quarto à noite",
-    src: "/images/quarto-casal.jpg",
-    alt: "Quarto de casal do hotel",
+    src: "/images/suite.jpg",
+    alt: "Suíte de casal do hotel",
   },
 ];
 
@@ -320,6 +320,8 @@ const rooms = [
     text: "O quarto de quem chega a trabalho, dorme e sai cedo. Enxuto no tamanho certo, com tudo que faz diferença numa noite só.",
     meta: ["1 hóspede", "Ar-condicionado", "Wi-Fi", "TV"],
     photo: "Quarto solteiro",
+    src: "/images/quarto-solteiro.jpg",
+    alt: "Quarto de solteiro do Hotel Sol Nascente",
     tone: undefined,
   },
   {
@@ -338,6 +340,8 @@ const rooms = [
     text: "Mais camas, mais espaço e a área de lazer no mesmo terreno. Feito para quem viaja com criança e não quer dividir o dia entre dois endereços.",
     meta: ["Grupos", "Camas adicionais", "Ar-condicionado", "Wi-Fi"],
     photo: "Quarto família",
+    src: "/images/quarto-familia.jpg",
+    alt: "Quarto família do Hotel Sol Nascente com várias camas",
     tone: "olive" as const,
   },
 ];
@@ -398,6 +402,7 @@ export function HotelSite() {
   const [purpose, setPurpose] = useState<string | null>(null);
   const [party, setParty] = useState<string | null>(null);
   const [stay, setStay] = useState<string | null>(null);
+  const [dockHidden, setDockHidden] = useState(false);
 
   const moment = hours[hour];
   const t = hours.length > 1 ? hour / (hours.length - 1) : 0;
@@ -416,6 +421,18 @@ export function HotelSite() {
     document.body.classList.toggle("is-locked", menu);
     return () => document.body.classList.remove("is-locked");
   }, [menu]);
+
+  /*
+   * O dock flutuante cobria o botao "Enviar no WhatsApp" do builder no celular.
+   * Dentro da secao de reserva ele e redundante, entao sai de cena.
+   */
+  useEffect(() => {
+    const section = document.querySelector("#reservar");
+    if (!section) return;
+    const observer = new IntersectionObserver((entries) => setDockHidden(entries[0].isIntersecting), { threshold: 0.18 });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const targets = document.querySelectorAll("[data-reveal]");
@@ -725,7 +742,7 @@ export function HotelSite() {
         <div className="shell dining-grid">
           <div className="dining-photos" data-reveal>
             <Slot tone="clay" tag="Salão do restaurante" src="/images/restaurante-salao.jpg" alt="Salão do restaurante do hotel com mesas postas" />
-            <Slot tag="Foto: prato do dia" />
+            <Slot tag="Café servido na mesa" src="/images/prato.jpg" alt="Prato do café da manhã servido junto à piscina" />
             <Slot tone="olive" tag="Café da manhã" src="/images/cafe-manha.jpg" alt="Buffet do café da manhã" />
           </div>
           <div className="dining-copy" data-reveal>
@@ -1055,7 +1072,7 @@ export function HotelSite() {
         </div>
       </footer>
 
-      <div className="dock" aria-label="Contato rápido">
+      <div className={dockHidden ? "dock is-hidden" : "dock"} aria-label="Contato rápido">
         <a className="dock--ig" href={instagram} target="_blank" rel="noreferrer" aria-label="Instagram do hotel">
           <Icon name="ig" />
           <span>Instagram</span>

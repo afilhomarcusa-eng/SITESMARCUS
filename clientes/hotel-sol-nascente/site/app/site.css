@@ -289,7 +289,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .city-facts div { padding: 18px 20px; border-radius: 14px; background: #fff; border: 1px solid var(--line); }
 .city-facts strong { display: block; font-family: var(--font-display), serif; font-size: 27px; line-height: 1; }
 .city-facts span { display: block; margin-top: 5px; color: var(--ink-soft); font-size: 12px; line-height: 1.45; }
-.city-photo .slot { height: 430px; border-radius: 24px 24px 160px 160px; }
+.city-photo .slot { height: 430px; border-radius: 24px 24px 160px 160px; place-items: start start; }
 
 /* ---------- monte sua estadia ---------- */
 .plan { background: linear-gradient(168deg, #1a2039, #2c2340 45%, #7a3f2c 100%); color: var(--sand); }
@@ -407,4 +407,29 @@ ul { margin: 0; padding: 0; list-style: none; }
   html { scroll-behavior: auto; }
   [data-reveal] { opacity: 1; transform: none; transition: none; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ---------- alvos de toque no celular ----------
+   Tudo que e clicavel precisa de pelo menos 44px de altura no dedo. Varios
+   links de texto tinham 20 a 27px e obrigavam mira. */
+@media (max-width: 900px) {
+  .text-link { min-height: 44px; align-items: center; }
+  .plan-contact a { min-height: 44px; }
+  .foot-col a { display: flex; align-items: center; min-height: 44px; margin-bottom: 0; }
+  .topbar-inner > a:first-child { display: flex; align-items: center; min-height: 48px; }
+  .drawer nav a { min-height: 56px; align-items: center; }
+  .dock a { height: 54px; }
+}
+
+/* o dock sai de cena dentro da secao de reserva, onde cobria o botao do builder */
+.dock { transition: opacity .25s ease, transform .25s ease; }
+.dock.is-hidden { opacity: 0; transform: translateY(14px); pointer-events: none; }
+
+/* ancora do menu: o cabecalho fixo comia o titulo da secao */
+[id] { scroll-margin-top: 84px; }
+
+/* no celular fica so o WhatsApp flutuante. O Instagram ja esta no rodape e na
+   secao de reserva, e dois circulos empilhados comem tela demais. */
+@media (max-width: 640px) {
+  .dock a.dock--ig { display: none; }
 }
