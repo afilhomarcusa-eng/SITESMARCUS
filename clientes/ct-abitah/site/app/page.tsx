@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Footer, Header, useReveal, WhatsApp } from "@/components/chrome";
 import { MapaUnidades } from "@/components/mapa-unidades";
+import { Preloader } from "@/components/preloader";
 import { modalidades, rede, unidades, waLink } from "@/lib/unidades";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
 
   return (
     <main>
+      <Preloader />
       <Header sobreFoto />
 
       <section className="enter" id="topo">

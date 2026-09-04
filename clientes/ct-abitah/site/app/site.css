@@ -418,3 +418,52 @@ h1, h2, h3 {
 @media (prefers-reduced-motion: reduce) {
   .enter-shot img, .enter-shot::after, .enter-in h1, .enter-in p, .enter-actions, .enter-tag, .enter-foot, .topbar.is-over { animation: none !important; }
 }
+
+/* ---------- cortina de abertura ----------
+   Circulo de traco fino que se desenha, marca apagada dentro, e a cortina sobe.
+   Enquanto ela esta na tela o corpo nao rola. */
+html.curtain-on, html.curtain-on body { overflow: hidden; }
+
+.curtain {
+  position: fixed; z-index: 200; inset: 0;
+  display: grid; place-items: center;
+  background: var(--bone);
+  transition: opacity .8s ease, transform .8s cubic-bezier(.7,0,.28,1);
+}
+.curtain.is-out { opacity: 0; transform: translateY(-4%); pointer-events: none; }
+.curtain-in { position: relative; display: grid; place-items: center; width: min(58vmin, 420px); aspect-ratio: 1; }
+
+.curtain-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.curtain-ring circle {
+  fill: none; stroke: rgba(68, 66, 58, .22); stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 622; stroke-dashoffset: 622;
+  animation: ringDraw 1.5s cubic-bezier(.5,0,.2,1) .12s forwards;
+}
+@keyframes ringDraw { to { stroke-dashoffset: 0 } }
+
+.curtain-logo {
+  position: relative; width: 48%; height: auto;
+  mix-blend-mode: multiply; opacity: 0;
+  animation: logoIn 1.1s ease .45s forwards;
+}
+@keyframes logoIn { from { opacity: 0; transform: translateY(8px) } to { opacity: .34; transform: none } }
+
+/* a entrada do hero so comeca depois que a cortina sai */
+html.curtain-on .enter-shot img,
+html.curtain-on .enter-shot::after,
+html.curtain-on .enter-in h1,
+html.curtain-on .enter-in p,
+html.curtain-on .enter-actions,
+html.curtain-on .enter-tag,
+html.curtain-on .enter-foot,
+html.curtain-on .topbar.is-over { animation-play-state: paused; }
+
+@media (max-width: 640px) {
+  .curtain-in { width: 72vmin; }
+  .curtain-logo { width: 56%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .curtain { display: none; }
+}
