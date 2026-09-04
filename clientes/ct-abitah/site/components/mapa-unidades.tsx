@@ -1,102 +1,83 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { ArrowRight, ArrowUpRight, WhatsApp } from "@/components/chrome";
-import { mapaLink, unidades, waLink, type Unidade } from "@/lib/unidades";
+import { useEffect, useRef, useState } from "react";
+import type { Map as LeafletMap, Marker } from "leaflet";
+import { ArrowRight, WhatsApp } from "@/components/chrome";
+import { unidades, waLink } from "@/lib/unidades";
 
 /*
- * O mapa nao usa API do Google: as coordenadas reais de cada unidade sao
- * projetadas dentro de um quadro fixo da Regiao Metropolitana de Salvador.
- * Numa area desse tamanho a projecao linear e visualmente indistinguivel de
- * Mercator, entao regra de tres resolve.
+ * Mapa de verdade, com tiles, zoom e arrasto. O embed do Google so aceita um
+ * lugar por iframe e a API com varios marcadores exige chave, entao aqui e
+ * Leaflet com tiles do Carto Positron, que combinam com a paleta clara da marca.
+ * Clicar num marcador troca a unidade no painel, e escolher no painel leva o
+ * mapa ate ela.
  */
-const QUADRO = { latMin: -13.012, latMax: -12.858, lngMin: -38.548, lngMax: -38.282 };
-
-function projetar(u: Unidade) {
-  const x = ((u.lng - QUADRO.lngMin) / (QUADRO.lngMax - QUADRO.lngMin)) * 100;
-  const y = ((QUADRO.latMax - u.lat) / (QUADRO.latMax - QUADRO.latMin)) * 100;
-  return { x, y };
-}
-
-/*
- * Vilas do Atlantico e Vilas Roof Top ficam a menos de 200 m uma da outra: no
- * quadro inteiro isso da 4 px e os dois pinos viram um borrao. O Roof Top ganha
- * um empurrao visual, e a legenda avisa que a posicao dele e aproximada, o que
- * e verdade de qualquer forma porque ele ainda nao tem ficha no Google.
- */
-const EMPURRAO: Record<string, { x: number; y: number }> = {
-  "vilas-roof-top": { x: -6.5, y: -4.5 },
-};
-
-const naRegiao = unidades.filter((u) => u.regiao !== "Feira de Santana");
-const foraDaRegiao = unidades.filter((u) => u.regiao === "Feira de Santana");
-
 export function MapaUnidades() {
   const [ativa, setAtiva] = useState(unidades[5].slug);
+  const caixa = useRef<HTMLDivElement>(null);
+  const mapa = useRef<LeafletMap | null>(null);
+  const marcadores = useRef<Record<string, Marker>>({});
+  const montado = useRef(false);
   const unidade = unidades.find((u) => u.slug === ativa) ?? unidades[0];
-  const foraDoQuadro = unidade.regiao === "Feira de Santana";
+
+  useEffect(() => {
+    let vivo = true;
+    (async () => {
+      const L = (await import("leaflet")).default;
+      if (!vivo || !caixa.current || mapa.current) return;
+
+      const m = L.map(caixa.current, { scrollWheelZoom: false });
+      mapa.current = m;
+
+      /* OSM padrao: livre e sem chave. O Carto passou a exigir API key. */
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap",
+        maxZoom: 19,
+      }).addTo(m);
+
+      unidades.forEach((u) => {
+        const icone = L.divIcon({
+          className: "leaf-pin",
+          html: `<span class="leaf-dot"></span><em>${u.nome}</em>`,
+          iconSize: [18, 18],
+          iconAnchor: [9, 9],
+        });
+        const mk = L.marker([u.lat, u.lng], { icon: icone, title: u.nome }).addTo(m);
+        mk.on("click", () => setAtiva(u.slug));
+        marcadores.current[u.slug] = mk;
+      });
+
+      m.fitBounds(
+        unidades.map((u) => [u.lat, u.lng] as [number, number]),
+        { padding: [50, 50] },
+      );
+
+      /* o destaque do selecionado sai daqui: quando o efeito de [ativa] rodou
+         pela primeira vez os marcadores ainda nao existiam */
+      marcadores.current[ativa]?.getElement()?.classList.add("is-on");
+      montado.current = true;
+    })();
+    return () => {
+      vivo = false;
+      mapa.current?.remove();
+      mapa.current = null;
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    Object.entries(marcadores.current).forEach(([slug, mk]) => {
+      mk.getElement()?.classList.toggle("is-on", slug === ativa);
+    });
+    /* na primeira renderizacao o enquadramento e o fitBounds das oito, nao um voo */
+    if (!montado.current) return;
+    const u = unidades.find((x) => x.slug === ativa);
+    if (u && mapa.current) mapa.current.flyTo([u.lat, u.lng], 14, { duration: 0.8 });
+  }, [ativa]);
 
   return (
     <div className="map-wrap" data-reveal>
-      <div className="map-canvas">
-        {/*
-          Sem linha de costa: qualquer traco de litoral desenhado a mao ficaria
-          errado em relacao aos pinos, que estao na coordenada real. Melhor uma
-          malha limpa e os rotulos de cidade do que geografia inventada.
-        */}
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <g className="map-grid">
-            {[12.5, 25, 37.5, 50, 62.5, 75, 87.5].map((v) => (
-              <line key={`h${v}`} x1="0" y1={v} x2="100" y2={v} vectorEffect="non-scaling-stroke" />
-            ))}
-            {[12.5, 25, 37.5, 50, 62.5, 75, 87.5].map((v) => (
-              <line key={`v${v}`} x1={v} y1="0" x2={v} y2="100" vectorEffect="non-scaling-stroke" />
-            ))}
-          </g>
-        </svg>
-
-        <div className="map-zone map-zone--sul">Salvador</div>
-        <div className="map-zone map-zone--norte">Lauro de Freitas</div>
-
-        {naRegiao.map((u) => {
-          const p = projetar(u);
-          const nudge = EMPURRAO[u.slug] ?? { x: 0, y: 0 };
-          return (
-            <button
-              key={u.slug}
-              type="button"
-              className={ativa === u.slug ? "pin is-on" : "pin"}
-              style={{ left: `${p.x + nudge.x}%`, top: `${p.y + nudge.y}%` }}
-              onClick={() => setAtiva(u.slug)}
-              aria-label={`Ver a unidade ${u.nome}`}
-              aria-pressed={ativa === u.slug}
-            >
-              <em>{u.nome}</em>
-            </button>
-          );
-        })}
-
-        {/* Feira fica a cem quilometros: entra ancorada na borda, fora da escala */}
-        {foraDaRegiao.map((u) => (
-          <button
-            key={u.slug}
-            type="button"
-            className={ativa === u.slug ? "pin is-on" : "pin"}
-            style={{ left: "8%", top: "12%" }}
-            onClick={() => setAtiva(u.slug)}
-            aria-label={`Ver a unidade de ${u.cidade}`}
-            aria-pressed={ativa === u.slug}
-          >
-            <em>{u.cidade}</em>
-          </button>
-        ))}
-
-        <p className="map-note">
-          Sete unidades na região metropolitana, projetadas pela coordenada real. Feira de Santana fica a cerca de 100 km
-          e entra fora de escala, no canto. O Roof Top divide o terreno com Vilas e aparece deslocado para não sobrepor.
-        </p>
-      </div>
+      <div className="map-canvas" ref={caixa} role="application" aria-label="Mapa das unidades Abitah" />
 
       <div className="map-panel">
         <div className="map-list">
@@ -135,8 +116,11 @@ export function MapaUnidades() {
             ) : (
               <span>Sem avaliações públicas ainda</span>
             )}
-            {unidade.horarios ? <span>Abre {unidade.horarios[0].horas.split(" às ")[0]}</span> : <span>Horário pelo WhatsApp</span>}
-            {foraDoQuadro && <span>≈ 100 km de Salvador</span>}
+            {unidade.horarios ? (
+              <span>Abre {unidade.horarios[0].horas.split(" às ")[0]}</span>
+            ) : (
+              <span>Horário pelo WhatsApp</span>
+            )}
           </div>
 
           <div className="map-actions">
@@ -153,11 +137,7 @@ export function MapaUnidades() {
               >
                 <WhatsApp />
               </a>
-            ) : (
-              <a className="btn btn--line" href={mapaLink(unidade)} target="_blank" rel="noreferrer" aria-label="Ver no mapa">
-                <ArrowUpRight />
-              </a>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

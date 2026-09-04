@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, Sora } from "next/font/google";
+import "leaflet/dist/leaflet.css";
 import "./site.css";
 
 /**

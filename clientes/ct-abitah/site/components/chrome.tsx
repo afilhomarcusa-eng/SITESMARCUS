@@ -143,9 +143,9 @@ export function Header({ atual, sobreFoto = false }: { atual?: string; sobreFoto
               </a>
             ))}
           </nav>
-          <a className="btn btn--brand" href="#unidades">
-            Escolher unidade
-          </a>
+          <Link className="btn btn--brand" href="/aula-experimental">
+            Aula experimental
+          </Link>
           <button className="burger" type="button" onClick={() => setOpen(true)} aria-label="Abrir menu">
             <span />
             <span />

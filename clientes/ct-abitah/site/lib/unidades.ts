@@ -202,7 +202,7 @@ export const unidades: Unidade[] = [
     sobre:
       "A unidade mais bem avaliada da rede: 5,0 com quinze avaliações públicas. Fica no Prime Center, e é onde funcionam também as salas de Spinning e Flow, a 200 metros dali.",
     foto: "/images/buraquinho.jpg",
-    fotoAlt: "Turma reunida na unidade Buraquinho",
+    fotoAlt: "Sala de treino da unidade Buraquinho",
     aberta: true,
   },
   {
@@ -230,7 +230,7 @@ export const unidades: Unidade[] = [
   },
   {
     slug: "feira-de-santana",
-    nome: "Sim",
+    nome: "Feira de Santana",
     cidade: "Feira de Santana",
     regiao: "Feira de Santana",
     endereco: "Av. Artêmia Pires Freitas, 9000",
@@ -252,7 +252,7 @@ export const unidades: Unidade[] = [
     sobre:
       "Fica no bairro Sim, na Artêmia Pires, a cerca de cem quilômetros de Salvador. É a primeira unidade da rede no interior da Bahia, e tem 5,0 no Google.",
     foto: "/images/feira-de-santana.jpg",
-    fotoAlt: "Turma reunida na unidade de Feira de Santana",
+    fotoAlt: "Fachada da unidade de Feira de Santana",
     aberta: true,
   },
 ];
@@ -264,26 +264,32 @@ export function getUnidade(slug: string) {
 /** As modalidades vieram da home do site oficial da rede. */
 export const modalidades = [
   {
+    foto: "/images/sala.jpg",
     nome: "Funcional",
     texto: "A base da casa. Movimento que serve para a vida fora daqui, em turma pequena e com correção o tempo todo.",
   },
   {
+    foto: "/images/kettlebell.jpg",
     nome: "Performance",
     texto: "Para quem já treina e quer número: carga, tempo, potência. O acompanhamento vira plano individual.",
   },
   {
+    foto: "/images/recepcao.jpg",
     nome: "Spinning",
     texto: "Sala própria, bike e volume. Serve tanto de cardio para quem faz funcional quanto de treino inteiro.",
   },
   {
+    foto: "/images/feira-sala.jpg",
     nome: "Corrida",
     texto: "Assessoria de rua com o pessoal da unidade. Sai do centro de treinamento e vai para o asfalto junto.",
   },
   {
+    foto: "/images/vilas-roof-top.jpg",
     nome: "Weekend",
     texto: "Os horários de sábado e domingo, que quase toda unidade abre. Treino mais longo, ritmo mais solto.",
   },
   {
+    foto: "/images/buraquinho.jpg",
     nome: "Abitah Day",
     texto: "O dia em que as unidades se encontram. É onde a rede deixa de ser oito endereços e vira uma turma só.",
   },

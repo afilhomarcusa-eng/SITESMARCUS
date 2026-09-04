@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { ArrowRight, ArrowUpRight, Footer, Header, useReveal, WhatsApp } from "@/components/chrome";
 import { MapaUnidades } from "@/components/mapa-unidades";
 import { Preloader } from "@/components/preloader";
@@ -8,6 +9,7 @@ import { modalidades, rede, unidades, waLink } from "@/lib/unidades";
 
 export default function Home() {
   useReveal();
+  const [mod, setMod] = useState(0);
 
   const comNota = unidades.filter((u) => u.nota !== null);
   const somaAval = comNota.reduce((t, u) => t + (u.avaliacoes ?? 0), 0);
@@ -44,27 +46,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="strip">
-        <div className="shell strip-grid" data-reveal>
-          <div>
-            <strong>08</strong>
-            <span>Unidades na Bahia</span>
-          </div>
-          <div>
-            <strong>03</strong>
-            <span>Cidades</span>
-          </div>
-          <div>
-            <strong>05:15</strong>
-            <span>A primeira turma do dia</span>
-          </div>
-          <div>
-            <strong>{rede.seguidores}</strong>
-            <span>Seguidores no Instagram</span>
-          </div>
-        </div>
-      </section>
-
       <section className="section on-dark" id="metodo">
         <div className="shell">
           <div className="head" data-reveal>
@@ -73,18 +54,40 @@ export default function Home() {
               <h2>Seis formas de treinar. Uma só forma de acompanhar.</h2>
             </div>
             <p>
-              A Abitah trabalha com turmas limitadas e presença constante do professor, do iniciante ao atleta. O que muda
-              de uma modalidade para outra é o estímulo, não o cuidado.
+              Turmas limitadas e professor presente, do iniciante ao atleta. O que muda de uma modalidade para outra é o
+              estímulo, não o cuidado. Passe por elas.
             </p>
           </div>
-          <div className="mod-grid" data-reveal>
-            {modalidades.map((m, i) => (
-              <article className="mod" key={m.nome}>
-                <i>0{i + 1}</i>
-                <h3>{m.nome}</h3>
-                <p>{m.texto}</p>
-              </article>
-            ))}
+
+          <div className="mods" data-reveal>
+            <div className="mods-list" role="tablist" aria-label="Modalidades">
+              {modalidades.map((m, i) => (
+                <button
+                  key={m.nome}
+                  type="button"
+                  role="tab"
+                  aria-selected={mod === i}
+                  className={mod === i ? "mod-row is-on" : "mod-row"}
+                  onClick={() => setMod(i)}
+                  onMouseEnter={() => setMod(i)}
+                >
+                  <i>0{i + 1}</i>
+                  <b>{m.nome}</b>
+                  <ArrowRight />
+                </button>
+              ))}
+            </div>
+
+            <div className="mods-stage">
+              <div className="mods-shot">
+                {modalidades.map((m, i) => (
+                  <img key={m.nome} src={m.foto} alt="" className={mod === i ? "is-on" : undefined} loading="lazy" />
+                ))}
+              </div>
+              <div className="mods-text">
+                <p>{modalidades[mod].texto}</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -96,24 +99,19 @@ export default function Home() {
             <blockquote>
               Mais do que um espaço para treinar, a Abitah é uma <em>comunidade que te puxa</em> para evoluir.
             </blockquote>
-            <ul className="creed-list">
+            <ul className="creed-points">
               <li>
-                <b>01</b>
-                <span>
-                  Acompanhamento de verdade. Turma pequena, professor corrigindo movimento, plano ajustado ao seu nível.
-                </span>
+                <strong>Acompanhamento de verdade</strong>
+                Turma pequena, professor corrigindo movimento e plano ajustado ao seu nível. Ninguém treina sozinho no
+                meio da sala.
               </li>
               <li>
-                <b>02</b>
-                <span>
-                  Do iniciante ao atleta. Tem gente de sessenta anos e gente competindo treinando no mesmo horário.
-                </span>
+                <strong>Do iniciante ao atleta</strong>
+                Tem gente de sessenta anos e gente competindo no mesmo horário. O estímulo muda, a turma é a mesma.
               </li>
               <li>
-                <b>03</b>
-                <span>
-                  Presença cobrada com carinho. É o que está por trás do &ldquo;aqui você não desiste&rdquo;.
-                </span>
+                <strong>Presença cobrada com carinho</strong>
+                É o que está por trás do &ldquo;aqui você não desiste&rdquo;. Quando você some, alguém pergunta.
               </li>
             </ul>
           </div>
@@ -210,9 +208,9 @@ export default function Home() {
               dia do seu treino.
             </p>
             <p style={{ marginTop: 24, display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <a className="btn btn--brand" href="#unidades">
-                Ver as unidades <ArrowRight />
-              </a>
+              <Link className="btn btn--brand" href="/aula-experimental">
+                Marcar aula experimental <ArrowRight />
+              </Link>
               <a className="btn btn--line" href={rede.instagram} target="_blank" rel="noreferrer">
                 Instagram <ArrowUpRight />
               </a>
