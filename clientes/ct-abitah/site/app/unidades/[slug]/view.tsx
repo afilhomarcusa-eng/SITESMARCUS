@@ -2,13 +2,11 @@
 
 import Link from "next/link";
 import { FotoUnidade } from "@/components/foto-unidade";
-import { MapaUnidade } from "@/components/mapa-unidade";
 import { ArrowLeft, ArrowUpRight, Footer, Header, Instagram, useReveal, WhatsApp } from "@/components/chrome";
-import { mapaLink, telHref, unidades, waLink, type Unidade } from "@/lib/unidades";
+import { mapaEmbed, mapaLink, telHref, waLink, type Unidade } from "@/lib/unidades";
 
 export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
   useReveal();
-  const outras = unidades.filter((o) => o.slug !== u.slug);
 
   return (
     <main>
@@ -135,34 +133,16 @@ export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
       {!u.localizacaoAproximada ? <section className="section" style={{ paddingTop: 0 }}>
         <div className="shell">
           <div className="u-map-frame" data-reveal>
-            <MapaUnidade unidade={u} />
+            <iframe
+              title={`Localização da Abitah ${u.nome} no Google Maps`}
+              src={mapaEmbed(u)}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
           </div>
         </div>
       </section> : null}
-      <section className="u-others section">
-        <div className="shell">
-          <div className="head" data-reveal>
-            <div>
-              <span className="tag">Outras unidades</span>
-              <h2>Talvez uma fique mais perto de você.</h2>
-            </div>
-            <p>São oito no total, entre Salvador, Lauro de Freitas e Feira de Santana.</p>
-          </div>
-          <div className="u-others-grid" data-reveal>
-            {outras.map((o) => (
-              <a className={o.foto ? "u-other u-other--photo" : "u-other"} href={`/unidades/${o.slug}`} key={o.slug}>
-                {o.foto ? <FotoUnidade slug={o.slug} alt={o.fotoAlt} /> : null}
-                <span className="u-other-content">
-                <b>{o.nome}</b>
-                <small>{o.cidade}</small>
-                <em>Conhecer unidade <ArrowUpRight /></em>
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <Footer unidade={u} />
     </main>
   );
