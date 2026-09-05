@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Map as LeafletMap, Marker } from "leaflet";
 import { ArrowRight, WhatsApp } from "@/components/chrome";
@@ -14,7 +13,7 @@ import { unidades, waLink } from "@/lib/unidades";
  * mapa ate ela.
  */
 export function MapaUnidades() {
-  const [ativa, setAtiva] = useState(unidades[5].slug);
+  const [ativa, setAtiva] = useState(unidades[0].slug);
   const caixa = useRef<HTMLDivElement>(null);
   const mapa = useRef<LeafletMap | null>(null);
   const marcadores = useRef<Record<string, Marker>>({});
@@ -27,7 +26,7 @@ export function MapaUnidades() {
       const L = (await import("leaflet")).default;
       if (!vivo || !caixa.current || mapa.current) return;
 
-      const m = L.map(caixa.current, { scrollWheelZoom: false });
+      const m = L.map(caixa.current, { scrollWheelZoom: false, zoomAnimation: false, fadeAnimation: false, markerZoomAnimation: false });
       mapa.current = m;
 
       /* OSM padrao: livre e sem chave. O Carto passou a exigir API key. */
@@ -36,7 +35,7 @@ export function MapaUnidades() {
         maxZoom: 19,
       }).addTo(m);
 
-      unidades.forEach((u) => {
+      unidades.filter((u) => !u.localizacaoAproximada).forEach((u) => {
         const icone = L.divIcon({
           className: "leaf-pin",
           html: `<span class="leaf-dot"></span><em>${u.nome}</em>`,
@@ -52,6 +51,7 @@ export function MapaUnidades() {
         unidades.map((u) => [u.lat, u.lng] as [number, number]),
         { padding: [50, 50] },
       );
+      m.invalidateSize();
 
       /* o destaque do selecionado sai daqui: quando o efeito de [ativa] rodou
          pela primeira vez os marcadores ainda nao existiam */
@@ -72,12 +72,12 @@ export function MapaUnidades() {
     /* na primeira renderizacao o enquadramento e o fitBounds das oito, nao um voo */
     if (!montado.current) return;
     const u = unidades.find((x) => x.slug === ativa);
-    if (u && mapa.current) mapa.current.flyTo([u.lat, u.lng], 14, { duration: 0.8 });
+    if (u && mapa.current) mapa.current.setView([u.lat, u.lng], 14, { animate: false });
   }, [ativa]);
 
   return (
     <div className="map-wrap" data-reveal>
-      <div className="map-canvas" ref={caixa} role="application" aria-label="Mapa das unidades Abitah" />
+      <div className="map-canvas" ref={caixa} role="region" aria-label="Mapa das unidades Abitah" />
 
       <div className="map-panel">
         <div className="map-list">
@@ -114,7 +114,7 @@ export function MapaUnidades() {
                 {unidade.nota.toString().replace(".", ",")} no Google · {unidade.avaliacoes} avaliações
               </span>
             ) : (
-              <span>Sem avaliações públicas ainda</span>
+              <span>{unidade.localizacaoAproximada ? "Confirme o acesso com o atendimento da rede" : "Treino com acompanhamento"}</span>
             )}
             {unidade.horarios ? (
               <span>Abre {unidade.horarios[0].horas.split(" às ")[0]}</span>
@@ -124,9 +124,9 @@ export function MapaUnidades() {
           </div>
 
           <div className="map-actions">
-            <Link className="btn btn--brand" href={`/unidades/${unidade.slug}`}>
+            <a className="btn btn--brand" href={`/unidades/${unidade.slug}`}>
               Ver a unidade <ArrowRight />
-            </Link>
+            </a>
             {unidade.whatsapp ? (
               <a
                 className="btn btn--line"

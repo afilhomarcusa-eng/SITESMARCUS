@@ -1,15 +1,10 @@
 /*
- * As oito unidades do CT Abitah.
- *
- * A lista veio da placa da propria marca, fotografada na fachada da unidade de
- * Feira de Santana: SALVADOR (Vitoria, Pituba, Patamares, Stella) ·
- * LAURO DE FREITAS (Vilas do Atlantico, Buraquinho, Vilas Roof Top) ·
- * FEIRA DE SANTANA (Sim).
- *
- * Endereco, telefone, nota e horario de cada uma vieram da ficha publica da
- * unidade no Google Maps, conferida em 04/09/2026. Nada aqui foi inventado:
- * onde o Google nao publica, o campo fica nulo e o site diz que falta.
+ * Dados revisados em 05/09/2026.
+ * Contatos: diretorio publicado no Instagram oficial (linkbio.co/CTAbitah).
+ * Enderecos e horarios: fichas publicas do Maps, com divergencias registradas
+ * em ../AUDITORIA-DADOS.md. Horarios de funcionamento nao sao horarios de turma.
  */
+import { fotosUnidades } from "./fotos-unidades";
 
 export type Unidade = {
   slug: string;
@@ -32,6 +27,8 @@ export type Unidade = {
   foto: string | null;
   fotoAlt: string;
   aberta: boolean;
+  localizacaoAproximada?: boolean;
+  contatoDescricao?: string;
 };
 
 /** Monta o link do WhatsApp com a mensagem ja escrita para aquela unidade. */
@@ -77,7 +74,7 @@ export const unidades: Unidade[] = [
     destaque: "No Corredor da Vitória",
     sobre:
       "Fica no primeiro andar, na Sete de Setembro, entre o Campo Grande e a Barra. É a unidade de quem treina antes do escritório e não quer atravessar a cidade para isso.",
-    foto: "/images/vitoria.jpg",
+    foto: fotosUnidades["vitoria"].src,
     fotoAlt: "Área de treino da unidade Vitória",
     aberta: true,
   },
@@ -86,11 +83,11 @@ export const unidades: Unidade[] = [
     nome: "Pituba",
     cidade: "Salvador",
     regiao: "Salvador",
-    endereco: "R. das Rosas, 492",
+    endereco: "R. das Rosas, 492 · Sala 4",
     bairro: "Pituba",
     cep: "41810-070",
-    telefone: "(71) 98265-0833",
-    whatsapp: "5571982650833",
+    telefone: "(71) 98161-4388",
+    whatsapp: "5571981614388",
     lat: -12.9904262,
     lng: -38.4571642,
     nota: null,
@@ -100,8 +97,8 @@ export const unidades: Unidade[] = [
     destaque: "Rua das Rosas",
     sobre:
       "Numa rua residencial da Pituba, longe do barulho da Paulo VI. Turmas pequenas e horário que abre às 5h30 para quem treina antes de tudo.",
-    foto: null,
-    fotoAlt: "Unidade Pituba",
+    foto: fotosUnidades["pituba"].src,
+    fotoAlt: "Acompanhamento de treino apresentado pela Abitah Pituba",
     aberta: true,
   },
   {
@@ -116,18 +113,18 @@ export const unidades: Unidade[] = [
     whatsapp: "5571981583232",
     lat: -12.9566953,
     lng: -38.4063145,
-    nota: 3.7,
-    avaliacoes: 3,
+    nota: null,
+    avaliacoes: null,
     horarios: [
       { dias: "Segunda a sexta", horas: "05:30 às 21:00" },
       { dias: "Sábado", horas: "07:00 às 09:00" },
       { dias: "Domingo", horas: "Fechado" },
     ],
     instagram: "https://www.instagram.com/abitah.patamares/",
-    destaque: "A primeira franquia",
+    destaque: "Treino em Patamares",
     sobre:
-      "Foi a primeira unidade franqueada do CT Abitah, e é onde o modelo foi provado antes de virar rede. Funcional, performance e aulas personalizadas, num ambiente que o Google marca como acolhedor para a comunidade LGBTQ+.",
-    foto: "/images/patamares.jpg",
+      "Na Rua Bicuíba, a unidade oferece treinamento funcional com acompanhamento. Fale com a equipe para escolher a turma e conhecer os programas disponíveis.",
+    foto: fotosUnidades["patamares"].src,
     fotoAlt: "Sala de treino da unidade Patamares",
     aberta: true,
   },
@@ -143,15 +140,15 @@ export const unidades: Unidade[] = [
     whatsapp: "5571999361307",
     lat: -12.9372295,
     lng: -38.3316777,
-    nota: 4.3,
-    avaliacoes: 6,
+    nota: null,
+    avaliacoes: null,
     horarios: [...semanaPadrao, { dias: "Sábado", horas: "07:15 às 10:15" }, { dias: "Domingo", horas: "08:00 às 10:00" }],
     instagram: null,
     destaque: "Perto da praia",
     sobre:
-      "A poucos minutos da praia de Stella Maris, e uma das que abrem no domingo de manhã. Combina bem com quem termina o treino e emenda no mar.",
-    foto: "/images/stella-maris.jpg",
-    fotoAlt: "Turma reunida na unidade Stella Maris",
+      "Na Rua Gilberto Freyre, em Stella Maris. Um espaço para treinar com acompanhamento e encaixar o movimento na rotina do bairro.",
+    foto: fotosUnidades["stella-maris"].src,
+    fotoAlt: "Área de treino e acompanhamento na unidade Stella Maris",
     aberta: true,
   },
   {
@@ -159,7 +156,7 @@ export const unidades: Unidade[] = [
     nome: "Vilas do Atlântico",
     cidade: "Lauro de Freitas",
     regiao: "Lauro de Freitas",
-    endereco: "R. Praia do Tubarão",
+    endereco: "R. Praia do Tubarão, 196",
     bairro: "Vilas do Atlântico",
     cep: "42708-730",
     telefone: "(71) 99952-1106",
@@ -175,11 +172,11 @@ export const unidades: Unidade[] = [
       { dias: "Domingo", horas: "07:30 às 09:30" },
     ],
     instagram: null,
-    destaque: "Abre 05:15, a mais cedo da rede",
+    destaque: "No coração de Vilas",
     sobre:
-      "É a unidade que abre mais cedo e fecha mais tarde de toda a rede, e a única com horário nos sete dias da semana. Fica dentro de Vilas, em rua de bairro.",
-    foto: "/images/vilas-do-atlantico.jpg",
-    fotoAlt: "Área de treino da unidade Vilas do Atlântico",
+      "Na Rua Praia do Tubarão, em Vilas do Atlântico. Consulte a equipe para conhecer as turmas, os programas e a disponibilidade de aulas.",
+    foto: fotosUnidades["vilas-do-atlantico"].src,
+    fotoAlt: "Recepção da unidade Vilas do Atlântico",
     aberta: true,
   },
   {
@@ -194,14 +191,14 @@ export const unidades: Unidade[] = [
     whatsapp: "5571996850701",
     lat: -12.8738924,
     lng: -38.3007407,
-    nota: 5,
-    avaliacoes: 15,
+    nota: null,
+    avaliacoes: null,
     horarios: [...semanaPadrao, { dias: "Sábado", horas: "07:00 às 10:30" }, { dias: "Domingo", horas: "07:00 às 10:00" }],
     instagram: null,
-    destaque: "Nota 5,0 no Google",
+    destaque: "No Prime Center",
     sobre:
-      "A unidade mais bem avaliada da rede: 5,0 com quinze avaliações públicas. Fica no Prime Center, e é onde funcionam também as salas de Spinning e Flow, a 200 metros dali.",
-    foto: "/images/buraquinho.jpg",
+      "No Edifício Prime Center, em Buraquinho. A região também recebe os espaços de Spinning e Flow da rede, em outro endereço na Rua Francisco das Mercês.",
+    foto: fotosUnidades["buraquinho"].src,
     fotoAlt: "Sala de treino da unidade Buraquinho",
     aberta: true,
   },
@@ -213,20 +210,22 @@ export const unidades: Unidade[] = [
     endereco: "Vilas do Atlântico",
     bairro: "Vilas do Atlântico",
     cep: null,
-    telefone: null,
-    whatsapp: "5571999521106",
-    lat: -12.8858,
-    lng: -38.3025,
+    telefone: "(71) 99736-0060",
+    whatsapp: "5571997360060",
+    lat: -12.8868403,
+    lng: -38.3011965,
     nota: null,
     avaliacoes: null,
     horarios: null,
     instagram: null,
     destaque: "A mais nova da rede",
     sobre:
-      "Treino em cobertura, aberto, em Vilas do Atlântico. É a unidade mais recente e ainda não tem ficha própria no Google, então endereço exato e horário saem pelo WhatsApp de Vilas.",
-    foto: null,
-    fotoAlt: "Unidade Vilas Roof Top",
+      "Treino em cobertura em Vilas do Atlântico. Fale com o atendimento da rede para confirmar o acesso, os horários e agendar sua experiência no Rooftop.",
+    foto: fotosUnidades["vilas-roof-top"].src,
+    fotoAlt: "Área de treino do Rooftop em Vilas do Atlântico",
     aberta: true,
+    localizacaoAproximada: true,
+    contatoDescricao: "Atendimento da rede",
   },
   {
     slug: "feira-de-santana",
@@ -236,12 +235,12 @@ export const unidades: Unidade[] = [
     endereco: "Av. Artêmia Pires Freitas, 9000",
     bairro: "Sim",
     cep: "44085-370",
-    telefone: "(75) 99929-9473",
-    whatsapp: "5575999299473",
+    telefone: "(71) 99952-1106",
+    whatsapp: "5571999521106",
     lat: -12.2467009,
     lng: -38.9049844,
-    nota: 5,
-    avaliacoes: 7,
+    nota: null,
+    avaliacoes: null,
     horarios: [
       { dias: "Segunda a sexta", horas: "05:15 às 21:00" },
       { dias: "Sábado", horas: "08:30 às 10:30" },
@@ -250,8 +249,8 @@ export const unidades: Unidade[] = [
     instagram: null,
     destaque: "A única fora da região metropolitana",
     sobre:
-      "Fica no bairro Sim, na Artêmia Pires, a cerca de cem quilômetros de Salvador. É a primeira unidade da rede no interior da Bahia, e tem 5,0 no Google.",
-    foto: "/images/feira-de-santana.jpg",
+      "Na Avenida Artêmia Pires Freitas, no bairro Sim. O contato publicado pela rede orienta sobre as turmas e o agendamento da unidade de Feira de Santana.",
+    foto: fotosUnidades["feira-de-santana"].src,
     fotoAlt: "Fachada da unidade de Feira de Santana",
     aberta: true,
   },

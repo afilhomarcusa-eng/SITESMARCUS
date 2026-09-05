@@ -1,0 +1,35 @@
+/* One sequence: trajectory -> original mark -> aperture -> hero. */
+html { scrollbar-gutter: stable; }
+html[data-opening] { overflow: hidden; }
+.brand-opening { display: none; position: fixed; inset: 0; z-index: 200; outline: none; }
+html[data-opening] .brand-opening { display: block; }
+html[data-opening="pending"] .brand-opening { background: var(--bone); }
+.opening-screen { display: block; width: 100%; height: 100%; overflow: hidden; }
+.opening-trajectory, .opening-bridge, .opening-rule { fill: none; stroke: #5f7a51; stroke-width: 1; vector-effect: non-scaling-stroke; stroke-linecap: round; opacity: 0; }
+.opening-dot, .opening-lead { fill: #5f7a51; opacity: 0; }
+.opening-skip { position: absolute; right: 24px; bottom: 24px; padding: 12px 20px; background: var(--bone); border: 1px solid var(--brand); border-radius: 999px; opacity: 0; pointer-events: none; }
+.opening-skip:focus-visible { opacity: 1; pointer-events: auto; }
+.hero-thread { display: block; width: 36px; height: 1px; margin: 0 auto 20px; background: var(--brand-soft); position: relative; }
+.hero-thread::after { content: ""; position: absolute; right: 0; top: -1.5px; width: 4px; height: 4px; border-radius: 50%; background: inherit; }
+html[data-opening] .enter-shot { animation: none; }
+html[data-opening]:not([data-hero-entrance]) :is(.hero-thread, .enter-tag, .enter-in h1, .enter-in p, .enter-actions, .enter-foot, .home .topbar, .home .dock) { opacity: 0; animation: none; }
+html[data-hero-entrance] .enter-in h1 { animation: hero-arrive 500ms var(--ease-out) 110ms both; }
+
+html[data-hero-entrance] .enter-actions { animation: none; }
+html[data-hero-entrance] .hero-thread { animation: opening-thread 380ms var(--ease-out) both; }
+html[data-hero-entrance] .enter-tag { animation: hero-arrive 450ms var(--ease-out) 60ms both; }
+html[data-hero-entrance] .hero-first { animation: opening-type 500ms var(--ease-out) 110ms both; }
+html[data-hero-entrance] .enter-in h1 em { animation: opening-type 500ms var(--ease-out) 170ms both; }
+html[data-hero-entrance] .hero-ending { animation: opening-type 500ms var(--ease-out) 210ms both; }
+html[data-hero-entrance] .enter-in p { animation: hero-arrive 500ms var(--ease-out) 250ms both; }
+html[data-hero-entrance] .enter-actions .btn:first-child { animation: hero-arrive 500ms var(--ease-out) 310ms both; }
+html[data-hero-entrance] .enter-actions .btn:last-child { animation: hero-arrive 500ms var(--ease-out) 360ms both; }
+html[data-hero-entrance] :is(.enter-foot, .home .topbar, .home .dock) { animation: hero-arrive 500ms var(--ease-out) 410ms both; }
+@keyframes opening-type { from { opacity: 0; } to { opacity: 1; } }
+@keyframes opening-thread { from { transform: scaleX(.1); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@media (max-width: 640px) {
+  .hero-thread { width: 28px; margin-bottom: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-hero-entrance] :is(.hero-thread, .hero-first, .enter-tag, .enter-in h1 em, .hero-ending, .enter-in p, .enter-actions .btn, .enter-foot, .home .topbar, .home .dock) { animation: none; }
+}

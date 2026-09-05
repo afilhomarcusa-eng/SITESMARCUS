@@ -2,56 +2,34 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowRight, ArrowUpRight, Footer, Header, useReveal, WhatsApp } from "@/components/chrome";
+import { ArrowRight, Footer, Header, Instagram, useReveal } from "@/components/chrome";
 import { MapaUnidades } from "@/components/mapa-unidades";
-import { Preloader } from "@/components/preloader";
-import { modalidades, rede, unidades, waLink } from "@/lib/unidades";
+
+
+import { BrandOpening } from "@/components/preloader";
+import { ImmersiveHero } from "@/components/immersive-hero";
+import { PremiumRoadmap } from "@/components/premium-roadmap";
+import { FaqIndex } from "@/components/faq-index";
+import { modalidades, rede } from "@/lib/unidades";
 
 export default function Home() {
   useReveal();
   const [mod, setMod] = useState(0);
 
-  const comNota = unidades.filter((u) => u.nota !== null);
-  const somaAval = comNota.reduce((t, u) => t + (u.avaliacoes ?? 0), 0);
-
   return (
-    <main>
-      <Preloader />
+    <main className="home">
+      <BrandOpening />
+      <div data-opening-content>
       <Header sobreFoto />
 
-      <section className="enter" id="topo">
-        <div className="enter-shot">
-          <img src="/images/hero.jpg" alt="Área de treino do CT Abitah" fetchPriority="high" />
-        </div>
-        <div className="shell enter-in">
-          <span className="tag tag--plain enter-tag">Centro de treinamento · Bahia</span>
-          <h1>
-            Liberte o atleta que <em>Abitah</em> em você.
-          </h1>
-          <p>
-            Oito unidades entre Salvador, Lauro de Freitas e Feira de Santana. Turma pequena, professor por perto e um
-            lugar onde a presença é cobrada com carinho.
-          </p>
-          <div className="enter-actions">
-            <a className="btn btn--brand" href="#unidades">
-              Escolher unidade <ArrowRight />
-            </a>
-            <a className="btn btn--line" href="#metodo">
-              O método
-            </a>
-          </div>
-        </div>
-        <div className="shell enter-foot">
-          <span>Aqui você não desiste</span>
-        </div>
-      </section>
+      <ImmersiveHero />
 
       <section className="section on-dark" id="metodo">
         <div className="shell">
           <div className="head" data-reveal>
             <div>
               <span className="tag">O método</span>
-              <h2>Seis formas de treinar. Uma só forma de acompanhar.</h2>
+              <h2><span>Seis formas de treinar.</span><span>Uma só forma <span className="keep-together">de acompanhar.</span></span></h2>
             </div>
             <p>
               Turmas limitadas e professor presente, do iniciante ao atleta. O que muda de uma modalidade para outra é o
@@ -59,68 +37,48 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mods" data-reveal>
-            <div className="mods-list" role="tablist" aria-label="Modalidades">
+          <div className="mods mods-editorial" data-reveal>
+            <div className="mods-list" role="tablist" aria-label="Modalidades" aria-orientation="vertical">
               {modalidades.map((m, i) => (
                 <button
                   key={m.nome}
                   type="button"
                   role="tab"
+                  id={`modalidade-${i}`}
+                  aria-controls="modalidade-painel"
+                  tabIndex={mod === i ? 0 : -1}
+                  onKeyDown={(event) => {
+                    const direction = event.key === "ArrowDown" || event.key === "ArrowRight" ? 1 : event.key === "ArrowUp" || event.key === "ArrowLeft" ? -1 : 0;
+                    if (!direction && event.key !== "Home" && event.key !== "End") return;
+                    event.preventDefault();
+                    const next = event.key === "Home" ? 0 : event.key === "End" ? modalidades.length - 1 : (i + direction + modalidades.length) % modalidades.length;
+                    setMod(next);
+                    document.getElementById(`modalidade-${next}`)?.focus();
+                  }}
                   aria-selected={mod === i}
                   className={mod === i ? "mod-row is-on" : "mod-row"}
                   onClick={() => setMod(i)}
-                  onMouseEnter={() => setMod(i)}
                 >
-                  <i>0{i + 1}</i>
+                  <i>0{i + 1} —</i>
                   <b>{m.nome}</b>
-                  <ArrowRight />
+                  <span>Conhecer ↗</span>
                 </button>
               ))}
             </div>
 
-            <div className="mods-stage">
+            <div className="mods-stage" id="modalidade-painel" role="tabpanel" aria-labelledby={`modalidade-${mod}`} tabIndex={0}>
               <div className="mods-shot">
                 {modalidades.map((m, i) => (
                   <img key={m.nome} src={m.foto} alt="" className={mod === i ? "is-on" : undefined} loading="lazy" />
                 ))}
               </div>
-              <div className="mods-text">
-                <p>{modalidades[mod].texto}</p>
-              </div>
+              <div className="mods-text"><p>{modalidades[mod].texto}</p><a href="#unidades">Conhecer ↗</a></div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="creed section">
-        <div className="shell creed-grid">
-          <div data-reveal>
-            <span className="tag">Por que a gente existe</span>
-            <blockquote>
-              Mais do que um espaço para treinar, a Abitah é uma <em>comunidade que te puxa</em> para evoluir.
-            </blockquote>
-            <ul className="creed-points">
-              <li>
-                <strong>Acompanhamento de verdade</strong>
-                Turma pequena, professor corrigindo movimento e plano ajustado ao seu nível. Ninguém treina sozinho no
-                meio da sala.
-              </li>
-              <li>
-                <strong>Do iniciante ao atleta</strong>
-                Tem gente de sessenta anos e gente competindo no mesmo horário. O estímulo muda, a turma é a mesma.
-              </li>
-              <li>
-                <strong>Presença cobrada com carinho</strong>
-                É o que está por trás do &ldquo;aqui você não desiste&rdquo;. Quando você some, alguém pergunta.
-              </li>
-            </ul>
-          </div>
-          <div className="creed-photo" data-reveal>
-            <img src="/images/patamares.jpg" alt="Parede da unidade Patamares com o lema Liberte o atleta que Abitah em você" />
-          </div>
-        </div>
-      </section>
-
+<PremiumRoadmap />
       <section className="map-section section" id="unidades">
         <div className="shell">
           <div className="head" data-reveal>
@@ -137,89 +95,30 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section">
+<section className="social-feed section" id="instagram">
         <div className="shell">
-          <div className="units-grid" data-reveal>
-            {unidades.map((u) => (
-              <Link className={u.foto ? "unit-card" : "unit-card unit-card--flat"} href={`/unidades/${u.slug}`} key={u.slug}>
-                {u.foto ? <img src={u.foto} alt={u.fotoAlt} loading="lazy" decoding="async" /> : null}
-                <small>{u.cidade}</small>
-                <h3>{u.nome}</h3>
-                <p>{u.destaque}</p>
-                <span className="link-line">
-                  Ver unidade <ArrowRight />
-                </span>
-              </Link>
+          <div className="social-feed-head" data-reveal>
+            <div><span className="tag">Nos siga no Instagram</span><h2><a href={rede.instagram} target="_blank" rel="noreferrer">@ctabitah</a></h2></div>
+          </div>
+          <div className="social-grid" data-reveal>
+            {["hero.jpg", "kettlebell.jpg", "sala.jpg", "recepcao.jpg"].map((foto, i) => (
+              <a href={rede.instagram} target="_blank" rel="noreferrer" key={foto}>
+                <img src={`/images/${foto}`} alt={`Momento de treino Abitah ${i + 1}`} loading="lazy" decoding="async" />
+                <span><Instagram /> Ver no Instagram</span>
+              </a>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="franchise section" id="franquia">
-        <div className="shell franchise-grid">
-          <div data-reveal>
-            <span className="tag tag--plain">Seja um franqueado</span>
-            <h2>Leve o CT Abitah para a sua cidade.</h2>
-            <p>
-              A rede começou em Salvador, provou o modelo em Patamares e hoje tem oito endereços em três cidades. Se você
-              quer levar saúde, performance e resultado para a sua região, a conversa começa aqui.
-            </p>
-            <p style={{ marginTop: 26 }}>
-              <a
-                className="btn btn--dark"
-                href={waLink(rede.whatsapp, "Olá! Tenho interesse em ser franqueado do CT Abitah.")}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Falar sobre franquia <WhatsApp />
-              </a>
-            </p>
-          </div>
-          <div className="franchise-facts" data-reveal>
-            <div>
-              <strong>2 cidades</strong>
-              <span>Salvador e Lauro de Freitas, mais Feira de Santana no interior</span>
-            </div>
-            <div>
-              <strong>
-                {comNota.length > 0
-                  ? (comNota.reduce((t, u) => t + (u.nota ?? 0), 0) / comNota.length).toFixed(1).replace(".", ",")
-                  : "—"}
-              </strong>
-              <span>Média das unidades avaliadas no Google, em {somaAval} avaliações</span>
-            </div>
-            <div>
-              <strong>{rede.telefone}</strong>
-              <span>{rede.email}</span>
-            </div>
-          </div>
-        </div>
-      </section>
+<FaqIndex />
 
-      <section className="section">
-        <div className="shell head" data-reveal>
-          <div>
-            <span className="tag">Ainda em dúvida</span>
-            <h2>Faça uma aula experimental.</h2>
-          </div>
-          <div>
-            <p>
-              Escolha a unidade mais perto e fale com a equipe dela. Quem atende no WhatsApp é quem vai estar na sala no
-              dia do seu treino.
-            </p>
-            <p style={{ marginTop: 24, display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <Link className="btn btn--brand" href="/aula-experimental">
-                Marcar aula experimental <ArrowRight />
-              </Link>
-              <a className="btn btn--line" href={rede.instagram} target="_blank" rel="noreferrer">
-                Instagram <ArrowUpRight />
-              </a>
-            </p>
-          </div>
-        </div>
+      <section className="section final-cta">
+        <div className="shell head" data-reveal><div><span className="tag">O próximo passo</span><h2>Marque sua aula experimental.</h2></div><div><p>Venha sentir o método na prática, no seu ritmo.</p><p style={{ marginTop: 24 }}><Link className="btn btn--brand" href="/aula-experimental">Escolher uma unidade <ArrowRight /></Link></p></div></div>
       </section>
 
       <Footer />
+      </div>
     </main>
   );
 }

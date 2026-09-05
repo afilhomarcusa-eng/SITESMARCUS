@@ -72,7 +72,7 @@ export function Form() {
             <h1 style={{ marginTop: 18 }}>Venha treinar uma vez. Depois a gente conversa.</h1>
             <p>
               Você escolhe a unidade e conta o que procura. A mensagem chega pronta no WhatsApp de quem atende ali, e é
-              essa mesma pessoa que vai te receber no dia.
+              a equipe confirma a disponibilidade e orienta seu primeiro treino.
             </p>
 
             <div className="form-dest">
@@ -219,7 +219,7 @@ export function Form() {
         </div>
       </section>
 
-      <Footer />
+      <Footer unidade={unidade} />
     </main>
   );
 }

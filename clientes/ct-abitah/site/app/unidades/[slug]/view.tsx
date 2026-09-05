@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { FotoUnidade } from "@/components/foto-unidade";
 import { ArrowLeft, ArrowUpRight, Footer, Header, Instagram, useReveal, WhatsApp } from "@/components/chrome";
 import { mapaEmbed, mapaLink, telHref, unidades, waLink, type Unidade } from "@/lib/unidades";
 
@@ -38,7 +39,7 @@ export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
         <div className="shell" style={{ marginTop: 32 }}>
           {u.foto ? (
             <div className="u-shot" data-reveal>
-              <img src={u.foto} alt={u.fotoAlt} />
+              <FotoUnidade slug={u.slug} alt={u.fotoAlt} principal />
             </div>
           ) : (
             <div className="u-shot--none" data-reveal>
@@ -55,6 +56,7 @@ export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
             <p>{u.sobre}</p>
 
             <div className="u-hours">
+              {u.horarios ? <p className="u-hours-note">Funcionamento publicado no Google Maps. Confirme os horários das turmas e feriados com a equipe.</p> : null}
               {u.horarios ? (
                 <table>
                   <thead>
@@ -74,15 +76,9 @@ export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
                 </table>
               ) : (
                 <p className="u-missing">
-                  Esta unidade ainda não tem ficha própria no Google, então o horário não está publicado em nenhum lugar
-                  oficial. Em vez de chutar, a gente prefere que você confirme no WhatsApp de Vilas do Atlântico, que
-                  responde por ela.
+                  Consulte o atendimento da rede para confirmar os horários e a disponibilidade das turmas.
                 </p>
               )}
-              <p className="u-missing" style={{ marginTop: 18 }}>
-                Horários conferidos na ficha pública do Google em 04/09/2026. Feriado e período de férias podem mudar a
-                grade, então vale confirmar antes de vir pela primeira vez.
-              </p>
             </div>
           </div>
 
@@ -102,6 +98,7 @@ export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
                 ) : null}
               </dd>
 
+              {u.contatoDescricao ? <><dt>Atendimento</dt><dd>{u.contatoDescricao}</dd></> : null}
               {u.telefone ? (
                 <>
                   <dt>Telefone</dt>
@@ -122,9 +119,9 @@ export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
                 Aula experimental <WhatsApp />
               </a>
             ) : null}
-            <a className="btn btn--line" href={mapaLink(u)} target="_blank" rel="noreferrer">
+            {!u.localizacaoAproximada ? <a className="btn btn--line" href={mapaLink(u)} target="_blank" rel="noreferrer">
               Traçar rota <ArrowUpRight />
-            </a>
+            </a> : null}
             {u.instagram ? (
               <a className="btn btn--line" href={u.instagram} target="_blank" rel="noreferrer">
                 Instagram da unidade <Instagram />
@@ -134,7 +131,7 @@ export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
         </div>
       </section>
 
-      <section className="section" style={{ paddingTop: 0 }}>
+      {!u.localizacaoAproximada ? <section className="section" style={{ paddingTop: 0 }}>
         <div className="shell">
           <div className="u-map-frame" data-reveal>
             <iframe
@@ -146,8 +143,7 @@ export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
             />
           </div>
         </div>
-      </section>
-
+      </section> : null}
       <section className="u-others section">
         <div className="shell">
           <div className="head" data-reveal>
@@ -159,16 +155,20 @@ export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
           </div>
           <div className="u-others-grid" data-reveal>
             {outras.map((o) => (
-              <Link className="u-other" href={`/unidades/${o.slug}`} key={o.slug}>
+              <a className={o.foto ? "u-other u-other--photo" : "u-other"} href={`/unidades/${o.slug}`} key={o.slug}>
+                {o.foto ? <FotoUnidade slug={o.slug} alt={o.fotoAlt} /> : null}
+                <span className="u-other-content">
                 <b>{o.nome}</b>
                 <small>{o.cidade}</small>
-              </Link>
+                <em>Conhecer unidade <ArrowUpRight /></em>
+                </span>
+              </a>
             ))}
           </div>
         </div>
       </section>
 
-      <Footer />
+      <Footer unidade={u} />
     </main>
   );
 }

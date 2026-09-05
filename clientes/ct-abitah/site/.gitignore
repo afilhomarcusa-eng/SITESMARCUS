@@ -6,3 +6,7 @@ out
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+.env*
+
+# Capturas e verificações locais de direção de arte
+.art-direction/

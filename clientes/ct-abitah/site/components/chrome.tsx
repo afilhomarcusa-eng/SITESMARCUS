@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { rede, unidades } from "@/lib/unidades";
+import { useEffect, useRef, useState } from "react";
+import { rede, unidades, waLink, type Unidade } from "@/lib/unidades";
 
 /* ------------------------------------------------------------------ icones */
 
@@ -87,19 +87,15 @@ export function Instagram() {
   );
 }
 
-/**
- * A marca sai do PDF oficial que o cliente enviou. Sao duas versoes do mesmo
- * arquivo: a escura para fundo claro e a clara para fundo escuro. O
- * mix-blend-mode no CSS derruba o branco do PNG, entao nao precisa de recorte.
- */
+/** Vetores oficiais do PDF; limites calculados sobre toda a arte, sem recortar letras. */
 export function Mark({ claro = false, pequeno = false }: { claro?: boolean; pequeno?: boolean }) {
   return (
     <span className={pequeno ? "mark mark--sm" : "mark"}>
       <img
-        src={claro ? "/images/logo-claro.png" : "/images/logo.png"}
+        src={claro ? "/images/logo-claro.svg" : "/images/logo.svg"}
         alt="Abitah Centro de Treinamento"
-        width={1200}
-        height={354}
+        width={1169}
+        height={289}
       />
     </span>
   );
@@ -110,12 +106,15 @@ export function Mark({ claro = false, pequeno = false }: { claro?: boolean; pequ
 const nav: [string, string][] = [
   ["O método", "/#metodo"],
   ["Unidades", "/#unidades"],
-  ["Franquia", "/#franquia"],
+  ["Perguntas", "/faq"],
+  ["Instagram", "/instagram"],
 ];
 
 export function Header({ atual, sobreFoto = false }: { atual?: string; sobreFoto?: boolean }) {
   const [stuck, setStuck] = useState(false);
   const [open, setOpen] = useState(false);
+  const drawer = useRef<HTMLDivElement>(null);
+  const menuButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setStuck(window.scrollY > 40);
@@ -125,8 +124,26 @@ export function Header({ atual, sobreFoto = false }: { atual?: string; sobreFoto
   }, []);
 
   useEffect(() => {
-    document.body.classList.toggle("is-locked", open);
-    return () => document.body.classList.remove("is-locked");
+    if (!open) return;
+    document.body.classList.add("is-locked");
+    const panel = drawer.current!;
+    const opener = menuButton.current;
+    const items = [...panel.querySelectorAll<HTMLElement>("a, button")];
+    items[0]?.focus({ preventScroll: true });
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); setOpen(false); }
+      if (event.key === "Tab") {
+        const first = items[0], last = items[items.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener("keydown", keydown);
+    return () => {
+      document.body.classList.remove("is-locked");
+      document.removeEventListener("keydown", keydown);
+      opener?.focus({ preventScroll: true });
+    };
   }, [open]);
 
   return (
@@ -146,14 +163,14 @@ export function Header({ atual, sobreFoto = false }: { atual?: string; sobreFoto
           <Link className="btn btn--brand" href="/aula-experimental">
             Aula experimental
           </Link>
-          <button className="burger" type="button" onClick={() => setOpen(true)} aria-label="Abrir menu">
+          <button ref={menuButton} aria-expanded={open} aria-controls="menu-principal" className="burger" type="button" onClick={() => setOpen(true)} aria-label="Abrir menu">
             <span />
             <span />
           </button>
         </div>
       </header>
 
-      <div className={open ? "drawer is-open" : "drawer"} aria-hidden={!open}>
+      <div ref={drawer} id="menu-principal" className={open ? "drawer is-open" : "drawer"} role="dialog" aria-label="Navegação principal" aria-modal={open ? true : undefined} aria-hidden={!open} inert={!open}>
         <div className="drawer-top">
           <Mark claro pequeno />
           <button type="button" onClick={() => setOpen(false)} aria-label="Fechar menu">
@@ -169,7 +186,7 @@ export function Header({ atual, sobreFoto = false }: { atual?: string; sobreFoto
           ))}
           {unidades.slice(0, 3).map((u, i) => (
             <Link key={u.slug} href={`/unidades/${u.slug}`} onClick={() => setOpen(false)}>
-              <i>0{i + 4}</i>
+              <i>0{i + 5}</i>
               {u.nome}
             </Link>
           ))}
@@ -185,7 +202,7 @@ export function Header({ atual, sobreFoto = false }: { atual?: string; sobreFoto
 
 /* --------------------------------------------------------------- rodape */
 
-export function Footer() {
+export function Footer({ unidade }: { unidade?: Unidade | null } = {}) {
   return (
     <>
       <footer className="foot">
@@ -233,10 +250,10 @@ export function Footer() {
 
       <div className="dock">
         <a
-          href={`https://wa.me/${rede.whatsapp}?text=${encodeURIComponent("Olá! Vim pelo site do CT Abitah.")}`}
+          href={waLink(unidade?.whatsapp ?? rede.whatsapp, unidade ? "Olá! Quero saber sobre a Abitah " + unidade.nome + "." : "Olá! Vim pelo site do CT Abitah.")}
           target="_blank"
           rel="noreferrer"
-          aria-label="Falar no WhatsApp"
+          aria-label={unidade ? "Falar no WhatsApp sobre a unidade " + unidade.nome : "Falar no WhatsApp"}
         >
           <WhatsApp />
           <span>WhatsApp</span>
@@ -260,7 +277,10 @@ export function useReveal() {
         }),
       { threshold: 0.12 },
     );
-    alvos.forEach((a) => obs.observe(a));
+    alvos.forEach((a) => {
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && a.getBoundingClientRect().top > innerHeight) a.classList.add("reveal-ready");
+      obs.observe(a);
+    });
     return () => obs.disconnect();
   }, []);
 }

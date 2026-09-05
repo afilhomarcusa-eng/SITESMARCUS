@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Archivo, Sora } from "next/font/google";
 import "leaflet/dist/leaflet.css";
 import "./site.css";
+import "./opening.css";
+import { openingBootstrap } from "@/lib/opening-bootstrap";
 
 /**
  * Sora no display: geometrica, com terminais retos e um desenho tecnico que
@@ -28,7 +30,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: openingBootstrap }} /></head>
       <body className={`${display.variable} ${sans.variable}`}>{children}</body>
     </html>
   );
