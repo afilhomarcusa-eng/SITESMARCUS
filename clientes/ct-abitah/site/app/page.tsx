@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowRight, Footer, Header, Instagram, useReveal } from "@/components/chrome";
+import { ArrowRight, ArrowUpRight, Footer, Header, Instagram, useReveal } from "@/components/chrome";
 import { MapaUnidades } from "@/components/mapa-unidades";
 
 
@@ -61,7 +61,7 @@ export default function Home() {
                 >
                   <i>0{i + 1} —</i>
                   <b>{m.nome}</b>
-                  <span>Conhecer ↗</span>
+                  <span>Conhecer <ArrowUpRight /></span>
                 </button>
               ))}
             </div>
@@ -72,7 +72,7 @@ export default function Home() {
                   <img key={m.nome} src={m.foto} alt="" className={mod === i ? "is-on" : undefined} loading="lazy" />
                 ))}
               </div>
-              <div className="mods-text"><p>{modalidades[mod].texto}</p><a href="#unidades">Conhecer ↗</a></div>
+              <div className="mods-text"><p>{modalidades[mod].texto}</p><a href="#unidades">Conhecer <ArrowUpRight /></a></div>
             </div>
           </div>
         </div>

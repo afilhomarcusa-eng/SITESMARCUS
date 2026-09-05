@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { FotoUnidade } from "@/components/foto-unidade";
+import { MapaUnidade } from "@/components/mapa-unidade";
 import { ArrowLeft, ArrowUpRight, Footer, Header, Instagram, useReveal, WhatsApp } from "@/components/chrome";
-import { mapaEmbed, mapaLink, telHref, unidades, waLink, type Unidade } from "@/lib/unidades";
+import { mapaLink, telHref, unidades, waLink, type Unidade } from "@/lib/unidades";
 
 export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
   useReveal();
@@ -134,13 +135,7 @@ export function UnidadeView({ unidade: u }: { unidade: Unidade }) {
       {!u.localizacaoAproximada ? <section className="section" style={{ paddingTop: 0 }}>
         <div className="shell">
           <div className="u-map-frame" data-reveal>
-            <iframe
-              title={`Localização da Abitah ${u.nome} no Google Maps`}
-              src={mapaEmbed(u)}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              allowFullScreen
-            />
+            <MapaUnidade unidade={u} />
           </div>
         </div>
       </section> : null}

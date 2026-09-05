@@ -18,6 +18,9 @@
   --duration-fast: 200ms; --duration-medium: 400ms; --duration-slow: 600ms;
   --ease-out: cubic-bezier(.22, 1, .36, 1); --ease-in-out: cubic-bezier(.65, 0, .35, 1);
   --r: 0px; --r-lg: 0px; --r-pill: 0px;
+  /* seta nordeste como desenho, nao como caractere: o U+2197 vira emoji
+     colorido no iOS e quebra a familia de icones do site */
+  --ico-up-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7'/%3E%3Cpath d='M9 7h8v8'/%3E%3C/svg%3E");
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: 110px; }
@@ -113,7 +116,8 @@ em { font-style: normal; }
 .mod-row:last-child { border-bottom: 1px solid var(--line); }
 .mod-row i { white-space: nowrap; font-size: var(--type-label); font-style: normal; letter-spacing: .12em; }
 .mod-row b { font-size: clamp(24px, 2.8vw, 44px); font-family: var(--font-display), sans-serif; font-weight: 400; letter-spacing: -.05em; transition: transform var(--duration-medium) var(--ease-out); }
-.mod-row > span { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); }
+.mod-row > span { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: 0; transition: opacity var(--duration-fast) var(--ease-out); }
+.mod-row > span .ico, .mods-text a .ico, .social-feed-head > a .ico { width: 13px; height: 13px; }
 .mod-row.is-on { color: var(--bone); }
 .mod-row.is-on i { color: var(--brand-soft); }
 .mod-row.is-on b { transform: translateX(5px); }
@@ -123,7 +127,7 @@ em { font-style: normal; }
 .mods-shot img.is-on { opacity: 1; }
 .mods-text { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 24px; border-top: 1px solid var(--line); margin-top: 22px; padding-top: 18px; }
 .mods-text p { max-width: 48ch; font-size: var(--type-body); color: var(--stone-soft); }
-.mods-text a { font-size: var(--type-label); text-transform: uppercase; letter-spacing: .1em; padding-block: 4px; white-space: nowrap; }
+.mods-text a { display: inline-flex; align-items: center; gap: 8px; font-size: var(--type-label); text-transform: uppercase; letter-spacing: .1em; padding-block: 4px; white-space: nowrap; }
 /* A curva compartilha coordenadas SVG com pontos e indicador. Texto usa a grade. */
 .premium-roadmap { border-bottom: 1px solid var(--line); }
 .premium-roadmap-head { max-width: 960px; }
@@ -166,7 +170,7 @@ em { font-style: normal; }
 .map-item b { font-size: 16px; font-weight: 500; transition: transform var(--duration-medium) var(--ease-out); }
 .map-item:hover b { transform: translateX(5px); }
 .map-item.is-on b { color: var(--brand); }
-.map-item.is-on b::before { content: "↗"; margin-right: 10px; }
+.map-item.is-on b::before { content: ""; display: inline-block; width: 13px; height: 13px; margin-right: 10px; vertical-align: -1px; background: currentColor; -webkit-mask: var(--ico-up-right) center / contain no-repeat; mask: var(--ico-up-right) center / contain no-repeat; }
 .map-item small { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--stone-soft); }
 .map-item i { font-size: 11px; font-style: normal; color: var(--stone-soft); }
 .map-detail { padding-block: 28px; }
@@ -188,7 +192,7 @@ em { font-style: normal; }
 .social-feed { border-top: 1px solid var(--line); }
 .social-feed-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 36px; }
 .social-feed-head h2 { margin-top: 20px; }
-.social-feed-head > a { font-size: var(--type-label); letter-spacing: .1em; }
+.social-feed-head > a { display: inline-flex; align-items: center; gap: 8px; font-size: var(--type-label); letter-spacing: .1em; }
 .social-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(10px, 1.8vw, 28px); }
 .social-grid--six { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .social-grid a { position: relative; display: block; min-width: 0; }
@@ -262,8 +266,8 @@ em { font-style: normal; }
 .u-card dt { font-size: var(--type-label); letter-spacing: .15em; text-transform: uppercase; }
 .u-card dd { margin: 8px 0 22px; color: var(--stone-soft); }
 .u-card .btn { width: 100%; margin-top: 10px; }
-.u-map-frame { aspect-ratio: 16 / 7; }
-.u-map-frame iframe { width: 100%; height: 100%; border: 0; }
+.u-map-frame { aspect-ratio: 16 / 7; border: 1px solid var(--line); }
+.u-map-canvas { width: 100%; height: 100%; background: var(--bone-2); }
 .u-others { border-top: 1px solid var(--line); }
 .u-others-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
 .u-other { display: flex; flex-direction: column; border-top: 1px solid var(--line); padding-top: 20px; }

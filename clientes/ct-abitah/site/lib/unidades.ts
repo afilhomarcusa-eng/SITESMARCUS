@@ -41,10 +41,6 @@ export function telHref(telefone: string) {
 }
 
 /** Embed do Google Maps centrado na unidade. Nao precisa de chave de API. */
-export function mapaEmbed(u: Unidade) {
-  return `https://www.google.com/maps?q=${u.lat},${u.lng}&z=17&output=embed`;
-}
-
 export function mapaLink(u: Unidade) {
   return `https://www.google.com/maps/search/?api=1&query=${u.lat},${u.lng}`;
 }
