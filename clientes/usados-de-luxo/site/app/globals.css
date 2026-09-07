@@ -1,0 +1,263 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Usados de Luxo — tokens
+
+   As cores não foram escolhidas, foram medidas. O preto é a parede do estúdio
+   onde eles fotografam os carros, a pedra é o piso, e o latão é a cor dominante
+   do letreiro da fachada. Tudo amostrado das fotos reais em 07/09/2026.
+--------------------------------------------------------------------------- */
+
+@theme {
+  --color-preto: #0b0b0c;
+  --color-parede: #131313;
+  --color-parede-luz: #3b3b3b;
+  --color-fumaca: #1c1c1e;
+  --color-grafite: #2a2a2c;
+  --color-pedra: #bab8b8;
+  --color-papel: #edebe7;
+  --color-latao: #d0b060;
+  --color-latao-claro: #e0c888;
+
+  --font-display: var(--fonte-display), "Arial Black", sans-serif;
+  --font-texto: var(--fonte-texto), system-ui, sans-serif;
+  --font-mono: var(--fonte-mono), ui-monospace, monospace;
+}
+
+:root {
+  --preto: #0b0b0c;
+  --parede: #131313;
+  --parede-luz: #3b3b3b;
+  --fumaca: #1c1c1e;
+  --grafite: #2a2a2c;
+  --pedra: #bab8b8;
+  --papel: #edebe7;
+  --latao: #d0b060;
+  --latao-claro: #e0c888;
+
+  --tinta: var(--papel);
+  --tinta-2: rgba(237, 235, 231, 0.62);
+  --tinta-3: rgba(237, 235, 231, 0.38);
+  --linha: rgba(237, 235, 231, 0.12);
+
+  /* Casca: usa a largura de verdade em telas grandes em vez de virar uma
+     coluna estreita boiando no meio de 1920. */
+  --casca: min(92vw, 1560px);
+  --goteira: clamp(1.25rem, 4vw, 4rem);
+
+  /* Movimento com peso de porta de carro. Nada quica. */
+  --e-saida: cubic-bezier(0.16, 1, 0.3, 1);
+  --e-camera: cubic-bezier(0.65, 0, 0.35, 1);
+  --e-suave: cubic-bezier(0.33, 1, 0.68, 1);
+  --d-micro: 220ms;
+  --d-ui: 420ms;
+  --d-revela: 820ms;
+  --d-cine: 1400ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--preto);
+  color: var(--tinta);
+  font-family: var(--font-texto);
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--latao);
+  color: var(--preto);
+}
+
+/* ------------------------------- tipografia ------------------------------ */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 125%;
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.display-solto {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-stretch: 112%;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.dado {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.etiqueta {
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 0.72vw, 0.72rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+}
+
+.corpo {
+  font-size: clamp(1rem, 1.02vw, 1.14rem);
+  line-height: 1.62;
+  color: var(--tinta-2);
+  text-wrap: pretty;
+}
+
+/* --------------------------------- layout -------------------------------- */
+
+.casca {
+  width: var(--casca);
+  margin-inline: auto;
+}
+
+.secao {
+  position: relative;
+  padding-block: clamp(5rem, 11vh, 10rem);
+}
+
+/* -------------------------- material do estúdio -------------------------- */
+
+/* A textura da parede. Não é ruído decorativo: é a superfície do lugar onde
+   as fotos foram feitas, e amarra o site às fotos. */
+.parede {
+  background-color: var(--parede);
+  background-image:
+    radial-gradient(
+      120% 80% at 22% 0%,
+      rgba(255, 255, 255, 0.055) 0%,
+      transparent 62%
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+}
+
+.risco {
+  border-top: 1px solid var(--linha);
+}
+
+/* No celular a faixa de números sangra de ponta a ponta com fundo próprio,
+   porque ali ela cai logo abaixo do carro e a lataria é clara. No desktop ela
+   volta a ser transparente, sobre a parede. Fica em classe, e não em style
+   inline, senão o inline venceria a regra do breakpoint. */
+.faixa-dados {
+  background: var(--preto);
+}
+
+@media (min-width: 768px) {
+  .faixa-dados {
+    background: transparent;
+  }
+}
+
+/* --------------------------------- foco ---------------------------------- */
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--latao);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* ------------------------------ revelações ------------------------------- */
+
+/* O padrão é visível. Quem esconde é o JS, e só depois de confirmar que vai
+   conseguir mostrar de novo. Assim, sem JS, nada some. */
+[data-revela] {
+  opacity: 1;
+}
+
+html[data-motion="on"] [data-revela] {
+  opacity: 0;
+}
+
+html[data-motion="on"] [data-revela="sobe"] {
+  transform: translate3d(0, 2.2rem, 0);
+}
+
+html[data-motion="on"] [data-revela="lado"] {
+  transform: translate3d(-2rem, 0, 0);
+}
+
+html[data-motion="on"] [data-revela].dentro {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--d-revela) var(--e-saida),
+    transform var(--d-revela) var(--e-saida);
+}
+
+/* Cortina de máscara: o texto sobe por trás de uma borda dura em vez de
+   simplesmente aparecer. Dá peso e não é o fade genérico de sempre. */
+/* Corta só na vertical.
+
+   overflow hidden nos dois eixos come o fim das palavras quando o texto é mais
+   largo que o bloco, e o defeito engana: parece quebra de linha, não corte.
+   E não adianta pedir overflow-y hidden com overflow-x visible, porque quando
+   um eixo é hidden o outro vira auto sozinho. clip-path resolve: corta em cima
+   e embaixo e deixa folga sobrando dos lados. */
+.mascara {
+  display: block;
+  clip-path: inset(0 -100vw);
+  padding-block: 0.04em;
+}
+
+.mascara > * {
+  display: block;
+}
+
+html[data-motion="on"] .mascara > * {
+  transform: translate3d(0, 105%, 0);
+}
+
+html[data-motion="on"] .mascara.dentro > * {
+  transform: none;
+  transition: transform var(--d-cine) var(--e-saida);
+}
+
+/* ------------------------------ acessível -------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion="on"] [data-revela],
+  html[data-motion="on"] .mascara > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

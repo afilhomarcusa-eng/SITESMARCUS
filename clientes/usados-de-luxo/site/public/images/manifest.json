@@ -1,0 +1,377 @@
+{
+  "geradoEm": "2026-09-07T14:56:28.661Z",
+  "imagens": {
+    "bmw-m4-coupe-1000.webp": {
+      "origem": "DcwgmbgD8qW-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "bmw-m4-coupe-g-1440.webp": {
+      "origem": "DcwgmbgD8qW-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "range-rover-velar-1000.webp": {
+      "origem": "DcwfqNHD5Nk-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "range-rover-velar-g-1440.webp": {
+      "origem": "DcwfqNHD5Nk-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "bmw-320i-m-sport-1000.webp": {
+      "origem": "Dc1Gf3qkY26-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "bmw-320i-m-sport-g-1440.webp": {
+      "origem": "Dc1Gf3qkY26-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "ford-ranger-black-1000.webp": {
+      "origem": "Dct5841j7bT-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "ford-ranger-black-g-1440.webp": {
+      "origem": "Dct5841j7bT-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "audi-q3-black-edition-1000.webp": {
+      "origem": "DcwgDixD8QD-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "audi-q3-black-edition-g-1440.webp": {
+      "origem": "DcwgDixD8QD-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "chevrolet-camaro-ss-1000.webp": {
+      "origem": "Dcwfahpj0jq-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "chevrolet-camaro-ss-g-1440.webp": {
+      "origem": "Dcwfahpj0jq-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "gac-gs4-elite-hev-1000.webp": {
+      "origem": "Dc1UtCMEYLf-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "gac-gs4-elite-hev-g-1440.webp": {
+      "origem": "Dc1UtCMEYLf-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "byd-song-plus-gs-1000.webp": {
+      "origem": "Dct39HyDydx-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "byd-song-plus-gs-g-1440.webp": {
+      "origem": "Dct39HyDydx-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "chevrolet-s10-lt-1000.webp": {
+      "origem": "Dc331hHAFVX-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "chevrolet-s10-lt-g-1440.webp": {
+      "origem": "Dc331hHAFVX-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "fiat-pulse-abarth-1000.webp": {
+      "origem": "DczC4X1jxNs-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "fiat-pulse-abarth-g-1440.webp": {
+      "origem": "DczC4X1jxNs-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "renault-kardian-1000.webp": {
+      "origem": "Dct7Rygj6AR-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "renault-kardian-g-1440.webp": {
+      "origem": "Dct7Rygj6AR-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "volkswagen-saveiro-robust-1000.webp": {
+      "origem": "Dct4kRKDxku-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "volkswagen-saveiro-robust-g-1440.webp": {
+      "origem": "Dct4kRKDxku-1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "bmw-m4-coupe-0-1440.webp": {
+      "origem": "m4-slide0-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "bmw-m4-coupe-1-1440.webp": {
+      "origem": "m4-slide1-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "bmw-m4-coupe-2-1440.webp": {
+      "origem": "m4-slide2-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "bmw-m4-coupe-3-1440.webp": {
+      "origem": "m4-slide3-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "bmw-m4-coupe-4-1440.webp": {
+      "origem": "m4-slide4-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "bmw-m4-coupe-5-1440.webp": {
+      "origem": "m4-slide5-1440x1800.jpg",
+      "nativa": {
+        "w": 1440,
+        "h": 1800
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1800
+      },
+      "slotCss": 720
+    },
+    "fachada-1520.webp": {
+      "origem": "maps-01.jpg",
+      "nativa": {
+        "w": 3024,
+        "h": 4032
+      },
+      "exportada": {
+        "w": 1520,
+        "h": 2027
+      },
+      "slotCss": 760
+    }
+  }
+}
