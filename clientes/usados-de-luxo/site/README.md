@@ -20,6 +20,10 @@ e óbvio numa captura.
 
 Se estiver com pressa e o build já for o atual: `npm run qa:rapido`.
 
+`npm run perf` mede LCP, CLS e o peso transferido contra o build de produção,
+com o servidor já no ar. Última medição em rede local: LCP 408 ms, CLS 0,0000,
+280 KB de JavaScript (Three.js incluso) e 1,5 MB de imagem no primeiro carregamento.
+
 ## O conceito
 
 Todo carro do estoque é fotografado na mesma sala: parede preta, piso claro, luz

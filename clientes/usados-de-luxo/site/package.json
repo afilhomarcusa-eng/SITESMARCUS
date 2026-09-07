@@ -9,7 +9,8 @@
     "lint": "eslint",
     "qa": "node scripts/qa-run.mjs",
     "assets": "node scripts/build-assets.mjs",
-    "qa:rapido": "node scripts/qa-run.mjs --sem-build"
+    "qa:rapido": "node scripts/qa-run.mjs --sem-build",
+    "perf": "node scripts/perf.mjs"
   },
   "dependencies": {
     "@types/three": "^0.185.4",
