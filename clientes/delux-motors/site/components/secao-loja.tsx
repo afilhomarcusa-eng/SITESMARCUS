@@ -1,13 +1,14 @@
-import { EMPRESA, whatsapp } from "@/lib/contato";
+import { EMPRESA, ROTA_URL, whatsapp } from "@/lib/contato";
 
 /**
  * A loja, apresentada.
  *
- * Aqui não entra segunda fotografia, e não é descuido: existe uma só, a da
- * fachada, e ela já está no herói. Repetir a mesma imagem embaixo, cortada
- * diferente, seria a mesma foto fingindo ser duas, e todo mundo percebe.
+ * A foto é a fachada em Boca do Rio no fim da tarde, a única que existe da
+ * loja. Ela vive aqui, e não no herói, por dois motivos: o herói mostra carro,
+ * que é o que se vende, e esta foto é de entardecer, escura, então ela vale
+ * mais como contraponto no meio de uma página clara do que como fundo.
  *
- * Então a apresentação é feita com o que existe de verdade: as palavras que
+ * O resto da apresentação é feito com o que existe de verdade: as palavras que
  * eles mesmos usam, o endereço, o horário e o que a loja faz. Sem tempo de
  * mercado inventado, sem número de carros vendidos, sem equipe imaginária.
  */
@@ -29,7 +30,7 @@ const PILARES = [
 
 export default function SecaoLoja() {
   return (
-    <section id="loja" className="secao" style={{ background: "var(--noite)" }}>
+    <section id="loja" className="secao" style={{ background: "var(--nuvem)" }}>
       <div className="casca">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-20">
           <div className="lg:sticky lg:top-24 lg:self-start">
@@ -55,6 +56,31 @@ export default function SecaoLoja() {
           </div>
 
           <div>
+            <figure className="m-0 mb-10" data-revela>
+              <img
+                src="/images/fachada-1200.webp"
+                alt="Fachada da Delux Motors na Boca do Rio ao entardecer, com um conversível preto e uma moto estacionados na frente"
+                width={1200}
+                height={1600}
+                loading="lazy"
+                decoding="async"
+                className="h-[44svh] w-full object-cover object-bottom md:h-[52svh]"
+                style={{ background: "var(--nuvem)" }}
+              />
+              <figcaption className="etiqueta mt-3">
+                A loja no fim da tarde. Foto do{" "}
+                <a
+                  href={ROTA_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-[var(--brasa)]"
+                >
+                  perfil da empresa no Google
+                </a>
+                .
+              </figcaption>
+            </figure>
+
             <p className="corpo mb-10 max-w-[52ch]" data-revela>
               A Delux Motors fica na Boca do Rio, em Salvador, com o showroom
               envidraçado dando para a Av. Octávio Mangabeira. É uma operação

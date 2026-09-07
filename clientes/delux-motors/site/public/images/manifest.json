@@ -1,6 +1,354 @@
 {
-  "geradoEm": "2026-09-07T16:16:19.836Z",
+  "geradoEm": "2026-09-07T19:14:12.727Z",
   "imagens": {
+    "ram-laramie-0c-1000.webp": {
+      "origem": "ram-laramie-0-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "ram-laramie-0-1280.webp": {
+      "origem": "ram-laramie-0-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1600
+      },
+      "slotCss": 640
+    },
+    "ram-laramie-1-1280.webp": {
+      "origem": "ram-laramie-1-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1600
+      },
+      "slotCss": 640
+    },
+    "ram-laramie-2-1280.webp": {
+      "origem": "ram-laramie-2-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1600
+      },
+      "slotCss": 640
+    },
+    "ram-laramie-3-1280.webp": {
+      "origem": "ram-laramie-3-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1600
+      },
+      "slotCss": 640
+    },
+    "ram-laramie-4-1280.webp": {
+      "origem": "ram-laramie-4-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1600
+      },
+      "slotCss": 640
+    },
+    "bmw-x4-0c-1000.webp": {
+      "origem": "bmw-x4-0-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1247
+      },
+      "slotCss": 500
+    },
+    "bmw-x4-0-1280.webp": {
+      "origem": "bmw-x4-0-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1596
+      },
+      "slotCss": 640
+    },
+    "bmw-x4-1-1280.webp": {
+      "origem": "bmw-x4-1-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1596
+      },
+      "slotCss": 640
+    },
+    "bmw-x4-2-1280.webp": {
+      "origem": "bmw-x4-2-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1596
+      },
+      "slotCss": 640
+    },
+    "bmw-x4-3-1280.webp": {
+      "origem": "bmw-x4-3-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1596
+      },
+      "slotCss": 640
+    },
+    "bmw-x4-4-1280.webp": {
+      "origem": "bmw-x4-4-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1596
+      },
+      "slotCss": 640
+    },
+    "corolla-altis-0c-1000.webp": {
+      "origem": "corolla-altis-0-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1250
+      },
+      "slotCss": 500
+    },
+    "corolla-altis-0-1280.webp": {
+      "origem": "corolla-altis-0-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1600
+      },
+      "slotCss": 640
+    },
+    "corolla-altis-1-1280.webp": {
+      "origem": "corolla-altis-1-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1600
+      },
+      "slotCss": 640
+    },
+    "corolla-altis-2-1280.webp": {
+      "origem": "corolla-altis-2-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1600
+      },
+      "slotCss": 640
+    },
+    "corolla-altis-3-1280.webp": {
+      "origem": "corolla-altis-3-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1600
+      },
+      "slotCss": 640
+    },
+    "corolla-altis-4-1280.webp": {
+      "origem": "corolla-altis-4-1288x1610.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1610
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1600
+      },
+      "slotCss": 640
+    },
+    "lexus-nx300-0c-1000.webp": {
+      "origem": "lexus-nx300-0-1288x1708.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1708
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1326
+      },
+      "slotCss": 500
+    },
+    "lexus-nx300-0-1280.webp": {
+      "origem": "lexus-nx300-0-1288x1708.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1708
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1697
+      },
+      "slotCss": 640
+    },
+    "lexus-nx300-1-1280.webp": {
+      "origem": "lexus-nx300-1-1288x1708.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1708
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1697
+      },
+      "slotCss": 640
+    },
+    "lexus-nx300-2-1280.webp": {
+      "origem": "lexus-nx300-2-1288x1708.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1708
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1697
+      },
+      "slotCss": 640
+    },
+    "lexus-nx300-3-1280.webp": {
+      "origem": "lexus-nx300-3-1288x1708.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1708
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1697
+      },
+      "slotCss": 640
+    },
+    "honda-city-0c-1000.webp": {
+      "origem": "honda-city-0-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1000,
+        "h": 1247
+      },
+      "slotCss": 500
+    },
+    "honda-city-0-1280.webp": {
+      "origem": "honda-city-0-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1596
+      },
+      "slotCss": 640
+    },
+    "honda-city-1-1280.webp": {
+      "origem": "honda-city-1-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1596
+      },
+      "slotCss": 640
+    },
+    "honda-city-2-1280.webp": {
+      "origem": "honda-city-2-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1596
+      },
+      "slotCss": 640
+    },
+    "honda-city-3-1280.webp": {
+      "origem": "honda-city-3-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1596
+      },
+      "slotCss": 640
+    },
+    "honda-city-4-1280.webp": {
+      "origem": "honda-city-4-1288x1606.jpg",
+      "nativa": {
+        "w": 1288,
+        "h": 1606
+      },
+      "exportada": {
+        "w": 1280,
+        "h": 1596
+      },
+      "slotCss": 640
+    },
     "fachada-1200.webp": {
       "origem": "maps-01.jpg",
       "nativa": {
@@ -11,7 +359,7 @@
         "w": 1200,
         "h": 1600
       },
-      "slotCss": 1200
+      "slotCss": 620
     }
   }
 }

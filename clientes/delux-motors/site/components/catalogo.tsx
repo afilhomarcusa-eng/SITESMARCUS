@@ -71,7 +71,7 @@ function Pilula({
       style={{
         border: `1px solid ${ativo ? "var(--brasa)" : "var(--linha)"}`,
         background: ativo ? "var(--brasa)" : "transparent",
-        color: ativo ? "var(--breu)" : "var(--tinta-2)",
+        color: ativo ? "var(--areia)" : "var(--tinta-2)",
         fontWeight: ativo ? 500 : 400,
       }}
     >
@@ -117,7 +117,7 @@ function Vazio({ filtrando, limpar }: { filtrando: boolean; limpar: () => void }
           target="_blank"
           rel="noopener noreferrer"
           className="px-6 py-3.5 text-[0.74rem] font-medium uppercase tracking-[0.13em]"
-          style={{ background: "var(--brasa)", color: "var(--breu)" }}
+          style={{ background: "var(--brasa)", color: "var(--areia)" }}
         >
           Dizer o que procuro
         </a>
@@ -137,7 +137,7 @@ function Vazio({ filtrando, limpar }: { filtrando: boolean; limpar: () => void }
             target="_blank"
             rel="noopener noreferrer"
             className="group px-0 py-7 sm:px-6"
-            style={{ background: "var(--breu)" }}
+            style={{ background: "var(--areia)" }}
           >
             <p className="etiqueta mb-2">{s.verbo}</p>
             <p className="display-leve mb-2 text-[1.05rem]">{s.titulo}</p>
@@ -249,11 +249,16 @@ export default function Catalogo({ inicial }: { inicial: Carro[] }) {
               id="painel-filtros"
               className={`${abertoNoCelular ? "grid" : "hidden"} gap-8 lg:sticky lg:top-24 lg:grid`}
             >
+              {/* Grupo com uma opção só não é filtro: ele não separa nada e
+                  ainda ocupa espaço prometendo que separa. Só entra a partir
+                  de duas. */}
               {[
                 { t: "Marca", campo: "marcas" as const, itens: op.marcas },
                 { t: "Câmbio", campo: "cambios" as const, itens: op.cambios },
                 { t: "Combustível", campo: "combustiveis" as const, itens: op.combustiveis },
-              ].map((g) => (
+              ]
+                .filter((g) => g.itens.length > 1)
+                .map((g) => (
                 <div key={g.campo}>
                   <p className="etiqueta mb-3">{g.t}</p>
                   <div className="flex flex-wrap gap-2">

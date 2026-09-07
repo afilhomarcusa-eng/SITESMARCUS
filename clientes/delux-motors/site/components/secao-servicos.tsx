@@ -33,7 +33,7 @@ const PASSOS: Record<string, string[]> = {
 
 export default function SecaoServicos() {
   return (
-    <section id="servicos" className="secao" style={{ background: "var(--breu)" }}>
+    <section id="servicos" className="secao" style={{ background: "var(--areia)" }}>
       <div className="casca">
         <div className="mb-12 max-w-[46ch] md:mb-16">
           <p className="etiqueta mb-5">O que fazemos</p>
@@ -53,7 +53,7 @@ export default function SecaoServicos() {
               data-servico={s.id}
               data-revela
               className="group grid gap-6 px-0 py-9 md:grid-cols-[7rem_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-start md:gap-10 md:py-11"
-              style={{ background: "var(--breu)" }}
+              style={{ background: "var(--areia)" }}
             >
               <p
                 className="display text-[clamp(2.2rem,4vw,3rem)] leading-none"

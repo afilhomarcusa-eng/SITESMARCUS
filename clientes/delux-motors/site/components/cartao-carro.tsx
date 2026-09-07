@@ -21,7 +21,7 @@ export default function CartaoCarro({
   carro: CarroSalvo;
   prioridade?: boolean;
 }) {
-  const src = useFoto(carro, "1000");
+  const src = useFoto(carro, "cartao");
 
   return (
     <Link
@@ -32,7 +32,7 @@ export default function CartaoCarro({
     >
       <div
         className="relative mb-4 overflow-hidden"
-        style={{ background: "var(--fumo)", aspectRatio: "4 / 5" }}
+        style={{ background: "var(--nuvem)", aspectRatio: "4 / 5" }}
       >
         {src ? (
           <img
@@ -52,11 +52,21 @@ export default function CartaoCarro({
           </span>
         )}
         <span
-          className="dado absolute left-0 top-0 px-3 py-2 text-[0.62rem] uppercase tracking-[0.16em]"
-          style={{ background: "var(--breu)", color: "var(--brasa)" }}
+          className="dado absolute left-0 top-0 px-3 py-2 text-[0.62rem] uppercase tracking-[0.14em]"
+          style={{ background: "var(--areia)", color: "var(--tinta)" }}
         >
           {carro.ano}
         </span>
+        {/* Alerta fica no cartão, não só na ficha. Passagem por leilão muda o
+            valor do carro e quem descobre isso depois se sente enganado. */}
+        {carro.alertas?.length ? (
+          <span
+            className="dado absolute bottom-0 left-0 right-0 px-3 py-2 text-[0.62rem] uppercase tracking-[0.12em]"
+            style={{ background: "var(--brasa)", color: "var(--areia)" }}
+          >
+            {carro.alertas[0]}
+          </span>
+        ) : null}
       </div>
 
       <h3 className="display-leve mb-1.5 text-[clamp(1rem,1.4vw,1.22rem)]">

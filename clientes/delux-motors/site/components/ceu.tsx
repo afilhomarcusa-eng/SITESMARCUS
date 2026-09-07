@@ -6,13 +6,17 @@ import { DURACAO_ABERTURA } from "@/lib/abertura";
 /**
  * O céu.
  *
- * A única fotografia real que existe da Delux Motors é a fachada em Boca do
- * Rio no fim da tarde, com o céu de Salvador aceso atrás. Este shader
- * reconstrói aquele céu, e ele é ao mesmo tempo o fundo do site e a abertura.
+ * É o céu de Salvador que aparece nas fotos do estoque: os carros deles são
+ * fotografados de dia, no pátio da loja, com o céu aberto atrás. Este shader
+ * reconstrói aquele céu, e ele é ao mesmo tempo o fundo do herói e a abertura.
  *
- * A abertura é o horizonte nascendo: a tela começa no breu e a brasa sobe pela
- * borda de baixo até o céu inteiro assentar, que é quando o site já está lá.
- * Não existe corte entre abertura e herói, é a mesma imagem em dois momentos.
+ * A abertura é o dia chegando: a tela começa numa luz baixa e morna, a
+ * claridade sobe pela borda de baixo e o céu abre até assentar, que é quando o
+ * site já está lá. Não existe corte entre abertura e herói, é a mesma imagem em
+ * dois momentos.
+ *
+ * O degradê termina exatamente na cor de fundo da página, então a emenda entre
+ * o herói e a primeira seção não aparece.
  *
  * Por que WebGL para um degradê: um céu ocupando a tela inteira em CSS mostra
  * faixas, porque o navegador interpola em 8 bits sem ruído. Aqui o grão entra
@@ -22,7 +26,7 @@ import { DURACAO_ABERTURA } from "@/lib/abertura";
 
 type Props = {
   /**
-   * Roda a subida do horizonte. Quem decide isso é o herói, em lib/abertura.ts,
+   * Roda a subida da claridade. Quem decide isso é o herói, em lib/abertura.ts,
    * porque o relógio da abertura não pode depender do pacote do three chegar.
    * Aqui só se anima o céu.
    */
@@ -42,13 +46,13 @@ const FRAG = /* glsl */ `
   varying vec2 vUv;
 
   uniform float uTempo;
-  uniform float uSobe;   // 0 = breu, 1 = céu assentado
+  uniform float uSobe;   // 0 = luz baixa, 1 = dia assentado
   uniform vec2  uRes;
 
-  // Cores medidas na foto da fachada, em 07/09/2026.
-  const vec3 ALTO  = vec3(0.043, 0.036, 0.055); // topo, quase breu violeta
-  const vec3 MEIO  = vec3(0.286, 0.220, 0.271); // malva do céu alto
-  const vec3 BRASA = vec3(0.941, 0.741, 0.627); // horizonte aceso
+  // Cores medidas nas fotos do estoque, em 07/09/2026.
+  const vec3 ALTO  = vec3(0.760, 0.855, 0.918); // céu aberto sobre o pátio
+  const vec3 MEIO  = vec3(0.906, 0.882, 0.847); // a bruma quente perto do chão
+  const vec3 BAIXO = vec3(0.949, 0.937, 0.918); // fecha na cor da página
 
   float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -65,8 +69,8 @@ const FRAG = /* glsl */ `
     );
   }
 
-  // Nuvem de fim de tarde: camadas de ruído esticadas na horizontal, porque
-  // nuvem de horizonte é larga e baixa, não redonda.
+  // Nuvem larga e baixa, esticada na horizontal, que é como nuvem de horizonte
+  // se comporta. Nada de bolha redonda.
   float fbm(vec2 p) {
     float v = 0.0;
     float a = 0.5;
@@ -82,46 +86,40 @@ const FRAG = /* glsl */ `
     vec2 uv = vUv;
     float razao = uRes.x / max(uRes.y, 1.0);
 
-    // O horizonte sobe durante a abertura e para baixo, perto da borda.
-    // Num pôr do sol de verdade a faixa acesa é estreita: o resto do céu é
-    // escuro. A primeira versão espalhava a brasa por dois terços da tela e o
-    // resultado era névoa cor de pêssego, não entardecer.
-    float h = mix(-0.34, 0.10, uSobe);
+    // A claridade sobe durante a abertura e para no lugar dela.
+    float h = mix(-0.35, 0.34, uSobe);
 
     // Deriva lenta, quase parada. Céu que corre vira protetor de tela.
-    vec2 p = vec2(uv.x * razao * 1.6 + uTempo * 0.008, uv.y * 2.4);
+    vec2 p = vec2(uv.x * razao * 1.5 + uTempo * 0.006, uv.y * 2.2);
     float nuvens = fbm(p);
 
-    // A altura da nuvem empurra o degradê um pouco para cima e para baixo,
-    // então a borda entre malva e brasa deixa de ser uma reta.
-    float ondula = (nuvens - 0.5) * 0.09;
-    float y = uv.y + ondula;
+    // A nuvem ondula a borda entre as faixas, então ela deixa de ser uma reta
+    // atravessando a tela.
+    float y = uv.y + (nuvens - 0.5) * 0.08;
 
-    // O malva só começa na metade de baixo. Em cima é quase breu, que é onde
-    // o texto do herói pousa.
-    float paraMeio  = smoothstep(0.78, h + 0.10, y);
-    float paraBrasa = smoothstep(h + 0.26, h - 0.04, y);
+    float paraMeio  = smoothstep(0.86, h + 0.12, y);
+    float paraBaixo = smoothstep(h + 0.30, h - 0.16, y);
 
     vec3 cor = ALTO;
-    cor = mix(cor, MEIO, paraMeio * 0.8);
-    cor = mix(cor, BRASA, pow(clamp(paraBrasa, 0.0, 1.0), 1.8) * 0.9);
+    cor = mix(cor, MEIO, paraMeio);
+    cor = mix(cor, BAIXO, clamp(paraBaixo, 0.0, 1.0));
 
-    // As nuvens acendem numa faixa curta logo acima do horizonte.
-    float acende = smoothstep(h + 0.34, h + 0.03, y) * smoothstep(0.46, 0.74, nuvens);
-    cor += vec3(0.30, 0.14, 0.08) * acende * 0.55;
+    // Nuvem alta, clara, discreta. Some perto do chão.
+    float alta = smoothstep(0.45, 0.85, nuvens) * smoothstep(h + 0.10, 0.92, y);
+    cor = mix(cor, vec3(0.98, 0.97, 0.96), alta * 0.35);
 
-    // Sombra na esquerda, que é onde fica a coluna de texto do herói. A brasa
-    // fica concentrada à direita, do lado da foto, e o texto ganha chão escuro.
-    float coluna = smoothstep(0.70, 0.0, uv.x);
-    cor *= 1.0 - coluna * 0.62;
+    // Um respiro de brasa logo acima do horizonte, que é a cor da marca.
+    float quente = smoothstep(h + 0.26, h - 0.02, y) * smoothstep(0.40, 0.72, nuvens);
+    cor = mix(cor, vec3(0.85, 0.62, 0.47), quente * 0.16);
 
-    // Grão de filme. Entra antes da quantização, e é ele que tira as faixas
-    // do degradê. Sem isto o céu inteiro fica listrado.
+    // Grão de filme. Entra antes da quantização, e é ele que tira as faixas do
+    // degradê. Sem isto o céu inteiro fica listrado.
     float grao = hash(uv * uRes + fract(uTempo) * 91.7) - 0.5;
-    cor += grao * 0.016;
+    cor += grao * 0.012;
 
-    // A abertura escurece tudo no começo, então a brasa aparece sozinha.
-    cor *= mix(0.15, 1.0, smoothstep(0.0, 0.55, uSobe));
+    // A abertura começa com a luz baixa e morna, e abre para o dia.
+    float luz = smoothstep(0.0, 0.7, uSobe);
+    cor = mix(cor * vec3(0.72, 0.63, 0.58), cor, luz);
 
     gl_FragColor = vec4(cor, 1.0);
   }
@@ -139,8 +137,10 @@ export default function Ceu({ abertura }: Props) {
 
     let cancelado = false;
     let limpar: (() => void) | undefined;
+
     // O three entra por import dinâmico para não pesar o primeiro carregamento.
-    // Se falhar, o degradê em CSS que está atrás continua valendo.
+    // Se falhar, o degradê de CSS que está no fundo continua valendo, e o
+    // conteúdo do herói não depende disto: quem revela é o relógio do herói.
     import("three")
       .then((THREE) => {
         if (cancelado) return;
@@ -149,11 +149,8 @@ export default function Ceu({ abertura }: Props) {
         try {
           renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
         } catch {
-          // Placa sem WebGL: o degradê de CSS que está no fundo assume.
           return;
         }
-
-        const rodar = abertura;
 
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(alvo.clientWidth, alvo.clientHeight);
@@ -164,7 +161,7 @@ export default function Ceu({ abertura }: Props) {
         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
         const uniforms = {
           uTempo: { value: 0 },
-          uSobe: { value: rodar ? 0 : 1 },
+          uSobe: { value: abertura ? 0 : 1 },
           uRes: { value: new THREE.Vector2(alvo.clientWidth, alvo.clientHeight) },
         };
         const malha = new THREE.Mesh(
@@ -183,16 +180,19 @@ export default function Ceu({ abertura }: Props) {
           const l = alvo.clientWidth;
           const a = alvo.clientHeight;
           renderer.setSize(l, a);
-          uniforms.uRes.value.set(l * renderer.getPixelRatio(), a * renderer.getPixelRatio());
+          uniforms.uRes.value.set(
+            l * renderer.getPixelRatio(),
+            a * renderer.getPixelRatio(),
+          );
         }
         medir();
 
-        // O primeiro gesto encerra a subida do horizonte, igual ao herói.
+        // O primeiro gesto encerra a subida, igual ao relógio do herói.
         let pulou = false;
         const pular = () => {
           pulou = true;
         };
-        if (rodar) {
+        if (abertura) {
           for (const ev of ["pointerdown", "wheel", "keydown", "touchstart"] as const) {
             window.addEventListener(ev, pular, { once: true, passive: true });
           }
@@ -207,7 +207,7 @@ export default function Ceu({ abertura }: Props) {
         });
         obs.observe(alvo);
 
-        // Saída exponencial: sobe rápido e assenta devagar, como luz caindo.
+        // Saída exponencial: sobe rápido e assenta devagar, como luz abrindo.
         const facil = (x: number) => 1 - Math.pow(1 - x, 3.2);
 
         function quadro(agora: number) {
@@ -216,7 +216,7 @@ export default function Ceu({ abertura }: Props) {
           if (!t0) t0 = agora;
           uniforms.uTempo.value = (agora - t0) / 1000;
 
-          if (rodar) {
+          if (abertura) {
             const p = pulou ? 1 : Math.min(1, (agora - t0) / DURACAO_ABERTURA);
             uniforms.uSobe.value = facil(p);
           }
@@ -240,8 +240,7 @@ export default function Ceu({ abertura }: Props) {
         };
       })
       .catch(() => {
-        // Sem three fica o degradê de CSS. O conteúdo do herói não depende
-        // disto: quem revela é o relógio do próprio herói.
+        /* sem three, fica o degradê de CSS */
       });
 
     return () => {
@@ -257,11 +256,10 @@ export default function Ceu({ abertura }: Props) {
       className="absolute inset-0"
       style={{
         /* Fallback: se o WebGL não subir, ainda existe céu, só sem o grão.
-           Repete as duas camadas do shader, inclusive a sombra da esquerda,
-           senão a foto do herói fica com a borda aparecendo contra um fundo
-           que não combina com ela. */
+           Repete as faixas do shader e fecha na cor da página, para a emenda
+           com a primeira seção não aparecer. */
         background:
-          "linear-gradient(to right, rgba(8,7,10,0.62) 0%, rgba(8,7,10,0.25) 44%, transparent 72%), linear-gradient(to top, #e0ab92 0%, #8d6a70 12%, #493a4a 34%, #14101a 64%, #08070a 100%)",
+          "linear-gradient(to top, #f2efea 0%, #f2efea 12%, #e7ddd2 30%, #dfe6ea 62%, #c2d8e9 100%)",
       }}
     />
   );

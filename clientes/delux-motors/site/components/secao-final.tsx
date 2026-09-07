@@ -12,7 +12,7 @@ import {
 /**
  * O fecho.
  *
- * Repete o motivo da abertura: a brasa do horizonte, agora como um clarão na
+ * Repete o motivo da abertura: a luz do horizonte, agora como um clarão na
  * borda de baixo. Começo e fim se referenciando é o que dá sensação de coisa
  * terminada, em vez de página que simplesmente acabou.
  */
@@ -37,7 +37,7 @@ export default function SecaoFinal() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "linear-gradient(to top, rgba(240,192,168,0.20) 0%, rgba(160,122,118,0.10) 22%, transparent 58%)",
+              "linear-gradient(to top, rgba(191,90,51,0.14) 0%, rgba(207,224,236,0.28) 26%, transparent 62%)",
           }}
         />
 
@@ -66,7 +66,7 @@ export default function SecaoFinal() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group mb-4 flex w-full items-center justify-between gap-6 px-6 py-5 text-[0.78rem] font-medium uppercase tracking-[0.14em] sm:w-auto"
-                style={{ background: "var(--brasa)", color: "var(--breu)" }}
+                style={{ background: "var(--brasa)", color: "var(--areia)" }}
               >
                 Chamar no WhatsApp
                 <span

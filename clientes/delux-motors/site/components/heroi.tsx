@@ -5,24 +5,33 @@ import Link from "next/link";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CONTATO, EMPRESA, HORARIO, whatsapp } from "@/lib/contato";
 import { DURACAO_ABERTURA, deveAbrir } from "@/lib/abertura";
+import { CARROS_INICIAIS } from "@/lib/carros";
+import { brl } from "@/lib/fmt";
 
 const Ceu = dynamic(() => import("./ceu"), { ssr: false });
 
-const MSG =
-  "Olá! Vim pelo site da Delux Motors e queria falar com vocês.";
+const MSG = "Olá! Vim pelo site da Delux Motors e queria falar com vocês.";
 
 /**
  * A chegada.
  *
  * A abertura não é uma tela de carregamento na frente do site: é o próprio
- * site num momento anterior. A brasa sobe pela borda de baixo, o céu de
- * Salvador assenta, a marca se apresenta no meio da tela e recolhe, e a loja
- * aparece embaixo do céu que já estava lá. Nunca há corte.
+ * site num momento anterior. A luz sobe pela borda de baixo, o céu de Salvador
+ * abre, a marca se apresenta no meio da tela e recolhe, e o carro aparece
+ * embaixo do céu que já estava lá. Nunca há corte.
  *
- * O botão de WhatsApp do cabeçalho fica de fora de tudo isso, cheio e
- * clicável desde o primeiro quadro. Abertura que apaga a ação principal por
- * alguns segundos custa conversa, e ninguém percebe isso no olho.
+ * O carro do herói é do estoque de verdade e está identificado, com preço e
+ * link. Foto de carro em site de revenda sem dizer que carro é vira papel de
+ * parede.
+ *
+ * O botão de WhatsApp do cabeçalho fica de fora de tudo isso, cheio e clicável
+ * desde o primeiro quadro. Abertura que apaga a ação principal por alguns
+ * segundos custa conversa, e ninguém percebe isso no olho.
  */
+
+/** O carro da vitrine: o mais caro do estoque, que é o que puxa a atenção. */
+const DESTAQUE = [...CARROS_INICIAIS].sort((a, b) => b.preco - a.preco)[0];
+
 export default function Heroi() {
   // O relógio é daqui, e começa na montagem. Antes quem contava era o
   // componente do céu, e o DOM só revelava depois que o pacote do three
@@ -46,8 +55,8 @@ export default function Heroi() {
    * do requestAnimationFrame, o primeiro quadro já teria sido pintado com o
    * conteúdo na tela, e a abertura começaria com um pisca.
    *
-   * A regra abaixo existe para evitar renderização em cascata, e ela está certa
-   * no caso geral. Aqui é uma renderização a mais, antes da pintura, e é
+   * A regra abaixo existe para evitar renderização em cascata, e está certa no
+   * caso geral. Aqui é uma renderização a mais, antes da pintura, e é
    * exatamente o que se quer.
    */
   useLayoutEffect(() => {
@@ -85,17 +94,13 @@ export default function Heroi() {
     };
   }, []);
 
-  // Os tempos não podem se sobrepor. Na primeira versão a marca ainda estava
-  // na tela quando a foto e a copy já tinham entrado, e o resultado era tudo
-  // acontecendo de uma vez em cima da mesma área.
   // Os tempos não se sobrepõem e são apertados de propósito. A foto do herói é
-  // o maior elemento da tela, então o momento em que ela aparece É o LCP: cada
-  // décimo que a sequência atrasa vira nota ruim de carregamento.
+  // o maior elemento da tela, então o momento em que ela aparece É o LCP.
   const trava = (x: number) => Math.max(0, Math.min(1, x));
-  const marcaEntra = trava((p - 0.2) / 0.2); //  entra com o céu já subindo
-  const marcaSai = trava((p - 0.44) / 0.14); //  e sai antes da loja chegar
-  const loja = trava((p - 0.48) / 0.2); //       a foto revela em seguida
-  const conteudo = trava((p - 0.56) / 0.22); //  e a copy fecha a sequência
+  const marcaEntra = trava((p - 0.2) / 0.2);
+  const marcaSai = trava((p - 0.44) / 0.14);
+  const carro = trava((p - 0.48) / 0.2);
+  const conteudo = trava((p - 0.56) / 0.22);
 
   return (
     <section
@@ -104,46 +109,40 @@ export default function Heroi() {
     >
       <Ceu abertura={rodarAbertura} />
 
-      {/* A loja.
-          É a única fotografia real que existe dela, e o que a torna boa é o céu
-          aceso atrás da fachada. A primeira versão cortava a foto numa faixa
-          larga ancorada embaixo, e o corte comia justamente o pôr do sol: no
-          fim sobrava só um galpão escuro.
-          Como o original é retrato, ela vira painel retrato, quase inteira, e
-          o céu do shader continua o céu de dentro da foto. */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 flex w-full items-end justify-end md:w-[50%]">
+      {/* O carro. Painel retrato à direita no desktop, faixa embaixo no
+          celular, com o céu do shader continuando em volta. */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 flex w-full items-end justify-end md:w-[58%]">
         <img
-          data-foto-loja
-          src="/images/fachada-1200.webp"
-          alt="Fachada da Delux Motors na Boca do Rio ao entardecer, com um conversível preto e uma moto estacionados na frente"
-          width={1200}
-          height={1600}
+          data-foto-carro
+          src={`/images/${DESTAQUE.foto}-1-1280.webp`}
+          alt={`${DESTAQUE.marca} ${DESTAQUE.modelo} ${DESTAQUE.versao} ${DESTAQUE.ano}, no pátio da Delux Motors`}
+          width={1280}
+          height={1697}
           fetchPriority="high"
           decoding="async"
-          className="h-[48svh] w-full object-cover object-bottom md:h-[86svh] md:w-auto md:max-w-none"
+          className="h-[52svh] w-full object-cover object-bottom md:h-[84svh] md:w-auto md:max-w-none"
           style={{
-            opacity: loja,
-            // Escurecida de propósito: a foto é um fim de tarde já claro, e a
-            // marca precisa dela como fundo, não como assunto.
-            filter: "brightness(0.72) saturate(1.06)",
+            opacity: carro,
             transition: "opacity 600ms var(--e-saida)",
             maskImage:
-              "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 26%, #000 62%)",
+              "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 16%, #000 40%)",
           }}
         />
       </div>
 
-      {/* No desktop a foto costura na horizontal, com o céu do shader
-          continuando à esquerda dela. No celular ela é faixa e a costura é na
-          vertical, então a máscara muda junto. */}
+      {/* No desktop o carro costura na horizontal, com o céu continuando à
+          esquerda dele. No celular ele é faixa e a costura é na vertical. */}
       <style>{`
         @media (min-width: 768px) {
-          [data-foto-loja] {
+          [data-foto-carro] {
+            /* O esmaecimento da esquerda é longo de propósito. Curto demais,
+               o céu da foto encosta no céu do shader com um degrau visível, e
+               a emenda entre os dois entrega que são duas imagens. */
             -webkit-mask-image:
-              linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 22%, #000 58%),
+              linear-gradient(to right, transparent 0%, rgba(0,0,0,0.18) 26%, rgba(0,0,0,0.62) 48%, #000 72%),
               linear-gradient(to bottom, transparent 0%, #000 14%);
             mask-image:
-              linear-gradient(to right, transparent 0%, rgba(0,0,0,0.35) 22%, #000 58%),
+              linear-gradient(to right, transparent 0%, rgba(0,0,0,0.18) 26%, rgba(0,0,0,0.62) 48%, #000 72%),
               linear-gradient(to bottom, transparent 0%, #000 14%);
             -webkit-mask-composite: source-in;
             mask-composite: intersect;
@@ -151,14 +150,14 @@ export default function Heroi() {
         }
       `}</style>
 
-      {/* Véu por trás da coluna de texto. A foto e o céu são claros embaixo, e
-          sem isto a copy fica ilegível justamente onde ela mais importa. */}
+      {/* Véu por trás do texto. O céu e o carro são claros e a tinta é escura,
+          então aqui o véu é da cor da página, não sombra. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-[15] md:hidden"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(8,7,10,0.96) 0%, rgba(8,7,10,0.9) 42%, rgba(8,7,10,0.55) 66%, transparent 92%)",
+            "linear-gradient(to bottom, var(--areia) 0%, rgba(242,239,234,0.94) 40%, rgba(242,239,234,0.45) 58%, transparent 78%)",
           opacity: conteudo,
           transition: "opacity 900ms var(--e-saida)",
         }}
@@ -168,19 +167,7 @@ export default function Heroi() {
         className="pointer-events-none absolute inset-0 z-[15] hidden md:block"
         style={{
           background:
-            "linear-gradient(95deg, rgba(8,7,10,0.94) 0%, rgba(8,7,10,0.78) 30%, rgba(8,7,10,0.28) 52%, transparent 72%)",
-          opacity: conteudo,
-          transition: "opacity 900ms var(--e-saida)",
-        }}
-      />
-
-      {/* Chão da faixa de dados. Ela fica na borda de baixo, que é exatamente
-          onde o horizonte acende, e endereço e horário precisam ser lidos. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[16] h-[34%]"
-        style={{
-          background: "linear-gradient(to top, rgba(8,7,10,0.94) 0%, transparent 100%)",
+            "linear-gradient(95deg, var(--areia) 0%, rgba(242,239,234,0.92) 34%, rgba(242,239,234,0.42) 56%, transparent 76%)",
           opacity: conteudo,
           transition: "opacity 900ms var(--e-saida)",
         }}
@@ -229,7 +216,7 @@ export default function Heroi() {
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-3 px-6 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em]"
-              style={{ background: "var(--brasa)", color: "var(--breu)" }}
+              style={{ background: "var(--brasa)", color: "var(--areia)" }}
             >
               Falar no WhatsApp
               <span
@@ -247,7 +234,7 @@ export default function Heroi() {
               className="group relative py-1 text-[0.78rem] uppercase tracking-[0.14em]"
               style={{ color: "var(--tinta-2)" }}
             >
-              Ver o estoque
+              Ver os {CARROS_INICIAIS.length} carros
               <span
                 aria-hidden="true"
                 className="absolute inset-x-0 -bottom-0.5 h-px origin-left transition-transform duration-300 group-hover:scale-x-0"
@@ -260,8 +247,38 @@ export default function Heroi() {
           </div>
         </div>
 
-        <dl
-          className="faixa-dados risco -mx-[calc((100vw-var(--casca))/2)] mt-10 grid grid-cols-2 gap-x-6 gap-y-6 px-[calc((100vw-var(--casca))/2)] pb-6 pt-6 md:mx-0 md:mt-14 md:grid-cols-4 md:gap-x-10 md:px-0 md:pb-0">
+        {/* O carro da cena, identificado. */}
+        <Link
+          href={`/estoque/${DESTAQUE.slug}`}
+          data-destaque
+          className="group mt-9 inline-flex items-start gap-4 md:mt-12"
+        >
+          <span
+            aria-hidden="true"
+            className="mt-2 block h-px w-8 shrink-0 transition-all duration-500 group-hover:w-12"
+            style={{
+              background: "var(--brasa)",
+              transitionTimingFunction: "var(--e-saida)",
+            }}
+          />
+          <span>
+            <span className="etiqueta mb-1.5 block">Na foto, no estoque</span>
+            <span className="display-leve block text-[clamp(1.02rem,1.6vw,1.32rem)]">
+              {DESTAQUE.marca} {DESTAQUE.modelo} {DESTAQUE.versao}
+            </span>
+            <span
+              className="dado mt-1.5 block text-[0.76rem]"
+              style={{ color: "var(--tinta-3)" }}
+            >
+              {DESTAQUE.ano} · {brl(DESTAQUE.preco)}
+            </span>
+          </span>
+        </Link>
+
+        {/* No celular, este vão é o espaço do carro. */}
+        <div aria-hidden="true" className="h-[26svh] md:hidden" />
+
+        <dl className="faixa-dados risco -mx-[calc((100vw-var(--casca))/2)] mt-9 grid grid-cols-2 gap-x-6 gap-y-6 px-[calc((100vw-var(--casca))/2)] pb-6 pt-6 md:mx-0 md:mt-12 md:grid-cols-4 md:gap-x-10 md:px-0 md:pb-0">
           {[
             { k: "Onde", v: "Av. Octávio Mangabeira, 20" },
             { k: "Segunda a sexta", v: "09:00 às 18:00" },

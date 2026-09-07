@@ -9,7 +9,7 @@
 
 import { chromium } from "playwright";
 
-const BASE = process.env.PERF_BASE ?? "http://127.0.0.1:3314";
+const BASE = process.env.PERF_BASE ?? "http://127.0.0.1:3315";
 
 const navegador = await chromium.launch();
 const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 } });
@@ -68,7 +68,7 @@ async function tempoAteAparecer(navegador) {
   // sondagem soma o custo de cada evaluate e devolve algumas centenas de
   // milissegundos a mais, o que fazia esta medida discordar da do QA.
   await p
-    .locator("[data-foto-loja]")
+    .locator("[data-foto-carro]")
     .evaluate(
       (e) =>
         new Promise((ok) => {
@@ -92,7 +92,7 @@ const aparece = await tempoAteAparecer(navegador);
 
 console.log(`
   LCP   ${Math.round(m.lcp)} ms  em ${m.alvo || "?"}   (alvo abaixo de 2500)
-  loja na tela, primeira visita da sessão: ${aparece} ms
+  carro na tela, primeira visita da sessão: ${aparece} ms
   CLS   ${m.cls.toFixed(4)}         (alvo abaixo de 0,1)
   DCL   ${Math.round(m.dcl)} ms
 

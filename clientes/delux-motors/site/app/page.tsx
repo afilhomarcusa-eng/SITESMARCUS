@@ -39,7 +39,7 @@ export default function Home() {
       <main>
         <Heroi />
         <SecaoServicos />
-        <SecaoEstoqueChamada total={CARROS_INICIAIS.length} />
+        <SecaoEstoqueChamada inicial={CARROS_INICIAIS} />
         <SecaoLoja />
         <SecaoLocal />
         <SecaoDuvidas />

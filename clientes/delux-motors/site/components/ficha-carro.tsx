@@ -10,10 +10,10 @@ import { CONTATO, SERVICOS, whatsapp } from "@/lib/contato";
 /**
  * A ficha de um carro.
  *
- * Roda no cliente porque hoje o estoque desta loja só existe no navegador de
- * quem cadastrou em /admin: não há lista pública para o servidor renderizar.
- * Quando o cliente mandar o estoque real e ele entrar em lib/carros.ts, esta
- * página passa a ser gerada no build, com preço no HTML, sem mudar o layout.
+ * Procura primeiro na lista publicada, em lib/carros.ts, que é o que sai
+ * pronto do build com preço no HTML. Se não achar, procura no que a gerência
+ * gravou neste navegador, e é isso que faz um carro recém cadastrado em /admin
+ * ter página antes de existir banco.
  */
 
 type Estado = "procurando" | "achou" | "nao-achou";
@@ -70,7 +70,7 @@ export default function FichaCarro({ slug }: { slug: string }) {
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-3.5 text-[0.74rem] font-medium uppercase tracking-[0.13em]"
-            style={{ background: "var(--brasa)", color: "var(--breu)" }}
+            style={{ background: "var(--brasa)", color: "var(--areia)" }}
           >
             Ver o que tem hoje
           </a>
@@ -90,8 +90,16 @@ export default function FichaCarro({ slug }: { slug: string }) {
 }
 
 function Ficha({ carro }: { carro: CarroSalvo }) {
-  const src = useFoto(carro, "g-1440");
+  const src = useFoto(carro, "grande");
   const titulo = nome(carro);
+  // Todas as fotos do carro, e não uma só. Quem compra sem ver quer olhar por
+  // todos os lados antes de mandar mensagem.
+  const galeria =
+    carro.fotoEnviada || !carro.foto
+      ? []
+      : Array.from({ length: Math.max(0, carro.fotos - 1) }, (_, i) =>
+          `/images/${carro.foto}-${i + 1}-1280.webp`,
+        );
 
   const ficha = [
     { k: "Ano", v: carro.ano },
@@ -114,22 +122,39 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
       </Link>
 
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
-        <div style={{ background: "var(--fumo)" }}>
+        <div className="grid gap-3">
           {src ? (
             <img
               src={src}
               alt={`${titulo} ${carro.ano} na Delux Motors`}
-              width={carro.nativa?.w ?? 1200}
-              height={carro.nativa?.h ?? 1600}
+              width={carro.nativa?.w ?? 1288}
+              height={carro.nativa?.h ?? 1610}
               fetchPriority="high"
               decoding="async"
               className="w-full"
+              style={{ background: "var(--nuvem)" }}
             />
           ) : (
-            <p className="etiqueta flex aspect-[4/5] items-center justify-center px-6 text-center">
+            <p
+              className="etiqueta flex aspect-[4/5] items-center justify-center px-6 text-center"
+              style={{ background: "var(--nuvem)" }}
+            >
               Foto ainda não publicada
             </p>
           )}
+          {galeria.map((g, i) => (
+            <img
+              key={g}
+              src={g}
+              alt={`${titulo} ${carro.ano}, foto ${i + 2}`}
+              width={carro.nativa?.w ?? 1288}
+              height={carro.nativa?.h ?? 1610}
+              loading="lazy"
+              decoding="async"
+              className="w-full"
+              style={{ background: "var(--nuvem)" }}
+            />
+          ))}
         </div>
 
         <div className="lg:sticky lg:top-24 lg:self-start">
@@ -146,6 +171,23 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
             {brl(carro.preco)}
           </p>
 
+          {carro.alertas?.length ? (
+            <ul className="mb-7 grid gap-2">
+              {carro.alertas.map((a) => (
+                <li
+                  key={a}
+                  className="dado px-4 py-3 text-[0.78rem]"
+                  style={{
+                    border: "1px solid var(--brasa)",
+                    color: "var(--brasa)",
+                  }}
+                >
+                  {a}
+                </li>
+              ))}
+            </ul>
+          ) : null}
+
           <a
             data-cta="carro"
             href={whatsapp(
@@ -154,7 +196,7 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
             target="_blank"
             rel="noopener noreferrer"
             className="group mb-3 flex items-center justify-between gap-6 px-6 py-5 text-[0.76rem] font-medium uppercase tracking-[0.14em]"
-            style={{ background: "var(--brasa)", color: "var(--breu)" }}
+            style={{ background: "var(--brasa)", color: "var(--areia)" }}
           >
             Perguntar sobre este carro
             <span

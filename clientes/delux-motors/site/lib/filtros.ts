@@ -64,7 +64,13 @@ export function grupoCambio(cambio: string): "Automático" | "Manual" {
 }
 
 export function opcoes(carros: CarroSalvo[]) {
-  const unico = (xs: string[]) => [...new Set(xs)].sort((a, b) => a.localeCompare(b, "pt-BR"));
+  // Campo em branco não vira opção. Quando a legenda do anúncio não diz o
+  // combustível, o certo é o carro não aparecer sob nenhum, e não o filtro
+  // ganhar uma pílula sem texto.
+  const unico = (xs: string[]) =>
+    [...new Set(xs.filter((x) => x && x.trim()))].sort((a, b) =>
+      a.localeCompare(b, "pt-BR"),
+    );
   return {
     marcas: unico(carros.map((c) => c.marca)),
     cambios: unico(carros.map((c) => grupoCambio(c.cambio))),

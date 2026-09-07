@@ -120,17 +120,22 @@ export function useEstoque(inicial: Carro[]) {
 }
 
 /**
- * Resolve o src de um carro: foto enviada pela gerência ou a do build.
+ * Resolve o src de um carro.
  *
  * O caminho padrão é derivado direto das props, na renderização. O estado
  * guarda só o que precisa vir do IndexedDB, que é assíncrono. Guardar os dois
  * em estado obrigava a chamar setState dentro do efeito e disparava uma
  * cascata de renderizações a cada troca de props.
+ *
+ * "cartao" é a foto da grade, exportada na largura do cartão. "grande" é a da
+ * ficha, na largura do retrato. Foto enviada pela gerência vence as duas.
  */
-export function useFoto(carro: CarroSalvo, tamanho: "1000" | "g-1440") {
-  // Sem foto é sem foto. Devolver o arquivo de outro carro seria mostrar uma
-  // lataria que não é a que está à venda.
-  const padrao = carro.foto ? `/images/${carro.foto}-${tamanho}.webp` : "";
+export function useFoto(carro: CarroSalvo, variante: "cartao" | "grande", indice = 0) {
+  const padrao = carro.foto
+    ? variante === "cartao"
+      ? `/images/${carro.foto}-0c-1000.webp`
+      : `/images/${carro.foto}-${indice}-1280.webp`
+    : "";
   const [enviada, setEnviada] = useState<string | null>(null);
 
   useEffect(() => {

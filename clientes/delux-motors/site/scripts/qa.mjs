@@ -344,7 +344,7 @@ async function abertura(navegador) {
   const t0 = Date.now();
   await pTempo.goto(BASE + "/", { waitUntil: "domcontentloaded" });
   await pTempo
-    .locator("[data-foto-loja]")
+    .locator("[data-foto-carro]")
     .evaluate(
       (e) =>
         new Promise((ok) => {
@@ -361,7 +361,7 @@ async function abertura(navegador) {
   const ateAparecer = Date.now() - t0;
   checar(
     ateAparecer <= 2500,
-    "a loja aparece em até 2,5s na primeira visita",
+    "o carro aparece em até 2,5s na primeira visita",
     `levou ${ateAparecer}ms`,
   );
   await pTempo.close();
@@ -437,7 +437,7 @@ async function abertura(navegador) {
   const heroiSem3d = await p3d.evaluate(() => {
     const h1 = document.querySelector("h1 .display");
     const cta = document.querySelector("[data-cta='heroi']");
-    const foto = document.querySelector("[data-foto-loja]");
+    const foto = document.querySelector("[data-foto-carro]");
     const op = (e) => (e ? parseFloat(getComputedStyle(e).opacity) : -1);
     return { h1: op(h1), cta: op(cta?.parentElement?.parentElement ?? cta), foto: op(foto) };
   });
@@ -448,7 +448,7 @@ async function abertura(navegador) {
   );
   checar(
     heroiSem3d.foto >= 0.99,
-    "sem WebGL a foto da loja aparece",
+    "sem WebGL a foto do carro aparece",
     `opacidade ${heroiSem3d.foto}`,
   );
   await p3d.screenshot({ path: path.join(SAIDA, "sem-webgl-1440.png"), fullPage: false });
@@ -495,93 +495,217 @@ async function abertura(navegador) {
 async function estoqueEGerencia(navegador) {
   const ctx = await navegador.newContext({ viewport: { width: 1440, height: 1000 } });
 
-  // ---------------------------------------------------------- estado vazio
+  // ------------------------------------------------------------- o catálogo
   const { pagina, erros } = await abrir(ctx, "/estoque");
   await rolarTudo(pagina);
   checar(erros.length === 0, "o estoque não tem erro de console", erros.join(" | "));
+  checar((await pagina.locator("h1").count()) === 1, "o estoque tem um h1");
 
-  // Faltava conferir isto fora da home, e a captura entregou: o fecho de
-  // /estoque aparecia em branco porque a revelação nunca tinha disparado.
   const presas = await pagina.evaluate(() =>
     [...document.querySelectorAll("[data-revela], .mascara")]
       .filter((e) => parseFloat(getComputedStyle(e).opacity) < 0.9)
       .map((e) => e.textContent.trim().slice(0, 30)),
   );
+  checar(presas.length === 0, "nenhuma revelação presa em /estoque", presas.slice(0, 3).join(" | "));
+
+  const conta = () => pagina.locator("[data-carro]").count();
+  const precos = () =>
+    pagina.$$eval("[data-carro]", (as) => as.map((a) => Number(a.dataset.preco)));
+
+  const total = await conta();
+  checar(total === 5, "o catálogo abre com os 5 carros", "achei " + total);
+
+  // Pílula sem texto e grupo com uma opção só. Os dois apareceram de verdade:
+  // quatro carros estão sem combustível na legenda de origem, e isso virava uma
+  // pílula em branco ao lado de "Híbrido".
+  const filtros = await pagina.evaluate(() => {
+    const painel = document.getElementById("painel-filtros");
+    const grupos = [...painel.children].map((g) => ({
+      titulo: g.querySelector("p")?.textContent?.trim() ?? "",
+      opcoes: [...g.querySelectorAll("button")].map((b) => b.textContent.trim()),
+    }));
+    return grupos.filter((g) => g.opcoes.length);
+  });
   checar(
-    presas.length === 0,
-    "nenhuma revelação presa em /estoque",
-    presas.slice(0, 3).join(" | "),
+    filtros.every((g) => g.opcoes.every((o) => o.length > 0)),
+    "nenhuma pílula de filtro sem texto",
+    JSON.stringify(filtros),
   );
-  checar((await pagina.locator("h1").count()) === 1, "o estoque tem um h1");
   checar(
-    (await pagina.locator("[data-carro]").count()) === 0,
-    "sem estoque cadastrado, nenhum cartão de carro é inventado",
+    filtros.every((g) => g.opcoes.length > 1),
+    "nenhum grupo de filtro com uma opção só",
+    JSON.stringify(filtros.filter((g) => g.opcoes.length < 2)),
+  );
+
+  /* ------------------------------------------------------- filtro de marca */
+  await pagina.getByRole("button", { name: "BMW", exact: true }).click();
+  await pagina.waitForTimeout(300);
+  const soBmw = await pagina.$$eval("[data-carro] h3", (hs) =>
+    hs.map((h) => h.textContent.trim()),
+  );
+  checar(soBmw.length === 1, "filtrar BMW deixa só a BMW", "sobraram " + soBmw.length);
+  checar(
+    soBmw.every((n) => n.startsWith("BMW")),
+    "só sobra BMW depois de filtrar BMW",
+    soBmw.join(", "),
   );
   checar(
-    await pagina.getByText("O jeito mais rápido é perguntar").isVisible(),
-    "o estoque vazio explica o que fazer",
+    (await pagina.evaluate(() => location.search)).includes("marca=BMW"),
+    "o filtro de marca entra na barra de endereço",
   );
-  const ctaVazio = pagina.locator("[data-cta='vazio']");
+
+  const contagem = await pagina.locator("[aria-live='polite']").first().innerText();
   checar(
-    (await ctaVazio.count()) === 1 &&
-      ((await ctaVazio.getAttribute("href")) ?? "").includes("wa.me/"),
-    "o estoque vazio oferece o WhatsApp",
+    contagem.includes("1") && contagem.includes("5"),
+    "a contagem mostra 1 de 5",
+    contagem.replace(/\s+/g, " "),
+  );
+
+  /* ------------------------------------------ o link filtrado já vem pronto */
+  const comFiltro = await pagina.evaluate(() => location.href);
+  const p2 = await ctx.newPage();
+  await p2.goto(comFiltro, { waitUntil: "networkidle" });
+  await p2.waitForTimeout(700);
+  checar(
+    (await p2.locator("[data-carro]").count()) === 1,
+    "abrir o link filtrado já traz o filtro aplicado",
+  );
+  await p2.close();
+
+  await pagina.getByRole("button", { name: /limpar 1 filtro/i }).first().click();
+  await pagina.waitForTimeout(300);
+  checar((await conta()) === 5, "limpar filtros devolve os 5");
+
+  /* ----------------------------------------------------------------- busca */
+  await pagina.getByPlaceholder("Buscar marca, modelo ou versão").fill("lexus");
+  await pagina.waitForTimeout(350);
+  checar((await conta()) === 1, "buscar lexus acha só o Lexus");
+
+  await pagina.getByPlaceholder("Buscar marca, modelo ou versão").fill("ferrari");
+  await pagina.waitForTimeout(350);
+  checar((await conta()) === 0, "busca sem resultado não mostra carro nenhum");
+  checar(
+    await pagina.getByText("Nenhum carro bate com essa busca").isVisible(),
+    "busca sem resultado mostra o estado vazio",
   );
   for (const id of ["comprar", "vender", "consignar"]) {
     checar(
-      (await pagina.locator(`[data-cta='vazio-${id}']`).count()) === 1,
-      `o estoque vazio oferece a porta de ${id}`,
+      (await pagina.locator("[data-cta='vazio-" + id + "']").count()) === 1,
+      "o estado vazio oferece a porta de " + id,
     );
   }
-  await pagina.screenshot({ path: path.join(SAIDA, "estoque-vazio-1440.png"), fullPage: true });
+  await pagina.getByRole("button", { name: /limpar filtros/i }).click();
+  await pagina.waitForTimeout(350);
+  checar((await conta()) === 5, "limpar do estado vazio devolve os 5");
+
+  /* ----------------------------------------------------------------- preço */
+  await pagina.getByRole("button", { name: "Até 120 mil" }).click();
+  await pagina.waitForTimeout(300);
+  const ate120 = await precos();
+  checar(ate120.length > 0, "o filtro de preço deixa algum carro");
+  checar(
+    ate120.every((v) => v <= 120000),
+    "nenhum carro acima de 120 mil sobrevive ao filtro",
+    ate120.filter((v) => v > 120000).join(", "),
+  );
+  await pagina.getByRole("button", { name: /limpar 1 filtro/i }).first().click();
+  await pagina.waitForTimeout(300);
+
+  /* ------------------------------------------------------------- ordenação */
+  await pagina.getByRole("button", { name: "Menor preço" }).click();
+  await pagina.waitForTimeout(300);
+  const cres = await precos();
+  checar(
+    cres.every((v, i) => i === 0 || cres[i - 1] <= v),
+    "ordenar por menor preço deixa a lista crescente",
+    cres.join(", "),
+  );
+  await pagina.getByRole("button", { name: "Maior preço" }).click();
+  await pagina.waitForTimeout(300);
+  const decr = await precos();
+  checar(
+    decr.every((v, i) => i === 0 || decr[i - 1] >= v),
+    "ordenar por maior preço deixa a lista decrescente",
+    decr.join(", "),
+  );
+  checar(decr[0] !== cres[0], "trocar a ordenação muda o primeiro cartão");
+
+  /* --------------------------------------------------------------- alertas */
+  // A RAM tem passagem por leilão declarada na legenda deles. Isso muda o valor
+  // do carro, então precisa aparecer no cartão e na ficha, não só na conversa.
+  const textoLista = await pagina.evaluate(() => document.body.innerText);
+  checar(/passagem por leil/i.test(textoLista), "o alerta de leilão aparece na listagem");
+
+  await pagina.screenshot({ path: path.join(SAIDA, "estoque-1440.png"), fullPage: true });
   await pagina.close();
 
-  // ------------------------------------------------------------- gerência
+  /* --------------------------------------------------------- ficha do carro */
+  const { pagina: ficha, erros: errosFicha } = await abrir(
+    ctx,
+    "/estoque/ram-laramie-1500-classic-2022",
+  );
+  await rolarTudo(ficha);
+  checar(errosFicha.length === 0, "a ficha não tem erro de console", errosFicha.join(" | "));
+  checar((await ficha.locator("h1").count()) === 1, "a ficha tem um h1");
+  const textoFicha = await ficha.evaluate(() => document.body.innerText);
+  checar(textoFicha.includes("209.900"), "a ficha mostra o preço");
+  checar(/passagem por leil/i.test(textoFicha), "o alerta de leilão aparece na ficha");
+  const fotosFicha = await ficha.locator("main img").count();
+  checar(fotosFicha >= 4, "a ficha traz a galeria do carro", "achei " + fotosFicha);
+  const ctaFicha = await ficha.locator("[data-cta='carro']").first().getAttribute("href");
+  checar(
+    !!ctaFicha && /RAM/i.test(decodeURIComponent(ctaFicha)),
+    "o CTA da ficha leva o carro na mensagem",
+    ctaFicha ?? "",
+  );
+  await ficha.screenshot({ path: path.join(SAIDA, "ficha-1440.png"), fullPage: true });
+  await ficha.close();
+
+  /* --------------------------------------------------------------- gerência */
   const { pagina: adm } = await abrir(ctx, "/admin");
   for (const c of ["Marca", "Modelo", "Versão", "Ano", "Preço em reais"]) {
-    checar((await adm.getByText(c, { exact: false }).count()) > 0, `a gerência tem o campo ${c}`);
+    checar(
+      (await adm.getByText(c, { exact: false }).count()) > 0,
+      "a gerência tem o campo " + c,
+    );
   }
-  checar(
-    (await adm.locator("section ul li").count()) === 0,
-    "a gerência começa sem nenhum carro",
-  );
+  const naLista = await adm.locator("section ul li").count();
+  checar(naLista === 5, "a gerência começa com os 5 carros publicados", "achei " + naLista);
 
   await adm.locator("form input").nth(0).fill("Mercedes-Benz");
   await adm.locator("form input").nth(1).fill("C 180");
   await adm.locator("form input").nth(2).fill("Cabriolet");
   await adm.locator("form input").nth(3).fill("2018");
-  const numeros = adm.locator("form input[type='number']");
-  await numeros.nth(1).fill("62000");
-  await numeros.nth(2).fill("189900");
+  const nums = adm.locator("form input[type='number']");
+  await nums.nth(1).fill("62000");
+  await nums.nth(2).fill("189900");
   await adm.getByRole("button", { name: /cadastrar no estoque/i }).click();
   await adm.waitForTimeout(700);
-
   checar(
     (await adm.getByText("Mercedes-Benz C 180").count()) > 0,
     "cadastrar um carro grava e ele aparece na lista da gerência",
   );
+  const emprestada = await adm.evaluate(() => {
+    const linha = [...document.querySelectorAll("section ul li")].find((l) =>
+      l.textContent.includes("Mercedes-Benz C 180"),
+    );
+    const img = linha ? linha.querySelector("img") : null;
+    return img ? "mostrou " + img.getAttribute("src") : "";
+  });
+  checar(emprestada === "", "carro sem foto não usa a foto de outro carro", emprestada);
   await adm.screenshot({ path: path.join(SAIDA, "gerencia-1440.png"), fullPage: true });
+  await adm.close();
 
-  // ------------------------------- o carro cadastrado chega ao site público
+  // o carro cadastrado chega ao site público
   const publico = await ctx.newPage();
   await publico.goto(BASE + "/estoque", { waitUntil: "networkidle" });
   await publico.waitForTimeout(900);
-  await rolarTudo(publico);
-  const cartoes = await publico.locator("[data-carro]").count();
-  checar(cartoes === 1, "o carro cadastrado aparece na página de estoque", `achei ${cartoes}`);
-  const texto = await publico.evaluate(() => document.body.innerText);
-  checar(texto.includes("189.900"), "o preço cadastrado aparece formatado no estoque");
+  const depois = await publico.locator("[data-carro]").count();
+  checar(depois === 6, "o carro cadastrado aparece na página de estoque", "achei " + depois);
   checar(
-    texto.includes("1 carro à venda") || texto.includes("1 carro"),
-    "a contagem acompanha o cadastro",
+    (await publico.evaluate(() => document.body.innerText)).includes("189.900"),
+    "o preço cadastrado aparece formatado no estoque",
   );
-
-  // e o filtro passa a existir junto com o carro
-  checar(
-    (await publico.getByRole("button", { name: "Mercedes-Benz", exact: true }).count()) === 1,
-    "a marca cadastrada vira filtro",
-  );
-  await publico.screenshot({ path: path.join(SAIDA, "estoque-com-carro-1440.png"), fullPage: true });
   await publico.close();
   await ctx.close();
 }

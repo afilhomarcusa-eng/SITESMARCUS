@@ -47,6 +47,7 @@ const VAZIO: CarroSalvo = {
   // Nasce sem foto. Herdar o arquivo de outro carro faria um Porsche recém
   // cadastrado aparecer com a foto do M4, que é foto falsa com outro nome.
   foto: "",
+  fotos: 0,
   nativa: { w: 1440, h: 1800 },
   origem: "",
 };
@@ -147,7 +148,9 @@ export default function Gerencia() {
     setRascunho(c);
     setEditando(c.slug);
     setErro("");
-    setPrevia(c.fotoEnviada ? ((await lerFoto(c.fotoEnviada)) ?? "") : `/images/${c.foto}-1000.webp`);
+    setPrevia(
+      c.fotoEnviada ? ((await lerFoto(c.fotoEnviada)) ?? "") : c.foto ? `/images/${c.foto}-0c-1000.webp` : "",
+    );
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -364,7 +367,7 @@ export default function Gerencia() {
                       style={{ border: "1px solid var(--linha)", color: "var(--tinta)" }}
                     >
                       {s.o.map((op) => (
-                        <option key={op} value={op} style={{ background: "var(--breu)" }}>
+                        <option key={op} value={op} style={{ background: "var(--areia)" }}>
                           {op}
                         </option>
                       ))}
@@ -431,7 +434,7 @@ export default function Gerencia() {
                   src={previa}
                   alt="Prévia da foto escolhida"
                   className="h-56 w-auto object-contain"
-                  style={{ background: "var(--fumo)" }}
+                  style={{ background: "var(--nuvem)" }}
                 />
               ) : null}
 
@@ -445,7 +448,7 @@ export default function Gerencia() {
                 <button
                   type="submit"
                   className="px-6 py-3.5 text-[0.72rem] uppercase tracking-[0.14em]"
-                  style={{ background: "var(--brasa)", color: "var(--breu)", fontWeight: 500 }}
+                  style={{ background: "var(--brasa)", color: "var(--areia)", fontWeight: 500 }}
                 >
                   {editando ? "Salvar alterações" : "Cadastrar no estoque"}
                 </button>
@@ -524,7 +527,7 @@ export default function Gerencia() {
 
 function LinhaFoto({ carro }: { carro: CarroSalvo }) {
   const [src, setSrc] = useState(
-    carro.fotoEnviada || !carro.foto ? "" : `/images/${carro.foto}-1000.webp`,
+    carro.fotoEnviada || !carro.foto ? "" : `/images/${carro.foto}-0c-1000.webp`,
   );
   useEffect(() => {
     if (!carro.fotoEnviada) return;
@@ -540,7 +543,7 @@ function LinhaFoto({ carro }: { carro: CarroSalvo }) {
   return (
     <span
       className="block h-16 w-[4.5rem] overflow-hidden"
-      style={{ background: "var(--fumo)" }}
+      style={{ background: "var(--nuvem)" }}
     >
       {src ? (
         <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" />

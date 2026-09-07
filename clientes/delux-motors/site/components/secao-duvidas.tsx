@@ -41,7 +41,7 @@ export default function SecaoDuvidas() {
     <section
       id="duvidas"
       className="secao"
-      style={{ background: "var(--noite)" }}
+      style={{ background: "var(--nuvem)" }}
       aria-labelledby="titulo-duvidas"
     >
       <div className="casca">

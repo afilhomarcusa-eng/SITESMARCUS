@@ -11,7 +11,7 @@ import { CONTATO, EMPRESA, ENDERECO_LINHA, HORARIO, ROTA_URL } from "@/lib/conta
 
 export default function SecaoLocal() {
   return (
-    <section id="local" className="secao" style={{ background: "var(--breu)" }}>
+    <section id="local" className="secao" style={{ background: "var(--areia)" }}>
       <div className="casca">
         <div className="mb-12 flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
           <div>
@@ -32,7 +32,7 @@ export default function SecaoLocal() {
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-3 px-6 py-4 text-[0.76rem] font-medium uppercase tracking-[0.13em]"
-            style={{ background: "var(--brasa)", color: "var(--breu)" }}
+            style={{ background: "var(--brasa)", color: "var(--areia)" }}
           >
             Traçar rota até a loja
             <span
@@ -89,7 +89,7 @@ export default function SecaoLocal() {
 
           <div
             className="relative w-full overflow-hidden"
-            style={{ aspectRatio: "16 / 11", background: "var(--fumo)" }}
+            style={{ aspectRatio: "16 / 11", background: "var(--nuvem)" }}
             data-revela
           >
             <iframe
