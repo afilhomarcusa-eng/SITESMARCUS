@@ -1,0 +1,248 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Delux Motors — tokens
+
+   As cores foram medidas na única fotografia real que existe da loja: a
+   fachada em Boca do Rio no fim da tarde. O preto é a fachada, o malva é o céu
+   alto, a brasa é o horizonte aceso e o cromo é o letreiro.
+
+   Amostrado em 07/09/2026.
+--------------------------------------------------------------------------- */
+
+@theme {
+  --color-breu: #08070a;
+  --color-noite: #12111a;
+  --color-fumo: #1b1a24;
+  --color-malva: #6b5a66;
+  --color-brasa: #f0c0a8;
+  --color-brasa-forte: #e79a72;
+  --color-cromo: #d6d4c6;
+
+  --font-display: var(--fonte-display), Georgia, serif;
+  --font-texto: var(--fonte-texto), system-ui, sans-serif;
+}
+
+:root {
+  --breu: #08070a;
+  --noite: #12111a;
+  --fumo: #1b1a24;
+  --malva: #6b5a66;
+  --brasa: #f0c0a8;
+  --brasa-forte: #e79a72;
+  --cromo: #d6d4c6;
+
+  --tinta: var(--cromo);
+  --tinta-2: rgba(214, 212, 198, 0.66);
+  --tinta-3: rgba(214, 212, 198, 0.4);
+  --linha: rgba(214, 212, 198, 0.14);
+
+  --casca: min(92vw, 1520px);
+
+  /* Movimento de fim de tarde: entra devagar, assenta e para. Nada estala. */
+  --e-saida: cubic-bezier(0.22, 1, 0.36, 1);
+  --e-entrada: cubic-bezier(0.4, 0, 0.2, 1);
+  --d-micro: 200ms;
+  --d-ui: 400ms;
+  --d-revela: 760ms;
+  --d-cine: 1500ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--breu);
+  color: var(--tinta);
+  font-family: var(--font-texto);
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--brasa);
+  color: var(--breu);
+}
+
+/* ------------------------------- tipografia ------------------------------ */
+
+/* O letreiro deles é um script cromado. Aqui o display é um grotesco variável
+   de contraste alto, que dá a mesma sensação de peça fundida sem tentar imitar
+   uma caligrafia que não temos em vetor. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-optical-sizing: auto;
+  line-height: 0.94;
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+}
+
+.display-leve {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.etiqueta {
+  font-family: var(--font-texto);
+  font-size: clamp(0.64rem, 0.74vw, 0.74rem);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tinta-3);
+}
+
+.dado {
+  font-family: var(--font-texto);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.corpo {
+  font-size: clamp(1rem, 1.02vw, 1.12rem);
+  line-height: 1.66;
+  color: var(--tinta-2);
+  text-wrap: pretty;
+}
+
+/* --------------------------------- layout -------------------------------- */
+
+.casca {
+  width: var(--casca);
+  margin-inline: auto;
+}
+
+.secao {
+  position: relative;
+  padding-block: clamp(4.5rem, 10vh, 9rem);
+}
+
+.risco {
+  border-top: 1px solid var(--linha);
+}
+
+/* No celular a faixa de endereço e horário sangra de ponta a ponta com fundo
+   próprio, porque ali ela cai em cima da foto. No desktop volta a ser
+   transparente. Fica em classe, e não em style inline, senão o inline venceria
+   a regra do breakpoint. */
+.faixa-dados {
+  background: var(--breu);
+}
+
+@media (min-width: 768px) {
+  .faixa-dados {
+    background: transparent;
+  }
+}
+
+/* ---------------------------------- cromo -------------------------------- */
+
+/* O letreiro da loja é cromado, e cromo é um degradê com uma faixa clara
+   atravessando. Vale para texto e serve de assinatura da marca no site. */
+.cromo {
+  background: linear-gradient(
+    172deg,
+    #8e8c82 0%,
+    #f4f2e8 26%,
+    #ffffff 38%,
+    #b9b7ab 52%,
+    #f0eee2 70%,
+    #86847a 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* --------------------------------- foco ---------------------------------- */
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--brasa);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ------------------------------ revelações ------------------------------- */
+
+/* O padrão é visível. Quem esconde é o JS, e só depois de confirmar que vai
+   conseguir mostrar de novo. Assim, sem JS, nada some. */
+[data-revela] {
+  opacity: 1;
+}
+
+html[data-motion="on"] [data-revela] {
+  opacity: 0;
+  transform: translate3d(0, 1.6rem, 0);
+}
+
+html[data-motion="on"] [data-revela].dentro {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--d-revela) var(--e-saida),
+    transform var(--d-revela) var(--e-saida);
+}
+
+/* Cortina: o texto sobe por trás de uma borda dura.
+   O corte é só na vertical. overflow hidden nos dois eixos come o fim das
+   palavras, e pedir overflow-y hidden com overflow-x visible não resolve,
+   porque quando um eixo é hidden o outro vira auto sozinho. */
+.mascara {
+  display: block;
+  clip-path: inset(0 -100vw);
+  padding-block: 0.05em;
+}
+
+.mascara > * {
+  display: block;
+}
+
+html[data-motion="on"] .mascara > * {
+  transform: translate3d(0, 106%, 0);
+}
+
+html[data-motion="on"] .mascara.dentro > * {
+  transform: none;
+  transition: transform var(--d-cine) var(--e-saida);
+}
+
+/* ------------------------------ acessível -------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion="on"] [data-revela],
+  html[data-motion="on"] .mascara > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
