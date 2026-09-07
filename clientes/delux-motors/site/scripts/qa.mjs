@@ -15,6 +15,14 @@ import { mkdir, writeFile, readFile } from "node:fs/promises";
 import path from "node:path";
 
 const BASE = process.env.QA_BASE ?? "http://127.0.0.1:3310";
+
+/**
+ * A gerência é protegida por senha, conferida no servidor por proxy.ts. O QA
+ * precisa da credencial para chegar lá, e precisa também conferir que sem ela
+ * ninguém entra.
+ */
+const SENHA_ADMIN = process.env.ADMIN_SENHA ?? "";
+const CREDENCIAL = { username: "delux", password: SENHA_ADMIN };
 const SAIDA = path.resolve("qa");
 const LARGURAS = [360, 390, 430, 768, 1024, 1280, 1440, 1920];
 
@@ -181,7 +189,10 @@ async function estruturais(navegador, manifesto) {
 /* ----------------------------------------------------------------- copy */
 
 async function copy(navegador) {
-  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 } });
+  const ctx = await navegador.newContext({
+    viewport: { width: 1440, height: 900 },
+    httpCredentials: CREDENCIAL,
+  });
   for (const rota of ["/", "/estoque", "/admin"]) {
     const { pagina } = await abrir(ctx, rota);
     const texto = await pagina.evaluate(() => document.body.innerText);
@@ -493,7 +504,10 @@ async function abertura(navegador) {
  * gerência tem que fazer ele aparecer no estoque de verdade.
  */
 async function estoqueEGerencia(navegador) {
-  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 1000 } });
+  const ctx = await navegador.newContext({
+    viewport: { width: 1440, height: 1000 },
+    httpCredentials: CREDENCIAL,
+  });
 
   // ------------------------------------------------------------- o catálogo
   const { pagina, erros } = await abrir(ctx, "/estoque");
@@ -710,6 +724,62 @@ async function estoqueEGerencia(navegador) {
   await ctx.close();
 }
 
+/* ------------------------------------------------------- a porta da gerência */
+
+/**
+ * A senha da gerência.
+ *
+ * Testa a porta pelos dois lados: sem credencial tem que dar 401, com a
+ * credencial errada também, e só a certa entra. Se algum dia alguém trocar a
+ * conferência para o lado do cliente, o primeiro caso passa a devolver 200 e
+ * este teste reprova.
+ */
+async function porta(navegador) {
+  const semSenha = await navegador.newContext();
+  const p1 = await semSenha.newPage();
+  const r1 = await p1.goto(BASE + "/admin", { waitUntil: "domcontentloaded" });
+  checar(r1.status() === 401, "sem senha a gerência devolve 401", "deu " + r1.status());
+  const corpo = await p1.evaluate(() => document.body.innerText).catch(() => "");
+  checar(
+    !/cadastrar no estoque/i.test(corpo),
+    "sem senha a tela de gerência não aparece",
+  );
+  // A senha não pode estar no pacote que vai para o navegador.
+  const html = await (await fetch(BASE + "/admin")).text().catch(() => "");
+  checar(
+    !SENHA_ADMIN || !html.includes(SENHA_ADMIN),
+    "a senha não aparece na resposta do servidor",
+  );
+  await semSenha.close();
+
+  const errada = await navegador.newContext({
+    httpCredentials: { username: "delux", password: SENHA_ADMIN + "x" },
+  });
+  const p2 = await errada.newPage();
+  const r2 = await p2.goto(BASE + "/admin", { waitUntil: "domcontentloaded" });
+  checar(r2.status() === 401, "senha errada devolve 401", "deu " + r2.status());
+  await errada.close();
+
+  const certa = await navegador.newContext({ httpCredentials: CREDENCIAL });
+  const p3 = await certa.newPage();
+  const r3 = await p3.goto(BASE + "/admin", { waitUntil: "networkidle" });
+  checar(r3.status() === 200, "com a senha certa a gerência abre", "deu " + r3.status());
+  checar(
+    (await p3.getByRole("button", { name: /cadastrar no estoque/i }).count()) === 1,
+    "com a senha certa o formulário está lá",
+  );
+  await certa.close();
+
+  // O resto do site continua aberto: a porta é só da gerência.
+  const publico = await navegador.newContext();
+  const p4 = await publico.newPage();
+  for (const rota of ["/", "/estoque"]) {
+    const r = await p4.goto(BASE + rota, { waitUntil: "domcontentloaded" });
+    checar(r.status() === 200, `${rota} continua aberto sem senha`, "deu " + r.status());
+  }
+  await publico.close();
+}
+
 /* -------------------------------------------------------------- retratos */
 
 async function retratos(navegador) {
@@ -777,6 +847,7 @@ async function main() {
     await copy(navegador);
     await conversao(navegador);
     await abertura(navegador);
+    await porta(navegador);
     await estoqueEGerencia(navegador);
     await retratos(navegador);
   } finally {

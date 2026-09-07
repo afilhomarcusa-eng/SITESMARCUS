@@ -10,6 +10,7 @@
 
 import { spawn } from "node:child_process";
 import { setTimeout as esperar } from "node:timers/promises";
+import { readFileSync } from "node:fs";
 
 const PORTA = process.env.QA_PORTA ?? "3310";
 const BASE = `http://127.0.0.1:${PORTA}`;
@@ -57,6 +58,18 @@ async function noAr() {
   return false;
 }
 
+/** Lê ADMIN_SENHA do ambiente ou do .env.local, que é o que o next start usa. */
+function senhaAdmin() {
+  if (process.env.ADMIN_SENHA) return process.env.ADMIN_SENHA;
+  try {
+    const texto = readFileSync(".env.local", "utf8");
+    const achou = texto.match(/^ADMIN_SENHA=(.*)$/m);
+    return achou ? achou[1].trim() : "";
+  } catch {
+    return "";
+  }
+}
+
 const pular = process.argv.includes("--sem-build");
 let servidor;
 
@@ -84,7 +97,11 @@ try {
     throw new Error("quem respondeu na porta não é este site");
   }
 
-  await rodar("node", ["scripts/qa.mjs"], { env: { ...process.env, QA_BASE: BASE } });
+  // A senha da gerência vem do .env.local, igual ao servidor de produção. Sem
+  // ela o QA não conseguiria abrir /admin, que é metade do fluxo do cliente.
+  await rodar("node", ["scripts/qa.mjs"], {
+    env: { ...process.env, QA_BASE: BASE, ADMIN_SENHA: senhaAdmin() },
+  });
 } finally {
   if (servidor?.pid) {
     if (process.platform === "win32") {

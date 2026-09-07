@@ -9,7 +9,7 @@ Tailwind, um shader de céu em WebGL, Lenis para a rolagem.
 npm install
 npm run dev          # desenvolvimento em localhost:3000
 npm run build        # build de produção
-npm run qa           # build + navegador de verdade + 315 verificações
+npm run qa           # build + navegador de verdade + 323 verificações
 npm run perf         # LCP, CLS e peso, com o servidor já no ar
 ```
 
@@ -86,6 +86,7 @@ silêncio.
 | Persistência do estoque (**o banco entra aqui**) | `lib/estoque.ts` |
 | Filtro, busca e ordenação | `lib/filtros.ts` |
 | Tempo da abertura | `lib/abertura.ts` |
+| Senha da gerência | `proxy.ts` e a variável `ADMIN_SENHA` |
 | Perguntas e respostas | `components/secao-duvidas.tsx` |
 | Geração das imagens | `scripts/build-assets.mjs` |
 | Verificações | `scripts/qa.mjs` |
@@ -140,12 +141,38 @@ O estado vazio continua existindo e continua vendendo: quando um filtro não
 devolve nada, a página oferece o WhatsApp e as outras duas portas do negócio, em
 vez de virar beco sem saída.
 
+### A senha da gerência
+
+`/admin` é protegida por senha, conferida em `proxy.ts`, que roda no servidor,
+na borda, antes de a página existir. A senha vive só na variável de ambiente
+`ADMIN_SENHA` e **nunca chega ao navegador**.
+
+Isso não é detalhe de organização: senha conferida em JavaScript de cliente é
+decoração, porque ela viaja dentro do pacote e qualquer visitante lê em dois
+cliques. O QA confere as duas coisas a cada execução, que sem credencial dá 401
+e que a senha não aparece na resposta do servidor.
+
+Falha fechado: sem `ADMIN_SENHA` configurada, ninguém entra. O contrário, abrir
+quando falta configuração, é um cadeado que destranca sozinho.
+
+Em desenvolvimento a senha vem do `.env.local`, que não vai para o repositório.
+Ver `.env.example`. Em produção:
+
+```bash
+vercel env add ADMIN_SENHA production
+```
+
+**O que a senha protege, e o que não protege.** Ela fecha a porta da tela de
+gerência. Ela não protege dados, porque ainda não existem dados no servidor: o
+estoque cadastrado em /admin mora no IndexedDB do navegador de quem cadastrou.
+Quando o banco entrar, a autenticação de verdade entra junto, e esta porta vira
+a primeira camada, não a única.
+
 ### O banco
 
 Troque as quatro funções de `lib/estoque.ts` (`lerTudo`, `gravarTudo`,
 `lerFoto`, `gravarFoto`) por chamadas de API. Nenhum componente, nenhum campo e
-nenhum formulário muda. Depois, ponha uma senha na frente de `/admin`, que hoje
-está aberta e só marcada como `noindex`.
+nenhum formulário muda.
 
 ## O que o QA verifica
 
@@ -171,6 +198,10 @@ Nenhuma pílula de filtro sem texto e nenhum grupo com uma opção só.
 
 Fluxo do cliente: cadastrar um carro na gerência fazendo ele aparecer no estoque
 público, com o preço formatado, e carro sem foto não herdando a lataria de outro.
+
+A porta da gerência, pelos dois lados: sem credencial dá 401, com a errada
+também, só a certa entra, a senha não aparece na resposta do servidor, e o
+resto do site continua aberto.
 
 Quando um defeito for corrigido, a verificação dele entra no mesmo passo. Foi
 assim que entraram a do título cortado, a da revelação presa fora da home, a do

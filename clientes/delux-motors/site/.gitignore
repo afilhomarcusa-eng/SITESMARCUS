@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# O exemplo entra no repositório: ele não tem segredo, só diz qual variável
+# precisa existir.
+!.env.example
 
 # vercel
 .vercel
