@@ -1,13 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { EMPRESA, TELEFONE, whatsapp } from "@/lib/contato";
 
+/**
+ * "Estoque" é rota, não âncora: é a página que vende, e ela precisa ter
+ * endereço próprio para ser mandada num link e achada no Google.
+ */
 const LINKS = [
-  { href: "#estoque", rotulo: "Estoque" },
-  { href: "#estudio", rotulo: "O estúdio" },
-  { href: "#distancia", rotulo: "Comprar de longe" },
-  { href: "#loja", rotulo: "A loja" },
+  { href: "/estoque", rotulo: "Estoque" },
+  { href: "/#confianca", rotulo: "Por que daqui" },
+  { href: "/#distancia", rotulo: "Como funciona" },
+  { href: "/#loja", rotulo: "A loja" },
 ];
 
 const MSG = "Olá! Vim pelo site e queria ver os carros disponíveis.";
@@ -43,8 +48,8 @@ export default function Navegacao() {
         }}
       >
         <div className="casca flex items-center justify-between gap-6 py-4 md:py-5">
-          <a
-            href="#conteudo"
+          <Link
+            href="/"
             className="group flex shrink-0 items-baseline gap-2.5"
             aria-label={`${EMPRESA.nome}, início`}
           >
@@ -58,7 +63,7 @@ export default function Navegacao() {
             <span className="display-solto hidden text-[0.78rem] tracking-[0.16em] sm:block">
               Usados de Luxo
             </span>
-          </a>
+          </Link>
 
           <nav aria-label="Seções" className="hidden items-center gap-8 lg:flex">
             {LINKS.map((l) => (

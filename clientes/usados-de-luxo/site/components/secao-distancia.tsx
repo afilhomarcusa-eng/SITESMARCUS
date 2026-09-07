@@ -64,12 +64,12 @@ export default function SecaoDistancia({ carros }: { carros: Carro[] }) {
               className="display mb-7 text-[clamp(2rem,4.6vw,3.6rem)]"
               data-revela="sobe"
             >
-              A maioria dos nossos clientes nunca pisou na loja
+              Comprar daqui de outro estado
             </h2>
             <p className="corpo mb-9 max-w-[44ch]" data-revela="sobe">
-              São 382 mil pessoas acompanhando o estoque pelo Instagram, de todos
-              os estados. Quem fecha de longe precisa de duas coisas: foto que não
-              esconde nada e uma pessoa com nome do outro lado da conversa.
+              A maior parte das vendas é para fora de Goiás, e o caminho é sempre
+              o mesmo. São quatro passos, sem burocracia inventada e sem taxa
+              escondida no meio.
             </p>
 
             <ul className="flex flex-wrap gap-x-2 gap-y-2" data-revela="sobe">

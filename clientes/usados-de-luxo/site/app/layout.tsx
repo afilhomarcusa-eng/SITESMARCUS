@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s — Usados de Luxo",
   },
   description:
-    "Revenda de seminovos premium em Goiânia. Cada carro é fotografado no nosso estúdio antes de entrar no estoque, e a entrega vai para todo o Brasil.",
+    "Seminovos premium à venda em Goiânia, com entrega para todo o Brasil. Veja o estoque com preço, ano e quilometragem de cada carro, e fale direto no WhatsApp.",
   keywords: [
     "carros de luxo Goiânia",
     "seminovos premium",
@@ -47,12 +47,12 @@ export const metadata: Metadata = {
     siteName: EMPRESA.nome,
     title: "Usados de Luxo — seminovos premium em Goiânia",
     description:
-      "Cada carro fotografado no nosso estúdio antes de entrar no estoque. Entrega em todo o Brasil.",
+      "Estoque com preço, ano e quilometragem de cada carro. Entrega para todo o Brasil.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Usados de Luxo — seminovos premium em Goiânia",
-    description: "Cada carro fotografado no nosso estúdio. Entrega em todo o Brasil.",
+    description: "Estoque com preço e quilometragem. Entrega para todo o Brasil.",
   },
   robots: { index: true, follow: true },
 };

@@ -1,10 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useCallback, useState } from "react";
 import { EMPRESA, whatsapp } from "@/lib/contato";
 import { brl, km } from "@/lib/fmt";
-import Link from "next/link";
 
 const CenaEstudio = dynamic(() => import("./cena-estudio"), { ssr: false });
 
@@ -35,7 +35,7 @@ export default function Heroi({ total, menorPreco, maiorPreco, destaque }: Props
   const aoPronto = useCallback(() => setCenaPronta(true), []);
 
   const dados = [
-    { k: "No estoque hoje", v: `${total} carros` },
+    { k: "À venda hoje", v: `${total} carros` },
     { k: "Faixa de preço", v: `${brl(menorPreco)} a ${brl(maiorPreco)}` },
     { k: `Google, ${EMPRESA.googleNotaColetadaEm}`, v: "4,5" },
     { k: "No Instagram", v: EMPRESA.instagramSeguidores },
@@ -46,15 +46,15 @@ export default function Heroi({ total, menorPreco, maiorPreco, destaque }: Props
       id="conteudo"
       className="parede relative isolate flex min-h-svh flex-col justify-start overflow-hidden pb-8 pt-24 md:justify-end md:pb-12 md:pt-28"
     >
-      {/* fundo: o nome da casa em escala monumental. É decoração de textura,
-          repete o que já está no cabeçalho e no rodapé, então pode ficar
-          parcialmente coberto pelo carro sem esconder informação de ninguém. */}
+      {/* fundo: o nome da casa em escala monumental. É textura, repete o que já
+          está no cabeçalho e no rodapé, então pode ficar parcialmente coberto
+          pelo carro sem esconder informação de ninguém. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute right-0 top-[14vh] z-10 select-none text-right md:top-[11vh]"
       >
         <p
-          className="display leading-[0.82] text-[13vw] md:text-[10.5vw]"
+          className="display text-[13vw] leading-[0.82] md:text-[10.5vw]"
           style={{
             color: "transparent",
             WebkitTextStroke: "1px rgba(237,235,231,0.10)",
@@ -83,16 +83,11 @@ export default function Heroi({ total, menorPreco, maiorPreco, destaque }: Props
               "linear-gradient(to bottom, transparent 0%, #000 12%, #000 88%, transparent 100%)",
           }}
         />
-        <CenaEstudio
-          foto={`/images/${foto}-1440.webp`}
-          abertura
-          onPronto={aoPronto}
-        />
+        <CenaEstudio foto={`/images/${foto}-1440.webp`} abertura onPronto={aoPronto} />
       </div>
 
-      {/* Véu só no celular, atrás do texto. Na tela pequena o carro e a coluna
-          de texto disputam o mesmo espaço, e sem isto o link secundário some
-          em cima da lataria clara. */}
+      {/* Véu só no celular, atrás do texto: na tela pequena o carro e a coluna
+          de texto disputam o mesmo espaço. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 z-[25] h-[62%] md:hidden"
@@ -109,40 +104,43 @@ export default function Heroi({ total, menorPreco, maiorPreco, destaque }: Props
             {EMPRESA.cidade}, {EMPRESA.estado} · entrega em todo o Brasil
           </p>
 
+          {/* A terceira linha é curta de propósito. Com "à venda hoje" ela
+              chegava em cima do carro em 1440, e o "hoje" já está logo abaixo,
+              na primeira coluna da faixa de dados. */}
           <h1 className="mb-6 md:mb-8">
-            <span className="mascara" data-mascara>
-              <span className="display block text-[clamp(2.6rem,7.6vw,6.4rem)]">
-                Cada carro
+            <span className="mascara">
+              <span className="display block text-[clamp(2.6rem,7.4vw,6.2rem)]">
+                {total} carros
               </span>
             </span>
-            <span className="mascara" data-mascara>
-              <span className="display-solto block text-[clamp(2rem,5.4vw,4.4rem)]">
-                passa pelo
+            <span className="mascara">
+              <span className="display-solto block text-[clamp(2rem,5.2vw,4.2rem)]">
+                premium
               </span>
             </span>
-            <span className="mascara" data-mascara>
+            <span className="mascara">
               <span
-                className="display block text-[clamp(2.6rem,7.6vw,6.4rem)]"
+                className="display block text-[clamp(2.6rem,7.4vw,6.2rem)]"
                 style={{ color: "var(--latao)" }}
               >
-                estúdio
+                à venda
               </span>
             </span>
           </h1>
 
-          <p className="corpo mb-8 max-w-[46ch] md:mb-10">
-            Revenda de seminovos premium em Goiânia. Antes de entrar no estoque, o
-            carro vai para a nossa sala de fotografia: parede preta, luz montada,
-            placa da casa. Quem compra de outro estado decide por essa foto, então
-            ela precisa mostrar o carro como ele é.
+          <p className="corpo mb-8 max-w-[48ch] md:mb-10">
+            De {brl(menorPreco)} a {brl(maiorPreco)}, com entrega para todo o
+            Brasil. Cada carro é fotografado no nosso estúdio antes de entrar no
+            site, para você decidir pela foto sem precisar viajar até Goiânia.
           </p>
 
           <div className="flex flex-wrap items-center gap-x-7 gap-y-4">
-            <a
-              data-cta="heroi"
-              href={whatsapp(MSG)}
-              target="_blank"
-              rel="noopener noreferrer"
+            {/* A ação principal do herói leva ao estoque: quem chega aqui está
+                procurando carro, não conversa. A conversa fica a um toque, no
+                botão ao lado e no cabeçalho, que nunca sai da tela. */}
+            <Link
+              data-cta="heroi-estoque"
+              href="/estoque"
               className="dado group inline-flex items-center gap-3 px-6 py-4 text-[0.74rem] uppercase tracking-[0.16em] transition-transform duration-300"
               style={{
                 background: "var(--latao)",
@@ -151,7 +149,7 @@ export default function Heroi({ total, menorPreco, maiorPreco, destaque }: Props
                 transitionTimingFunction: "var(--e-saida)",
               }}
             >
-              Falar com a equipe
+              Ver o estoque
               <span
                 aria-hidden="true"
                 className="inline-block transition-transform duration-300 group-hover:translate-x-1"
@@ -159,14 +157,17 @@ export default function Heroi({ total, menorPreco, maiorPreco, destaque }: Props
               >
                 &rarr;
               </span>
-            </a>
+            </Link>
 
             <a
-              href="#estoque"
+              data-cta="heroi"
+              href={whatsapp(MSG)}
+              target="_blank"
+              rel="noopener noreferrer"
               className="dado group relative py-1 text-[0.74rem] uppercase tracking-[0.16em]"
               style={{ color: "var(--tinta-2)" }}
             >
-              Ver os {total} carros
+              Falar no WhatsApp
               <span
                 aria-hidden="true"
                 className="absolute inset-x-0 -bottom-0.5 h-px origin-left transition-transform duration-300 group-hover:scale-x-0"
@@ -179,8 +180,7 @@ export default function Heroi({ total, menorPreco, maiorPreco, destaque }: Props
           </div>
         </div>
 
-        {/* legenda do carro que está na cena. Foto de carro em site de revenda
-            sem dizer que carro é vira papel de parede. */}
+        {/* legenda do carro que está na cena */}
         <Link
           href={`/estoque/${destaque.slug}`}
           data-destaque
@@ -189,31 +189,29 @@ export default function Heroi({ total, menorPreco, maiorPreco, destaque }: Props
           <span
             aria-hidden="true"
             className="mt-2 block h-px w-8 shrink-0 transition-all duration-500 group-hover:w-12"
-            style={{ background: "var(--latao)", transitionTimingFunction: "var(--e-saida)" }}
+            style={{
+              background: "var(--latao)",
+              transitionTimingFunction: "var(--e-saida)",
+            }}
           />
           <span>
             <span className="etiqueta mb-1.5 block">Na cena, em estoque</span>
             <span className="display-solto block text-[clamp(1.05rem,1.7vw,1.4rem)]">
               {destaque.marca} {destaque.modelo} {destaque.versao}
             </span>
-            <span className="dado mt-1.5 block text-[0.74rem]" style={{ color: "var(--tinta-3)" }}>
+            <span
+              className="dado mt-1.5 block text-[0.74rem]"
+              style={{ color: "var(--tinta-3)" }}
+            >
               {destaque.ano} · {km(destaque.km)} · {brl(destaque.preco)}
             </span>
           </span>
         </Link>
 
-        {/* No celular, este vão é o espaço do carro. O texto fica em cima, o
-            carro no meio, os números embaixo, um embaixo do outro em vez de
-            todos disputando o mesmo pedaço de tela. */}
+        {/* No celular, este vão é o espaço do carro. */}
         <div aria-hidden="true" className="h-[30svh] md:hidden" />
 
-        {/* faixa de dados: tudo aqui é medido, nada é adjetivo. Também é o que
-            segura a largura de telas grandes sem virar vazio.
-            No celular ela ganha fundo próprio, sangrando de ponta a ponta,
-            para não cair por cima da lataria clara. */}
-        <dl
-          className="faixa-dados risco -mx-[calc((100vw-var(--casca))/2)] grid grid-cols-2 gap-x-6 gap-y-7 px-[calc((100vw-var(--casca))/2)] pb-7 pt-7 md:mx-0 md:mt-16 md:grid-cols-4 md:gap-x-10 md:px-0 md:pb-0"
-        >
+        <dl className="faixa-dados risco -mx-[calc((100vw-var(--casca))/2)] grid grid-cols-2 gap-x-6 gap-y-7 px-[calc((100vw-var(--casca))/2)] pb-7 pt-7 md:mx-0 md:mt-16 md:grid-cols-4 md:gap-x-10 md:px-0 md:pb-0">
           {dados.map((d) => (
             <div key={d.k}>
               <dt className="etiqueta mb-2">{d.k}</dt>

@@ -24,6 +24,28 @@ Se estiver com pressa e o build já for o atual: `npm run qa:rapido`.
 com o servidor já no ar. Última medição em rede local: LCP 408 ms, CLS 0,0000,
 280 KB de JavaScript (Three.js incluso) e 1,5 MB de imagem no primeiro carregamento.
 
+## As páginas
+
+| Rota | Serve para |
+|---|---|
+| `/` | Herói, seis carros logo abaixo, depois o argumento de confiança e o processo |
+| `/estoque` | **A página que vende.** Estoque inteiro com busca, filtro e ordenação |
+| `/estoque/[slug]` | Um carro: galeria, ficha completa e o WhatsApp com o carro na mensagem |
+| `/admin` | Gerência do estoque |
+
+A ordem da home já foi outra: o manifesto do estúdio vinha antes dos carros e
+empurrava o estoque para a terceira tela. Estava invertido. Quem entra no site de
+uma revenda quer ver carro, e a história da loja só é ouvida depois que algum
+carro chamou atenção.
+
+O estado dos filtros vive na barra de endereço, então uma seleção é um link:
+`/estoque?marca=BMW&cambio=Automático&ate=300000` abre já filtrado. Isso existe
+porque quem atende no WhatsApp precisa mandar "olha os automáticos até 300 mil"
+como um link, e não como instrução de quatro passos.
+
+O catálogo sai renderizado no servidor com os 12 carros e os preços no HTML. Os
+filtros são do cliente e não escondem nada do robô.
+
 ## O conceito
 
 Todo carro do estoque é fotografado na mesma sala: parede preta, piso claro, luz
@@ -31,9 +53,12 @@ montada de lado, placa da casa no lugar da placa real. Não é acaso, é um est�
 e é o que permite vender para quem está a dois mil quilômetros e nunca vai ver o
 carro pessoalmente.
 
-O site inteiro sai daí. As cores não foram escolhidas, foram medidas das fotos:
-o preto é a parede (`#131313`), a pedra é o piso (`#BAB8B8`) e o latão é a cor
-dominante do letreiro da fachada (`#D0B060`).
+No site isso não é a manchete, é o argumento: aparece depois da vitrine, para
+responder à única pergunta de quem já viu um carro e está inseguro.
+
+As cores não foram escolhidas, foram medidas das fotos: o preto é a parede
+(`#131313`), a pedra é o piso (`#BAB8B8`) e o latão é a cor dominante do letreiro
+da fachada (`#D0B060`).
 
 ## Onde mexer
 
@@ -41,6 +66,7 @@ dominante do letreiro da fachada (`#D0B060`).
 |---|---|
 | Telefone, WhatsApp, endereço, horário | `lib/contato.ts` |
 | Estoque inicial | `lib/carros.ts` |
+| Filtro, busca e ordenação | `lib/filtros.ts` |
 | Persistência do estoque (**o banco entra aqui**) | `lib/estoque.ts` |
 | Perguntas e respostas | `components/secao-duvidas.tsx` |
 | Geração das imagens | `scripts/build-assets.mjs` |
@@ -99,6 +125,13 @@ número de telefone, âncoras que resolvem, `rel="noopener"`, o CTA principal ch
 e clicável em seis instantes da abertura, abertura uma vez por sessão, movimento
 reduzido, sem JavaScript, a foto que não pode cobrir a frase do estúdio, largura
 usada em 1920, e o cadastro da gerência gravando de verdade.
+
+No catálogo, os filtros são conferidos pelo resultado e não pelo clique: filtrar
+BMW tem que deixar dois carros e os dois têm que ser BMW, o filtro de preço não
+pode deixar passar nada acima do teto, ordenar por menor preço tem que produzir
+uma lista crescente, a busca sem resultado tem que mostrar o estado vazio com o
+WhatsApp, e abrir o link com o filtro na barra de endereço tem que já trazer a
+lista filtrada.
 
 Quando um defeito for corrigido, a verificação dele entra no mesmo passo. Foi
 assim que entraram a do título cortado, a da foto cobrindo o texto e a do carro

@@ -19,11 +19,11 @@ import {
 const MSG = "Olá! Vim pelo site e queria falar sobre um carro.";
 
 const LINKS = [
-  { href: "#estoque", rotulo: "Estoque" },
-  { href: "#estudio", rotulo: "O estúdio" },
-  { href: "#distancia", rotulo: "Comprar de longe" },
-  { href: "#loja", rotulo: "A loja" },
-  { href: "#duvidas", rotulo: "Dúvidas" },
+  { href: "/estoque", rotulo: "Estoque" },
+  { href: "/#confianca", rotulo: "Por que daqui" },
+  { href: "/#distancia", rotulo: "Como funciona" },
+  { href: "/#loja", rotulo: "A loja" },
+  { href: "/#duvidas", rotulo: "Dúvidas" },
 ];
 
 export default function SecaoFinal({ total }: { total: number }) {

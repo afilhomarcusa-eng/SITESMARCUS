@@ -59,10 +59,16 @@ export default function Movimento() {
     });
 
     function onClique(ev: MouseEvent) {
-      const alvo = (ev.target as HTMLElement).closest?.("a[href^='#']");
+      // Pega tanto "#secao" quanto "/#secao". O menu usa a forma absoluta para
+      // funcionar a partir de /estoque, e sem isto ela deixaria de rolar suave
+      // quando o visitante já está na home.
+      const alvo = (ev.target as HTMLElement).closest?.("a[href*='#']");
       if (!alvo) return;
-      const id = alvo.getAttribute("href")!.slice(1);
+      const href = alvo.getAttribute("href") ?? "";
+      const id = href.slice(href.indexOf("#") + 1);
       if (!id) return;
+      // Se a seção não existe nesta página, o link é para outra rota. Deixa o
+      // navegador navegar.
       const destino = document.getElementById(id);
       if (!destino) return;
       ev.preventDefault();

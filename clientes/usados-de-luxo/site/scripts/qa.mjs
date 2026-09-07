@@ -59,10 +59,17 @@ async function abrir(ctx, rota) {
   return { pagina, erros, respostasRuins };
 }
 
+/** Os que precisam abrir conversa, cada um conferido pelo próprio seletor. */
 const CTAS_ESPERADOS = [
   { seletor: "[data-cta='cabecalho']", onde: "cabeçalho" },
   { seletor: "[data-cta='heroi']", onde: "herói" },
   { seletor: "[data-cta='final']", onde: "fecho" },
+];
+
+/** A ação principal do herói leva ao catálogo, não à conversa. */
+const CTAS_INTERNOS = [
+  { seletor: "[data-cta='heroi-estoque']", onde: "herói", destino: "/estoque" },
+  { seletor: "[data-cta='ver-estoque']", onde: "vitrine", destino: "/estoque" },
 ];
 
 /* ------------------------------------------------------------- estruturais */
@@ -210,7 +217,7 @@ async function cenaNaoCobreTexto(navegador) {
     await pagina.waitForTimeout(3600);
 
     const cena = await pagina.evaluate(() => {
-      const s = document.getElementById("estudio");
+      const s = document.getElementById("confianca");
       return { topo: s.offsetTop, altura: s.offsetHeight };
     });
 
@@ -254,6 +261,156 @@ async function cenaNaoCobreTexto(navegador) {
   }
 }
 
+/* --------------------------------------------------------------- catálogo */
+
+/**
+ * Os filtros de /estoque.
+ *
+ * Existe porque o cliente disse que "os filtros não funcionaram". Funcionavam,
+ * mas eram só quatro ordenações em texto miúdo, sem contagem, e mexer neles
+ * não mudava nada visível. Aqui o teste não pergunta se o clique registrou:
+ * conta os cartões antes e depois e confere o conteúdo do que sobrou.
+ */
+async function catalogo(navegador) {
+  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 1000 } });
+  const { pagina, erros } = await abrir(ctx, "/estoque");
+
+  const conta = () => pagina.locator("[data-carro]").count();
+  const precos = () =>
+    pagina.$$eval("[data-carro]", (as) => as.map((a) => Number(a.dataset.preco)));
+  const nomes = () =>
+    pagina.$$eval("[data-carro] h3", (hs) => hs.map((h) => h.textContent.trim()));
+
+  const total = await conta();
+  checar(total === 12, "o catálogo abre com os 12 carros", `achei ${total}`);
+  checar(erros.length === 0, "o catálogo não tem erro de console", erros.join(" | "));
+  checar((await pagina.locator("h1").count()) === 1, "o catálogo tem um h1");
+
+  /* ------------------------------------------------------- filtro de marca */
+  await pagina.getByRole("button", { name: "BMW", exact: true }).click();
+  await pagina.waitForTimeout(300);
+  const soBmw = await nomes();
+  checar(soBmw.length === 2, "filtrar BMW deixa os 2 BMW", `sobraram ${soBmw.length}`);
+  checar(
+    soBmw.every((n) => n.startsWith("BMW")),
+    "só sobra BMW depois de filtrar BMW",
+    soBmw.join(", "),
+  );
+  checar(
+    (await pagina.evaluate(() => location.search)).includes("marca=BMW"),
+    "o filtro de marca entra na barra de endereço",
+  );
+
+  // a contagem visível precisa concordar com o que está na tela
+  const textoContagem = await pagina.locator("[aria-live='polite']").first().innerText();
+  checar(
+    textoContagem.includes("2") && textoContagem.includes("12"),
+    "a contagem mostra 2 de 12",
+    textoContagem.replace(/\s+/g, " "),
+  );
+
+  /* ---------------------------------------------- o link filtrado funciona */
+  const comFiltro = await pagina.evaluate(() => location.href);
+  const p2 = await ctx.newPage();
+  await p2.goto(comFiltro, { waitUntil: "networkidle" });
+  await p2.waitForTimeout(700);
+  const abertoDeLink = await p2.locator("[data-carro]").count();
+  checar(abertoDeLink === 2, "abrir o link filtrado já traz o filtro aplicado", `achei ${abertoDeLink}`);
+  await p2.close();
+
+  /* -------------------------------------------------------------- limpar */
+  await pagina.getByRole("button", { name: /limpar 1 filtro/i }).first().click();
+  await pagina.waitForTimeout(300);
+  checar((await conta()) === 12, "limpar filtros devolve os 12");
+
+  /* --------------------------------------------------------------- busca */
+  await pagina.getByPlaceholder("Buscar marca, modelo ou versão").fill("ranger");
+  await pagina.waitForTimeout(350);
+  const busca = await nomes();
+  checar(
+    busca.length === 1 && /ranger/i.test(busca[0]),
+    "buscar por ranger acha só a Ranger",
+    busca.join(", "),
+  );
+
+  // acento não pode atrapalhar: "hibrido" tem que achar "Híbrido"
+  await pagina.getByPlaceholder("Buscar marca, modelo ou versão").fill("camaro");
+  await pagina.waitForTimeout(350);
+  checar((await conta()) === 1, "buscar camaro acha o Camaro");
+
+  /* ---------------------------------------------------------- lista vazia */
+  await pagina.getByPlaceholder("Buscar marca, modelo ou versão").fill("ferrari");
+  await pagina.waitForTimeout(350);
+  checar((await conta()) === 0, "busca sem resultado não mostra carro nenhum");
+  checar(
+    await pagina.getByText("Nenhum carro com esses filtros").isVisible(),
+    "busca sem resultado mostra o estado vazio",
+  );
+  const ctaVazio = pagina.locator("[data-cta='vazio']");
+  checar(
+    (await ctaVazio.count()) === 1 &&
+      (await ctaVazio.getAttribute("href")).includes("wa.me/"),
+    "o estado vazio oferece o WhatsApp",
+  );
+
+  await pagina.getByRole("button", { name: /limpar filtros/i }).click();
+  await pagina.waitForTimeout(350);
+  checar((await conta()) === 12, "limpar do estado vazio devolve os 12");
+
+  /* --------------------------------------------------------------- preço */
+  await pagina.getByRole("button", { name: "Até 150 mil" }).click();
+  await pagina.waitForTimeout(300);
+  const ate150 = await precos();
+  checar(ate150.length > 0, "o filtro de preço deixa algum carro");
+  checar(
+    ate150.every((v) => v <= 150000),
+    "nenhum carro acima de 150 mil sobrevive ao filtro",
+    ate150.filter((v) => v > 150000).join(", "),
+  );
+  const semFiltroPreco = 12;
+  checar(
+    ate150.length < semFiltroPreco,
+    "o filtro de preço realmente reduz a lista",
+    `${ate150.length} de ${semFiltroPreco}`,
+  );
+  await pagina.getByRole("button", { name: /limpar 1 filtro/i }).first().click();
+  await pagina.waitForTimeout(300);
+
+  /* ----------------------------------------------------------- ordenação */
+  await pagina.getByRole("button", { name: "Menor preço" }).click();
+  await pagina.waitForTimeout(300);
+  const cres = await precos();
+  checar(
+    cres.every((v, i) => i === 0 || cres[i - 1] <= v),
+    "ordenar por menor preço deixa a lista crescente",
+    cres.join(", "),
+  );
+
+  await pagina.getByRole("button", { name: "Maior preço" }).click();
+  await pagina.waitForTimeout(300);
+  const decr = await precos();
+  checar(
+    decr.every((v, i) => i === 0 || decr[i - 1] >= v),
+    "ordenar por maior preço deixa a lista decrescente",
+    decr.join(", "),
+  );
+  checar(
+    decr[0] !== cres[0],
+    "trocar a ordenação muda de fato o primeiro cartão",
+    `${cres[0]} contra ${decr[0]}`,
+  );
+
+  /* ------------------------------------------------ combinação de filtros */
+  await pagina.getByRole("button", { name: "Automático", exact: true }).click();
+  await pagina.waitForTimeout(300);
+  const auto = await conta();
+  checar(auto > 0 && auto < 12, "o filtro de câmbio reduz a lista", `sobraram ${auto}`);
+
+  await pagina.screenshot({ path: path.join(SAIDA, "estoque-1440.png"), fullPage: true });
+  await pagina.close();
+  await ctx.close();
+}
+
 /* ------------------------------------------------------------- retratos */
 
 /**
@@ -267,7 +424,7 @@ async function cenaNaoCobreTexto(navegador) {
  * desenhado em 1440 costuma virar um objeto pequeno boiando num oceano de
  * fundo quando a tela cresce, e isso não aparece em teste de estouro.
  */
-const SECOES = ["conteudo", "estudio", "estoque", "distancia", "loja", "duvidas"];
+const SECOES = ["conteudo", "estoque", "confianca", "distancia", "loja", "duvidas"];
 
 async function retratos(navegador) {
   for (const largura of [390, 1440, 1920]) {
@@ -403,6 +560,17 @@ async function conversao(navegador) {
     );
   }
 
+  for (const { seletor, onde, destino } of CTAS_INTERNOS) {
+    const el = pagina.locator(seletor).first();
+    checar((await el.count()) > 0, `existe o botão de estoque do ${onde}`);
+    if ((await el.count()) === 0) continue;
+    checar(
+      (await el.getAttribute("href")) === destino,
+      `o botão de estoque do ${onde} aponta para ${destino}`,
+      (await el.getAttribute("href")) ?? "sem href",
+    );
+  }
+
   // toda âncora interna resolve
   const ancoras = await pagina.evaluate(() =>
     [...document.querySelectorAll("a[href^='#']")]
@@ -502,8 +670,9 @@ async function abertura(navegador) {
   const textoSemJs = await pj.evaluate(() => document.body.innerText).catch(() => "");
   const conteudoSemJs = await pj.locator("h1").first().textContent();
   checar(
-    (conteudoSemJs ?? "").includes("estúdio"),
+    /carros/i.test(conteudoSemJs ?? "") && /venda/i.test(conteudoSemJs ?? ""),
     "sem JavaScript o título principal aparece",
+    conteudoSemJs ?? "sem h1",
   );
   const opacidadeSemJs = await pj
     .locator("h1 .display")
@@ -518,6 +687,23 @@ async function abertura(navegador) {
     (textoSemJs || "").includes("3434-6026"),
     "sem JavaScript o telefone continua na página",
   );
+
+  // O catálogo é a página que vende. Sem JavaScript ele tem que sair inteiro
+  // no HTML, com preço, senão o Google indexa uma casca vazia.
+  const pjEstoque = await ctxJs.newPage();
+  await pjEstoque.goto(BASE + "/estoque", { waitUntil: "domcontentloaded" });
+  const cartoesSemJs = await pjEstoque.locator("[data-carro]").count();
+  checar(
+    cartoesSemJs === 12,
+    "sem JavaScript o catálogo traz os 12 carros no HTML",
+    `achei ${cartoesSemJs}`,
+  );
+  const textoEstoqueSemJs = await pjEstoque.evaluate(() => document.body.innerText);
+  checar(
+    textoEstoqueSemJs.includes("359.900"),
+    "sem JavaScript os preços saem no HTML do catálogo",
+  );
+  await pjEstoque.close();
   await pj.screenshot({ path: path.join(SAIDA, "sem-js-1440.png"), fullPage: true });
   await pj.close();
   await ctxJs.close();
@@ -617,6 +803,7 @@ async function main() {
     await conversao(navegador);
     await abertura(navegador);
     await paginaCarro(navegador);
+    await catalogo(navegador);
     await gerencia(navegador);
     await cenaNaoCobreTexto(navegador);
     await retratos(navegador);
