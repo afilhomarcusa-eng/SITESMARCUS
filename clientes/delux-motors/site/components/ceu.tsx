@@ -6,11 +6,12 @@ import { DURACAO_ABERTURA } from "@/lib/abertura";
 /**
  * O céu.
  *
- * É o céu de Salvador que aparece nas fotos do estoque: os carros deles são
- * fotografados de dia, no pátio da loja, com o céu aberto atrás. Este shader
- * reconstrói aquele céu, e ele é ao mesmo tempo o fundo do herói e a abertura.
+ * É o céu de Salvador que aparece nas fotos do estoque, em preto e branco,
+ * como o resto da interface. Os carros deles são fotografados de dia, no pátio
+ * da loja, com o céu aberto atrás. Este shader reconstrói aquela luz sem a cor,
+ * e ele é ao mesmo tempo o fundo do herói e a abertura.
  *
- * A abertura é o dia chegando: a tela começa numa luz baixa e morna, a
+ * A abertura é o dia chegando: a tela começa numa luz baixa, a
  * claridade sobe pela borda de baixo e o céu abre até assentar, que é quando o
  * site já está lá. Não existe corte entre abertura e herói, é a mesma imagem em
  * dois momentos.
@@ -49,10 +50,10 @@ const FRAG = /* glsl */ `
   uniform float uSobe;   // 0 = luz baixa, 1 = dia assentado
   uniform vec2  uRes;
 
-  // Cores medidas nas fotos do estoque, em 07/09/2026.
-  const vec3 ALTO  = vec3(0.760, 0.855, 0.918); // céu aberto sobre o pátio
-  const vec3 MEIO  = vec3(0.906, 0.882, 0.847); // a bruma quente perto do chão
-  const vec3 BAIXO = vec3(0.949, 0.937, 0.918); // fecha na cor da página
+  // Sem cor, só luz. Os tons vieram da luminância das fotos do estoque.
+  const vec3 ALTO  = vec3(0.855, 0.855, 0.852); // o alto, mais fechado
+  const vec3 MEIO  = vec3(0.941, 0.941, 0.937); // a bruma perto do chão
+  const vec3 BAIXO = vec3(1.000, 1.000, 1.000); // fecha no branco da página
 
   float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -106,20 +107,21 @@ const FRAG = /* glsl */ `
 
     // Nuvem alta, clara, discreta. Some perto do chão.
     float alta = smoothstep(0.45, 0.85, nuvens) * smoothstep(h + 0.10, 0.92, y);
-    cor = mix(cor, vec3(0.98, 0.97, 0.96), alta * 0.35);
+    cor = mix(cor, vec3(0.985), alta * 0.4);
 
-    // Um respiro de brasa logo acima do horizonte, que é a cor da marca.
-    float quente = smoothstep(h + 0.26, h - 0.02, y) * smoothstep(0.40, 0.72, nuvens);
-    cor = mix(cor, vec3(0.85, 0.62, 0.47), quente * 0.16);
+    // Uma sombra rasa logo acima do horizonte, para a faixa não ser uma chapa.
+    float sombra = smoothstep(h + 0.26, h - 0.02, y) * smoothstep(0.40, 0.72, nuvens);
+    cor = mix(cor, vec3(0.90), sombra * 0.22);
 
     // Grão de filme. Entra antes da quantização, e é ele que tira as faixas do
     // degradê. Sem isto o céu inteiro fica listrado.
     float grao = hash(uv * uRes + fract(uTempo) * 91.7) - 0.5;
     cor += grao * 0.012;
 
-    // A abertura começa com a luz baixa e morna, e abre para o dia.
+    // A abertura começa com a luz baixa e abre para o dia. Sem virar sépia:
+    // é a mesma luz, só mais fechada.
     float luz = smoothstep(0.0, 0.7, uSobe);
-    cor = mix(cor * vec3(0.72, 0.63, 0.58), cor, luz);
+    cor = mix(cor * 0.62, cor, luz);
 
     gl_FragColor = vec4(cor, 1.0);
   }
@@ -259,7 +261,7 @@ export default function Ceu({ abertura }: Props) {
            Repete as faixas do shader e fecha na cor da página, para a emenda
            com a primeira seção não aparecer. */
         background:
-          "linear-gradient(to top, #f2efea 0%, #f2efea 12%, #e7ddd2 30%, #dfe6ea 62%, #c2d8e9 100%)",
+          "linear-gradient(to top, #ffffff 0%, #ffffff 14%, #f6f6f5 34%, #eeeeed 64%, #dadad8 100%)",
       }}
     />
   );

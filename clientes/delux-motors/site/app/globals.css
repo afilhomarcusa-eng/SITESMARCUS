@@ -3,44 +3,37 @@
 /* ---------------------------------------------------------------------------
    Delux Motors — tokens
 
-   O site é claro porque a fotografia deles é clara. Os carros do estoque são
-   fotografados de dia, no pátio da loja, com céu aberto e piso de concreto.
-   Um site escuro brigaria com o material que ele existe para mostrar.
+   Preto e branco, claro.
 
-   As cores foram medidas nessas fotos e na foto da fachada:
-   areia e nuvem vêm do concreto do pátio, a tinta vem do preto das grades e
-   dos vidros, e a brasa vem do horizonte aceso atrás da loja no fim da tarde.
+   A cor fica onde ela importa, que é dentro das fotos: os carros são o produto,
+   e é a lataria deles que tem que puxar o olho. Interface colorida disputa com
+   a mercadoria. Aqui a interface é papel e tinta, e o carro é a única coisa
+   colorida na tela.
 
-   Amostrado em 07/09/2026.
+   O cinza da nuvem é o concreto do pátio onde eles fotografam, dessaturado.
 --------------------------------------------------------------------------- */
 
 @theme {
-  --color-areia: #f2efea;
-  --color-nuvem: #e7e2d9;
-  --color-cinza: #b3a9a4;
-  --color-tinta: #191621;
-  --color-brasa: #bf5a33;
-  --color-brasa-clara: #e8a882;
-  --color-ceu: #cfe0ec;
+  --color-branco: #ffffff;
+  --color-nuvem: #f2f2f1;
+  --color-cinza: #a8a8a6;
+  --color-tinta: #0a0a0a;
 }
 
 :root {
-  --areia: #f2efea;
-  --nuvem: #e7e2d9;
-  --cinza: #b3a9a4;
-  --grafite: #191621;
-  --brasa: #bf5a33;
-  --brasa-clara: #e8a882;
-  --ceu: #cfe0ec;
+  --branco: #ffffff;
+  --nuvem: #f2f2f1;
+  --cinza: #a8a8a6;
+  --grafite: #0a0a0a;
 
   --tinta: var(--grafite);
-  --tinta-2: rgba(25, 22, 33, 0.7);
-  --tinta-3: rgba(25, 22, 33, 0.45);
-  --linha: rgba(25, 22, 33, 0.14);
+  --tinta-2: rgba(10, 10, 10, 0.68);
+  --tinta-3: rgba(10, 10, 10, 0.44);
+  --linha: rgba(10, 10, 10, 0.14);
 
   --casca: min(92vw, 1520px);
 
-  /* Movimento de fim de tarde: entra devagar, assenta e para. Nada estala. */
+  /* Movimento de luz abrindo: entra devagar, assenta e para. Nada estala. */
   --e-saida: cubic-bezier(0.22, 1, 0.36, 1);
   --d-micro: 200ms;
   --d-ui: 400ms;
@@ -58,7 +51,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--areia);
+  background: var(--branco);
   color: var(--tinta);
   font-family: var(--font-texto);
   font-synthesis-weight: none;
@@ -67,8 +60,8 @@ body {
 }
 
 ::selection {
-  background: var(--brasa);
-  color: var(--areia);
+  background: var(--tinta);
+  color: var(--branco);
 }
 
 /* ------------------------------- tipografia ------------------------------ */
@@ -135,7 +128,7 @@ body {
    transparente. Fica em classe, e não em style inline, senão o inline venceria
    a regra do breakpoint. */
 .faixa-dados {
-  background: var(--areia);
+  background: var(--branco);
 }
 
 @media (min-width: 768px) {
@@ -147,17 +140,17 @@ body {
 /* ---------------------------------- cromo -------------------------------- */
 
 /* O letreiro da loja é cromado, e cromo é um degradê com uma faixa clara
-   atravessando. Sobre fundo claro o cromo precisa ser escuro, senão some:
+   atravessando. Sobre papel branco o cromo precisa ser escuro, senão some:
    metal claro só brilha contra sombra. */
 .cromo {
   background: linear-gradient(
     172deg,
-    #3a3540 0%,
-    #6f6a74 22%,
-    #221f2a 42%,
-    #7d7880 62%,
-    #2a2632 82%,
-    #4a4550 100%
+    #2e2e2e 0%,
+    #6b6b6b 22%,
+    #121212 42%,
+    #767676 62%,
+    #1a1a1a 82%,
+    #3d3d3d 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -167,7 +160,7 @@ body {
 /* --------------------------------- foco ---------------------------------- */
 
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--brasa);
+  outline: 2px solid var(--tinta);
   outline-offset: 3px;
   border-radius: 2px;
 }

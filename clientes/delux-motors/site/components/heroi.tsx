@@ -123,21 +123,31 @@ export default function Heroi() {
           className="h-[52svh] w-full object-cover object-bottom md:h-[84svh] md:w-auto md:max-w-none"
           style={{
             opacity: carro,
+            // Quase sem cor de propósito. No herói a foto é atmosfera, e a cor
+            // fica guardada para o catálogo, onde ela ajuda a escolher carro.
+            filter: "saturate(0.28) contrast(1.05)",
             transition: "opacity 600ms var(--e-saida)",
-            maskImage:
-              "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 16%, #000 40%)",
           }}
         />
       </div>
 
-      {/* No desktop o carro costura na horizontal, com o céu continuando à
-          esquerda dele. No celular ele é faixa e a costura é na vertical. */}
+      {/* No celular o carro é faixa e a costura com o céu é na vertical. No
+          desktop ele é painel e a costura é na horizontal.
+
+          As duas máscaras vivem aqui, na folha de estilo, e não no style
+          inline do elemento. Estilo inline vence regra de media query, então a
+          máscara do celular ficava valendo também no desktop: o painel não
+          tinha esmaecimento nenhum do lado esquerdo e a emenda com o céu
+          aparecia como uma linha reta atravessando a tela. */}
       <style>{`
+        [data-foto-carro] {
+          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 16%, #000 40%);
+          mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 16%, #000 40%);
+        }
         @media (min-width: 768px) {
           [data-foto-carro] {
-            /* O esmaecimento da esquerda é longo de propósito. Curto demais,
-               o céu da foto encosta no céu do shader com um degrau visível, e
-               a emenda entre os dois entrega que são duas imagens. */
+            /* O esmaecimento da esquerda é longo de propósito. Curto demais, o
+               céu da foto encosta no céu do shader com um degrau visível. */
             -webkit-mask-image:
               linear-gradient(to right, transparent 0%, rgba(0,0,0,0.18) 26%, rgba(0,0,0,0.62) 48%, #000 72%),
               linear-gradient(to bottom, transparent 0%, #000 14%);
@@ -157,7 +167,7 @@ export default function Heroi() {
         className="pointer-events-none absolute inset-0 z-[15] md:hidden"
         style={{
           background:
-            "linear-gradient(to bottom, var(--areia) 0%, rgba(242,239,234,0.94) 40%, rgba(242,239,234,0.45) 58%, transparent 78%)",
+            "linear-gradient(to bottom, var(--branco) 0%, rgba(255,255,255,0.94) 40%, rgba(255,255,255,0.48) 58%, transparent 78%)",
           opacity: conteudo,
           transition: "opacity 900ms var(--e-saida)",
         }}
@@ -167,7 +177,7 @@ export default function Heroi() {
         className="pointer-events-none absolute inset-0 z-[15] hidden md:block"
         style={{
           background:
-            "linear-gradient(95deg, var(--areia) 0%, rgba(242,239,234,0.92) 34%, rgba(242,239,234,0.42) 56%, transparent 76%)",
+            "linear-gradient(95deg, var(--branco) 0%, rgba(255,255,255,0.94) 34%, rgba(255,255,255,0.45) 56%, transparent 76%)",
           opacity: conteudo,
           transition: "opacity 900ms var(--e-saida)",
         }}
@@ -196,7 +206,7 @@ export default function Heroi() {
             <span className="mascara">
               <span
                 className="display block text-[clamp(2.4rem,6.4vw,5.4rem)]"
-                style={{ color: "var(--brasa)" }}
+                style={{ color: "var(--tinta)" }}
               >
                 ou consignar
               </span>
@@ -216,7 +226,7 @@ export default function Heroi() {
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-3 px-6 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em]"
-              style={{ background: "var(--brasa)", color: "var(--areia)" }}
+              style={{ background: "var(--tinta)", color: "var(--branco)" }}
             >
               Falar no WhatsApp
               <span
@@ -257,7 +267,7 @@ export default function Heroi() {
             aria-hidden="true"
             className="mt-2 block h-px w-8 shrink-0 transition-all duration-500 group-hover:w-12"
             style={{
-              background: "var(--brasa)",
+              background: "var(--tinta)",
               transitionTimingFunction: "var(--e-saida)",
             }}
           />

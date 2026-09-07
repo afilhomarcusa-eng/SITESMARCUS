@@ -266,7 +266,7 @@ export default function Gerencia() {
 
         <p
           className="corpo mb-10 max-w-[70ch] border-l-2 pl-5 text-[0.88rem]"
-          style={{ borderColor: "var(--brasa)" }}
+          style={{ borderColor: "var(--tinta)" }}
         >
           O estoque do site começa aqui. O que você cadastrar é gravado neste
           navegador e aparece na página de estoque na hora, nesta máquina. Ainda
@@ -276,7 +276,7 @@ export default function Gerencia() {
         </p>
 
         {aviso ? (
-          <p role="status" className="mb-6 text-[0.78rem]" style={{ color: "var(--brasa)" }}>
+          <p role="status" className="mb-6 text-[0.78rem]" style={{ color: "var(--tinta)" }}>
             {aviso}
           </p>
         ) : null}
@@ -367,7 +367,7 @@ export default function Gerencia() {
                       style={{ border: "1px solid var(--linha)", color: "var(--tinta)" }}
                     >
                       {s.o.map((op) => (
-                        <option key={op} value={op} style={{ background: "var(--areia)" }}>
+                        <option key={op} value={op} style={{ background: "var(--branco)" }}>
                           {op}
                         </option>
                       ))}
@@ -448,7 +448,7 @@ export default function Gerencia() {
                 <button
                   type="submit"
                   className="px-6 py-3.5 text-[0.72rem] uppercase tracking-[0.14em]"
-                  style={{ background: "var(--brasa)", color: "var(--areia)", fontWeight: 500 }}
+                  style={{ background: "var(--tinta)", color: "var(--branco)", fontWeight: 500 }}
                 >
                   {editando ? "Salvar alterações" : "Cadastrar no estoque"}
                 </button>
@@ -501,7 +501,7 @@ export default function Gerencia() {
                         type="button"
                         onClick={() => editar(c)}
                         className="text-[0.68rem] uppercase tracking-[0.12em]"
-                        style={{ color: "var(--brasa)" }}
+                        style={{ color: "var(--tinta)" }}
                       >
                         Editar
                       </button>

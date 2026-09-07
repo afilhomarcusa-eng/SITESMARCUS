@@ -9,7 +9,7 @@
 
 import { chromium } from "playwright";
 
-const BASE = process.env.PERF_BASE ?? "http://127.0.0.1:3315";
+const BASE = process.env.PERF_BASE ?? "http://127.0.0.1:3316";
 
 const navegador = await chromium.launch();
 const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 } });

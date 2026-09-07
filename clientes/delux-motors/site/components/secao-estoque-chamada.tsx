@@ -63,7 +63,7 @@ export default function SecaoEstoqueChamada({ inicial }: { inicial: Carro[] }) {
               data-cta="ver-estoque"
               href="/estoque"
               className="group inline-flex items-center gap-3 px-5 py-3.5 text-[0.74rem] uppercase tracking-[0.13em]"
-              style={{ border: "1px solid var(--brasa)", color: "var(--brasa)" }}
+              style={{ border: "1px solid var(--tinta)", color: "var(--tinta)" }}
             >
               Ver todos, com filtro
               <span
@@ -100,7 +100,7 @@ export default function SecaoEstoqueChamada({ inicial }: { inicial: Carro[] }) {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-3 px-6 py-4 text-[0.76rem] font-medium uppercase tracking-[0.13em]"
-              style={{ background: "var(--brasa)", color: "var(--areia)" }}
+              style={{ background: "var(--tinta)", color: "var(--branco)" }}
             >
               Perguntar o que tem hoje
               <span aria-hidden="true">&rarr;</span>
@@ -118,7 +118,7 @@ export default function SecaoEstoqueChamada({ inicial }: { inicial: Carro[] }) {
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-3 px-6 py-4 text-[0.76rem] font-medium uppercase tracking-[0.13em]"
-              style={{ background: "var(--brasa)", color: "var(--areia)" }}
+              style={{ background: "var(--tinta)", color: "var(--branco)" }}
             >
               Não achou? Diga o que procura
               <span

@@ -53,7 +53,7 @@ export default function CartaoCarro({
         )}
         <span
           className="dado absolute left-0 top-0 px-3 py-2 text-[0.62rem] uppercase tracking-[0.14em]"
-          style={{ background: "var(--areia)", color: "var(--tinta)" }}
+          style={{ background: "var(--branco)", color: "var(--tinta)" }}
         >
           {carro.ano}
         </span>
@@ -62,7 +62,7 @@ export default function CartaoCarro({
         {carro.alertas?.length ? (
           <span
             className="dado absolute bottom-0 left-0 right-0 px-3 py-2 text-[0.62rem] uppercase tracking-[0.12em]"
-            style={{ background: "var(--brasa)", color: "var(--areia)" }}
+            style={{ background: "var(--tinta)", color: "var(--branco)" }}
           >
             {carro.alertas[0]}
           </span>

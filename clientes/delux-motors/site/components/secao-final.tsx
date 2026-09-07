@@ -12,8 +12,8 @@ import {
 /**
  * O fecho.
  *
- * Repete o motivo da abertura: a luz do horizonte, agora como um clarão na
- * borda de baixo. Começo e fim se referenciando é o que dá sensação de coisa
+ * Repete o motivo da abertura: a luz do horizonte, agora como uma sombra
+ * rasa na borda de baixo. Começo e fim se referenciando é o que dá sensação de coisa
  * terminada, em vez de página que simplesmente acabou.
  */
 
@@ -37,7 +37,7 @@ export default function SecaoFinal() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "linear-gradient(to top, rgba(191,90,51,0.14) 0%, rgba(207,224,236,0.28) 26%, transparent 62%)",
+              "linear-gradient(to top, rgba(10,10,10,0.07) 0%, rgba(10,10,10,0.03) 26%, transparent 62%)",
           }}
         />
 
@@ -66,7 +66,7 @@ export default function SecaoFinal() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group mb-4 flex w-full items-center justify-between gap-6 px-6 py-5 text-[0.78rem] font-medium uppercase tracking-[0.14em] sm:w-auto"
-                style={{ background: "var(--brasa)", color: "var(--areia)" }}
+                style={{ background: "var(--tinta)", color: "var(--branco)" }}
               >
                 Chamar no WhatsApp
                 <span
@@ -85,7 +85,7 @@ export default function SecaoFinal() {
                     href={whatsapp(s.mensagem)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[0.78rem] underline decoration-[var(--tinta-3)] underline-offset-4 transition-colors duration-200 hover:text-[var(--brasa)]"
+                    className="text-[0.78rem] underline decoration-[var(--tinta-3)] underline-offset-4 transition-colors duration-200 hover:text-[var(--tinta)]"
                     style={{ color: "var(--tinta-2)" }}
                   >
                     {s.verbo}
@@ -118,7 +118,7 @@ export default function SecaoFinal() {
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="text-[0.88rem] transition-colors duration-200 hover:text-[var(--brasa)]"
+                      className="text-[0.88rem] transition-colors duration-200 hover:text-[var(--tinta)]"
                       style={{ color: "var(--tinta-2)" }}
                     >
                       {l.rotulo}
@@ -134,7 +134,7 @@ export default function SecaoFinal() {
                 <li>
                   <a
                     href={CONTATO.tel}
-                    className="dado transition-colors duration-200 hover:text-[var(--brasa)]"
+                    className="dado transition-colors duration-200 hover:text-[var(--tinta)]"
                     style={{ color: "var(--tinta-2)" }}
                   >
                     {CONTATO.exibicao}
@@ -145,7 +145,7 @@ export default function SecaoFinal() {
                     href={`https://www.instagram.com/${EMPRESA.instagram}/`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="transition-colors duration-200 hover:text-[var(--brasa)]"
+                    className="transition-colors duration-200 hover:text-[var(--tinta)]"
                     style={{ color: "var(--tinta-2)" }}
                   >
                     @{EMPRESA.instagram}
@@ -156,7 +156,7 @@ export default function SecaoFinal() {
                     href={ROTA_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="transition-colors duration-200 hover:text-[var(--brasa)]"
+                    className="transition-colors duration-200 hover:text-[var(--tinta)]"
                     style={{ color: "var(--tinta-2)" }}
                   >
                     Traçar rota

@@ -35,15 +35,20 @@ própria mensagem já escrita no WhatsApp.
 
 ## O conceito
 
-**O site é claro porque a fotografia deles é clara.** Os carros do estoque são
-fotografados de dia, no pátio da loja, com céu aberto e piso de concreto. Um
-site escuro brigaria com o material que ele existe para mostrar.
+**Preto e branco, claro.** A interface é papel e tinta: branco (`#FFFFFF`),
+cinza de concreto para as seções alternadas (`#F2F2F1`) e preto (`#0A0A0A`).
 
-As cores não foram escolhidas, foram medidas nessas fotos: a areia e a nuvem vêm
-do concreto do pátio (`#F2EFEA`, `#E7E2D9`), a tinta vem do preto das grades e
-dos vidros (`#191621`), o céu vem do céu (`#CFE0EC`), e a brasa (`#BF5A33`) vem
-do horizonte aceso atrás da loja no fim da tarde, escurecida para ter contraste
-sobre fundo claro.
+A cor fica onde ela importa, que é dentro das fotos. Os carros são o produto, e
+é a lataria deles que tem que puxar o olho. Interface colorida disputa com a
+mercadoria.
+
+O site é claro porque a fotografia deles é clara: os carros são fotografados de
+dia, no pátio da loja, com céu aberto e piso de concreto. Um site escuro
+brigaria com o material que ele existe para mostrar.
+
+A foto do herói é a única quase sem cor (`saturate(0.28)`), de propósito: ali
+ela é atmosfera, e a cor fica guardada para o catálogo, onde ajuda a escolher
+carro.
 
 ### A abertura
 
@@ -54,9 +59,10 @@ aparece embaixo do céu que já estava lá. Não existe corte entre abertura e h
 encerra.
 
 O céu é um shader porque um degradê desse tamanho em CSS mostra faixas: o
-navegador interpola em 8 bits sem ruído. No shader o grão entra antes da
-quantização e o degradê fica limpo. Se o WebGL não subir, existe um degradê de
-CSS atrás que imita as mesmas faixas e fecha na cor da página.
+navegador interpola em 8 bits sem ruído. Num degradê quase todo branco isso
+apareceria ainda mais. No shader o grão entra antes da quantização e o degradê
+fica limpo. Se o WebGL não subir, existe um degradê de CSS atrás que imita as
+mesmas faixas e fecha no branco da página.
 
 ### O relógio da abertura vive em `lib/abertura.ts`
 
@@ -67,7 +73,7 @@ entrava inteiro na conta: **o LCP deu 4,2s**. Encurtar a sequência levou a 2,9s
 ainda reprovando.
 
 Agora o relógio começa na montagem do herói e o céu acompanha por conta própria.
-LCP medido: **208 ms**, com o carro na tela em 2,2s na primeira visita da sessão.
+LCP medido: **196 ms**, com o carro na tela em 1,3s na primeira visita da sessão.
 O `npm run qa` mede esse tempo a cada execução, para não voltar a crescer em
 silêncio.
 
@@ -171,7 +177,16 @@ assim que entraram a do título cortado, a da revelação presa fora da home, a 
 tempo até o carro aparecer, a do site sem WebGL, a da pílula em branco e a do
 grupo de filtro com uma opção só.
 
-## O defeito que quase passou
+## Dois defeitos que quase passaram
+
+**Estilo inline vence media query.** As duas máscaras da foto do herói, a do
+celular e a do desktop, estavam em lugares diferentes: a do celular no `style`
+inline do elemento e a do desktop numa regra `@media`. Inline sempre vence, então
+o painel do desktop nunca teve esmaecimento lateral, e a emenda entre a foto e o
+céu aparecia como uma linha reta atravessando a tela. As duas foram para a folha
+de estilo, e é o breakpoint que decide.
+
+
 
 O pacote do three falhou ao carregar numa medição e **o herói inteiro ficou
 invisível, para sempre, sem erro na tela**. O céu tinha fallback em CSS desde o

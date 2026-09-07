@@ -41,7 +41,7 @@ export default function Navegacao() {
       <header
         className="fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500"
         style={{
-          backgroundColor: rolou ? "rgba(242,239,234,0.9)" : "transparent",
+          backgroundColor: rolou ? "rgba(255,255,255,0.9)" : "transparent",
           backdropFilter: rolou ? "blur(16px)" : "none",
           borderBottom: `1px solid ${rolou ? "var(--linha)" : "transparent"}`,
           transitionTimingFunction: "var(--e-saida)",
@@ -72,7 +72,7 @@ export default function Navegacao() {
                   aria-hidden="true"
                   className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
                   style={{
-                    background: "var(--brasa)",
+                    background: "var(--tinta)",
                     transitionTimingFunction: "var(--e-saida)",
                   }}
                 />
@@ -96,7 +96,7 @@ export default function Navegacao() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center px-4 py-2.5 text-[0.72rem] font-medium uppercase tracking-[0.13em]"
-              style={{ background: "var(--brasa)", color: "var(--areia)" }}
+              style={{ background: "var(--tinta)", color: "var(--branco)" }}
             >
               WhatsApp
             </a>
@@ -138,7 +138,7 @@ export default function Navegacao() {
         id="menu-movel"
         hidden={!aberto}
         className="fixed inset-0 z-40 lg:hidden"
-        style={{ background: "var(--areia)" }}
+        style={{ background: "var(--branco)" }}
       >
         <div className="casca flex h-full flex-col justify-center gap-1 pt-20">
           {LINKS.map((l, i) => (
@@ -160,7 +160,7 @@ export default function Navegacao() {
           <a
             href={CONTATO.tel}
             className="dado mt-8 text-[0.9rem]"
-            style={{ color: "var(--brasa)" }}
+            style={{ color: "var(--tinta)" }}
           >
             {CONTATO.exibicao}
           </a>

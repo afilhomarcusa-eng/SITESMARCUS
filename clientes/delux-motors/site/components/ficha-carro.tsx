@@ -70,7 +70,7 @@ export default function FichaCarro({ slug }: { slug: string }) {
             target="_blank"
             rel="noopener noreferrer"
             className="px-6 py-3.5 text-[0.74rem] font-medium uppercase tracking-[0.13em]"
-            style={{ background: "var(--brasa)", color: "var(--areia)" }}
+            style={{ background: "var(--tinta)", color: "var(--branco)" }}
           >
             Ver o que tem hoje
           </a>
@@ -166,7 +166,7 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
           </h1>
           <p
             className="dado mb-8 text-[clamp(1.3rem,2.4vw,1.9rem)]"
-            style={{ color: "var(--brasa)" }}
+            style={{ color: "var(--tinta)" }}
           >
             {brl(carro.preco)}
           </p>
@@ -178,8 +178,8 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
                   key={a}
                   className="dado px-4 py-3 text-[0.78rem]"
                   style={{
-                    border: "1px solid var(--brasa)",
-                    color: "var(--brasa)",
+                    border: "1px solid var(--tinta)",
+                    color: "var(--tinta)",
                   }}
                 >
                   {a}
@@ -196,7 +196,7 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
             target="_blank"
             rel="noopener noreferrer"
             className="group mb-3 flex items-center justify-between gap-6 px-6 py-5 text-[0.76rem] font-medium uppercase tracking-[0.14em]"
-            style={{ background: "var(--brasa)", color: "var(--areia)" }}
+            style={{ background: "var(--tinta)", color: "var(--branco)" }}
           >
             Perguntar sobre este carro
             <span
@@ -239,7 +239,7 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
                     <span
                       aria-hidden="true"
                       className="mt-2.5 inline-block h-px w-3.5 shrink-0"
-                      style={{ background: "var(--brasa)" }}
+                      style={{ background: "var(--tinta)" }}
                     />
                     {d}
                   </li>
@@ -254,7 +254,7 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
               href={whatsapp(SERVICOS[1].mensagem)}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-4 hover:text-[var(--brasa)]"
+              className="underline underline-offset-4 hover:text-[var(--tinta)]"
             >
               avalia na mesma conversa
             </a>

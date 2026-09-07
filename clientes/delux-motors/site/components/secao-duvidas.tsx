@@ -75,7 +75,7 @@ export default function SecaoDuvidas() {
                     aria-hidden="true"
                     className="mt-1 shrink-0 text-[1.1rem] leading-none transition-transform duration-300 group-open:rotate-45"
                     style={{
-                      color: "var(--brasa)",
+                      color: "var(--tinta)",
                       transitionTimingFunction: "var(--e-saida)",
                     }}
                   >

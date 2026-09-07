@@ -69,9 +69,9 @@ function Pilula({
       aria-pressed={ativo}
       className="px-3.5 py-2 text-[0.72rem] uppercase tracking-[0.09em] transition-colors duration-200"
       style={{
-        border: `1px solid ${ativo ? "var(--brasa)" : "var(--linha)"}`,
-        background: ativo ? "var(--brasa)" : "transparent",
-        color: ativo ? "var(--areia)" : "var(--tinta-2)",
+        border: `1px solid ${ativo ? "var(--tinta)" : "var(--linha)"}`,
+        background: ativo ? "var(--tinta)" : "transparent",
+        color: ativo ? "var(--branco)" : "var(--tinta-2)",
         fontWeight: ativo ? 500 : 400,
       }}
     >
@@ -117,7 +117,7 @@ function Vazio({ filtrando, limpar }: { filtrando: boolean; limpar: () => void }
           target="_blank"
           rel="noopener noreferrer"
           className="px-6 py-3.5 text-[0.74rem] font-medium uppercase tracking-[0.13em]"
-          style={{ background: "var(--brasa)", color: "var(--areia)" }}
+          style={{ background: "var(--tinta)", color: "var(--branco)" }}
         >
           Dizer o que procuro
         </a>
@@ -137,7 +137,7 @@ function Vazio({ filtrando, limpar }: { filtrando: boolean; limpar: () => void }
             target="_blank"
             rel="noopener noreferrer"
             className="group px-0 py-7 sm:px-6"
-            style={{ background: "var(--areia)" }}
+            style={{ background: "var(--branco)" }}
           >
             <p className="etiqueta mb-2">{s.verbo}</p>
             <p className="display-leve mb-2 text-[1.05rem]">{s.titulo}</p>
@@ -316,7 +316,7 @@ export default function Catalogo({ inicial }: { inicial: Carro[] }) {
             >
               {/* A contagem é o que prova que o filtro fez alguma coisa. */}
               <p aria-live="polite" className="dado text-[0.84rem]">
-                <strong style={{ color: "var(--brasa)", fontWeight: 500 }}>
+                <strong style={{ color: "var(--tinta)", fontWeight: 500 }}>
                   {resultado.length}
                 </strong>{" "}
                 {resultado.length === 1 ? "carro" : "carros"}
@@ -333,8 +333,8 @@ export default function Catalogo({ inicial }: { inicial: Carro[] }) {
                     aria-pressed={filtro.ordem === o.id}
                     className="py-1 text-[0.72rem] uppercase tracking-[0.09em] transition-colors duration-200"
                     style={{
-                      color: filtro.ordem === o.id ? "var(--brasa)" : "var(--tinta-3)",
-                      borderBottom: `1px solid ${filtro.ordem === o.id ? "var(--brasa)" : "transparent"}`,
+                      color: filtro.ordem === o.id ? "var(--tinta)" : "var(--tinta-3)",
+                      borderBottom: `1px solid ${filtro.ordem === o.id ? "var(--tinta)" : "transparent"}`,
                     }}
                   >
                     {o.rotulo}
@@ -358,7 +358,7 @@ export default function Catalogo({ inicial }: { inicial: Carro[] }) {
 
       <p className="mt-14 text-[0.8rem]" style={{ color: "var(--tinta-3)" }}>
         Também compramos e recebemos em consignação.{" "}
-        <Link href="/#servicos" className="underline underline-offset-4 hover:text-[var(--brasa)]">
+        <Link href="/#servicos" className="underline underline-offset-4 hover:text-[var(--tinta)]">
           Ver como funciona
         </Link>
         .

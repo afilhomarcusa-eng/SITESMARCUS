@@ -73,7 +73,7 @@ export default function SecaoLoja() {
                   href={ROTA_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline underline-offset-2 hover:text-[var(--brasa)]"
+                  className="underline underline-offset-2 hover:text-[var(--tinta)]"
                 >
                   perfil da empresa no Google
                 </a>
@@ -95,7 +95,7 @@ export default function SecaoLoja() {
                     <span
                       aria-hidden="true"
                       className="mt-2.5 inline-block h-px w-5 shrink-0"
-                      style={{ background: "var(--brasa)" }}
+                      style={{ background: "var(--tinta)" }}
                     />
                     {p.t}
                   </dt>
@@ -112,7 +112,7 @@ export default function SecaoLoja() {
                   <span
                     aria-hidden="true"
                     className="mt-2.5 inline-block h-px w-5 shrink-0"
-                    style={{ background: "var(--brasa)" }}
+                    style={{ background: "var(--tinta)" }}
                   />
                   O dia a dia no Instagram
                 </dt>
@@ -122,7 +122,7 @@ export default function SecaoLoja() {
                     href={`https://www.instagram.com/${EMPRESA.instagram}/`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline underline-offset-4 transition-colors duration-200 hover:text-[var(--brasa)]"
+                    className="underline underline-offset-4 transition-colors duration-200 hover:text-[var(--tinta)]"
                   >
                     @{EMPRESA.instagram}
                   </a>
