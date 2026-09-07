@@ -1,0 +1,6 @@
+# Capturas do portão de QA. São dezenas de MB de PNG e não fazem parte do site.
+qa/
+
+# Os originais das fotos ficam fora do projeto e já viraram webp em
+# public/images pelo scripts/build-assets.mjs.
+../assets/
