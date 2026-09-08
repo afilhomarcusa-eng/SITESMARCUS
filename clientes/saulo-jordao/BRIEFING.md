@@ -24,8 +24,10 @@ SISTEMA: Instrument Serif no display, Archivo no texto e nos números. Papel mor
   as cores medidas nas próprias fotos. Moldura 3:4 é a unidade do layout inteiro.
 MOVIMENTO: folha de papel. Revelação por máscara vertical, nunca opacidade mais
   translateY. Peso em vez de mola: cubic-bezier(0.16, 1, 0.3, 1).
-PLANOS: fundo é o nome em corpo grande, meio é o retrato, frente é a etiqueta de
-  dados que cruza a foto.
+PLANOS: fundo é a moldura 3:4 vazia, a mesma da abertura, agora parada; meio é o
+  retrato, que tapa metade dela; frente é a etiqueta de dados que cruza a foto.
+  A primeira versão usava o nome em corpo monumental no fundo e foi trocada: ele
+  caía atrás do título e a leitura sofria, sem ganhar profundidade nenhuma.
 MAPA: herói, seis do estoque, quem é Saulo com números computados, as três portas,
   chamada final, rodapé.
 MOMENTOS: abertura em diafragma, o retrato que a etiqueta atravessa, a grade que
@@ -93,7 +95,26 @@ Nada de gradiente, nada de card arredondado em grade de três, nada de emoji com
 copy, nada de superlativo vazio. As legendas do cliente têm "menor valor anunciado
 no Brasil" e frases assim: fato concreto entra, superlativo não.
 
+## O que ficou pronto
+
+Publicado em 08/09/2026: https://saulo-jordao.vercel.app
+
+Cinco rotas, 670 verificações de QA num navegador de verdade, LCP 240ms, CLS
+0,004, 142 KB de JavaScript. O carro aparece na tela em 2,0s, que é a abertura
+terminando; a foto está pintada desde o primeiro quadro, por baixo dela.
+
+Fotos: as 145 originais foram reduzidas para masters de 1600px em
+`assets/carros`, que é o que o maior slot do site precisa em 2x. As originais de
+3024x4032 vieram do catálogo do Wix e somavam 485 MB, o que não cabe em
+repositório. As que o site não usa hoje ficaram em 1000px, como acervo: se
+alguma delas for promovida a foto grande de ficha, o QA reprova por resolução,
+que é exatamente o trabalho dele.
+
 ## Pendências
 
-- Trocar `robots: index:false` quando o link deixar de ser aprovação e virar o site oficial
+- Trocar `robots: index:false` quando o link deixar de ser aprovação e virar o
+  site oficial. São dois lugares: `app/layout.tsx` e `app/robots.ts`. Junto,
+  definir `NEXT_PUBLIC_SITE_URL` com o domínio final
 - Preço e estoque mudam. Quem edita mexe em `lib/estoque.ts`, um objeto por carro
+- Ficha do Audi RS5, quando o cliente mandar
+- Horário de atendimento, se ele quiser publicar um

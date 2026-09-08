@@ -42,3 +42,6 @@ next-env.d.ts
 
 # capturas do portão de QA: 40 MB de PNG que não são o site
 /qa
+
+.vercel
+.env*

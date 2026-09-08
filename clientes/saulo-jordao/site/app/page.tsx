@@ -91,10 +91,10 @@ export default function Home() {
                 do Brasil, incluindo importação.
               </p>
               <p data-revelar style={{ "--atraso": "160ms" } as React.CSSProperties}>
-                As fotos deste site são as dos anúncios dele, quase todas feitas
-                no mesmo trecho de calçada de Aracaju, sempre com o carro em pé,
-                na luz do dia. É por isso que o site inteiro é feito de retratos
-                verticais: o layout foi desenhado em cima do que existe.
+                As fotos deste site são as dos anúncios dele, quase todas no
+                mesmo trecho de calçada de Aracaju, e todas verticais. É por
+                isso que o site inteiro é feito de retratos em pé: o layout foi
+                desenhado em cima do que existe.
               </p>
             </div>
 

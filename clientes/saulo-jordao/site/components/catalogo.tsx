@@ -169,9 +169,11 @@ export default function Catalogo({ consultaInicial }: { consultaInicial: string 
         ) : (
           <div className="vazio medida">
             <h2>Nenhum carro com esse filtro.</h2>
+            {/* Nada de "o estoque muda toda semana": nenhuma fonte diz isso.
+                O que dá para afirmar é o que ele mesmo escreve, que procura o
+                carro em qualquer lugar do Brasil. */}
             <p>
-              O estoque muda toda semana, e o que não está aqui Saulo procura no
-              Brasil inteiro.
+              O que não está aqui, Saulo procura no Brasil inteiro.
             </p>
             <div className="heroi-acoes" style={{ marginTop: 0 }}>
               <button type="button" className="acao" onClick={() => mudar({ busca: "", marca: "", ate: null })}>
