@@ -76,8 +76,11 @@ export const VENDER: Formulario = {
   rota: "/vender",
   chave: "vender",
   titulo: "Quero vender o meu",
+  /* "do anúncio à transferência" saiu daqui: nenhuma fonte diz que ele cuida da
+     documentação. O que o site dele diz é consultoria para vender com segurança
+     e rapidez, e é isso que está escrito agora. */
   linhaFina:
-    "Mande a ficha do seu carro. Saulo avalia e cuida da venda, do anúncio à transferência.",
+    "Mande a ficha do seu carro. Saulo avalia e conduz a venda, com atendimento em todo o Brasil.",
   abertura: "Olá, Saulo. Vim pelo site e quero vender o meu carro.",
   botao: "Mandar no WhatsApp",
   campos: [
