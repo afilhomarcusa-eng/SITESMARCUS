@@ -2,9 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CONTATO, EMPRESA, HORARIO, whatsapp } from "@/lib/contato";
-import { DURACAO_ABERTURA, deveAbrir } from "@/lib/abertura";
 import { CARROS_INICIAIS } from "@/lib/carros";
 import { brl } from "@/lib/fmt";
 
@@ -15,98 +13,27 @@ const MSG = "Olá! Vim pelo site da Delux Motors e queria falar com vocês.";
 /**
  * A chegada.
  *
- * A abertura não é uma tela de carregamento na frente do site: é o próprio
- * site num momento anterior. A cena já está montada e pintada, e o que existe
- * por cima é um véu escuro que recua de baixo para cima, como a luz do dia
- * entrando. A marca se apresenta no meio da tela e recolhe. Nunca há corte.
+ * Este componente nao sabe que existe uma abertura, e isso e a correcao.
  *
- * O conteúdo fica em opacidade cheia o tempo todo, inclusive a foto. Quem
- * esconde é o véu. Isso resolve duas coisas de uma vez: o navegador conta a
- * pintura para o LCP e o elemento está pintado desde o começo, então a abertura
- * pode ser longa sem custar carregamento; e não existe segunda animação para
- * sair de sincronia com esta.
+ * Ele ja foi o dono do relogio dela, e ali estava o problema: o veu nascia do
+ * estado do React, ou seja depois da hidratacao, enquanto o HTML do servidor
+ * ja tinha sido pintado sem veu nenhum. A cena aparecia aberta e a abertura
+ * caia por cima atrasada.
  *
- * O carro do herói é do estoque de verdade e está identificado, com preço e
- * link. Foto de carro em site de revenda sem dizer que carro é vira papel de
+ * Agora a cortina e um elemento do servidor, animado por CSS, em
+ * components/cortina.tsx. O heroi so monta a cena e a pinta imediatamente, na
+ * opacidade cheia, sempre. Quem decide quando ela e vista e a cortina, por
+ * cima. Sem estado compartilhado, nao ha o que sair de sincronia.
+ *
+ * O carro do heroi e do estoque de verdade e esta identificado, com preco e
+ * link. Foto de carro em site de revenda sem dizer que carro e vira papel de
  * parede.
- *
- * O botão de WhatsApp do cabeçalho fica de fora de tudo isso, cheio e clicável
- * desde o primeiro quadro. Abertura que apaga a ação principal por alguns
- * segundos custa conversa, e ninguém percebe isso no olho.
  */
 
 /** O carro da vitrine: o mais caro do estoque, que é o que puxa a atenção. */
 const DESTAQUE = [...CARROS_INICIAIS].sort((a, b) => b.preco - a.preco)[0];
 
 export default function Heroi() {
-  // O relógio é daqui, e começa na montagem. Antes quem contava era o
-  // componente do céu, e o DOM só revelava depois que o pacote do three
-  // baixava: o tempo de carregar a biblioteca entrava na conta e empurrava o
-  // LCP para quase três segundos.
-  const [p, setP] = useState(1);
-  const abriuRef = useRef(false);
-
-  /**
-   * Esconder antes da primeira pintura.
-   *
-   * O estado nasce em 1, ou seja visível, porque é assim que o servidor
-   * renderiza e é assim que fica sem JavaScript. Quando a abertura tem que
-   * rodar, este efeito derruba para 0.
-   *
-   * Tem que ser useLayoutEffect: ele roda antes do navegador pintar, então o
-   * visitante nunca vê o herói aparecer e sumir. Num useEffect comum, ou dentro
-   * do requestAnimationFrame, o primeiro quadro já teria sido pintado com o
-   * conteúdo na tela, e a abertura começaria com um pisca.
-   *
-   * A regra abaixo existe para evitar renderização em cascata, e está certa no
-   * caso geral. Aqui é uma renderização a mais, antes da pintura, e é
-   * exatamente o que se quer.
-   */
-  useLayoutEffect(() => {
-    if (!deveAbrir()) return;
-    abriuRef.current = true;
-    /* eslint-disable-next-line react-hooks/set-state-in-effect */
-    setP(0);
-  }, []);
-
-  useEffect(() => {
-    if (!abriuRef.current) return;
-    let raf = 0;
-    let t0 = 0;
-    let pulou = false;
-    const pular = () => {
-      pulou = true;
-    };
-    for (const ev of ["pointerdown", "wheel", "keydown", "touchstart"] as const) {
-      window.addEventListener(ev, pular, { once: true, passive: true });
-    }
-    const passo = (agora: number) => {
-      if (!t0) t0 = agora;
-      const v = pulou ? 1 : Math.min(1, (agora - t0) / DURACAO_ABERTURA);
-      setP(v);
-      if (v < 1) raf = requestAnimationFrame(passo);
-    };
-    raf = requestAnimationFrame(passo);
-    return () => {
-      cancelAnimationFrame(raf);
-      for (const ev of ["pointerdown", "wheel", "keydown", "touchstart"] as const) {
-        window.removeEventListener(ev, pular);
-      }
-    };
-  }, []);
-
-  const trava = (x: number) => Math.max(0, Math.min(1, x));
-
-  // A luz sobe da borda de baixo até passar do topo. O véu é o negativo disso.
-  const luz = trava(p / 0.66);
-  // Sobe rápido e assenta devagar, como luz do dia entrando.
-  const subida = 1 - Math.pow(1 - luz, 2.6);
-  const borda = -8 + subida * 128; // em porcentagem da altura da tela
-
-  // A marca entra cedo, segura enquanto a luz sobe, e recolhe no fim.
-  const marcaEntra = trava((p - 0.1) / 0.18);
-  const marcaSai = trava((p - 0.62) / 0.18);
-
   return (
     <section
       id="conteudo"
@@ -296,45 +223,6 @@ export default function Heroi() {
         </dl>
         <p className="so-leitor">{HORARIO.domingo}</p>
       </div>
-
-      {/* A ABERTURA.
-          Um véu escuro cobrindo a cena inteira, que recua de baixo para cima.
-          A cena por baixo já está montada e pintada: o véu só decide quando ela
-          é vista. Sai do fluxo e não recebe clique, então o botão do cabeçalho
-          continua clicável do primeiro quadro ao último. */}
-      {p < 1 ? (
-        <div
-          data-abertura
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-40"
-          style={{
-            background: `linear-gradient(to top,
-              transparent ${borda - 26}%,
-              rgba(10,10,10,0.55) ${borda - 9}%,
-              rgba(10,10,10,0.97) ${borda}%,
-              rgba(10,10,10,0.99) 100%)`,
-          }}
-        />
-      ) : null}
-
-      {/* A marca, no meio da tela, só durante a abertura. */}
-      {p < 1 ? (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-40 flex items-center justify-center"
-          style={{
-            opacity: marcaEntra * (1 - marcaSai),
-            transform: `scale(${1 - marcaSai * 0.14})`,
-          }}
-        >
-          <p
-            className="display text-center text-[clamp(3rem,13vw,10rem)] leading-none"
-            style={{ color: "var(--branco)" }}
-          >
-            Delux
-          </p>
-        </div>
-      ) : null}
 
     </section>
   );

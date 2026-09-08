@@ -1,55 +1,77 @@
 /**
- * A abertura, em um lugar só.
+ * A abertura.
  *
- * Duas coisas já deram errado aqui, e as duas viraram regra.
+ * Este arquivo guarda um número e conta uma história curta, porque a história
+ * explica por que a abertura é feita do jeito que é.
  *
- * 1. Quem contava o tempo era o componente do céu, e o DOM esperava o aviso
- *    dele. O relógio só começava depois que o pacote do three baixava, então o
- *    tempo de carregar a biblioteca entrava inteiro na conta e o LCP ia para
- *    quase três segundos.
+ * Primeira versão: quem contava o tempo era o componente do céu, em WebGL. O
+ * relógio só começava depois que o pacote do three baixava, então o tempo de
+ * carregar a biblioteca entrava inteiro na conta e o LCP ia para 4,2s.
  *
- * 2. Ao separar os dois relógios, eles passaram a começar em momentos
- *    diferentes: o do DOM na montagem, o do céu quando o three chegava. O
- *    conteúdo abria antes de o céu terminar, e a abertura parecia quebrada.
+ * Segunda: separei os relógios. Aí eles passaram a começar em momentos
+ * diferentes, o do DOM na montagem e o do céu quando o three chegava, e o
+ * conteúdo abria antes de o céu terminar.
  *
- * A saída não foi sincronizar dois relógios, foi ter um só. Hoje a abertura é
- * um véu em cima da cena, animado pelo relógio do herói. O céu desenha sempre
- * o estado assentado e pode chegar quando quiser: atrasado, adiantado ou nunca.
- * Nada na abertura depende dele.
+ * Terceira: um relógio só, no React. Ainda errado, e esse era o mais difícil de
+ * ver. O véu era criado depois da hidratação, mas o navegador pinta o HTML do
+ * servidor muito antes disso, e esse HTML não tinha véu nenhum. A página
+ * aparecia inteira, aberta, e só então a abertura caía por cima. Em aparelho ou
+ * conexão lenta a janela entre uma coisa e outra é enorme.
  *
- * O conteúdo fica em opacidade cheia o tempo todo, inclusive a foto do herói.
- * É o véu que esconde. Isso mantém o LCP baixo mesmo com abertura longa,
- * porque o navegador conta a pintura, e o elemento é pintado desde o começo.
+ * Quarta, esta: a cortina está no HTML desde o servidor e quem anima é o CSS.
+ * Não existe momento em que a página exista sem ela. Não depende de React, de
+ * hidratação, do three, nem de rede. Um script bloqueante no head decide, antes
+ * da primeira pintura, se a abertura roda; se não roda, a cortina nem aparece.
+ *
+ * E se o JavaScript falhar por completo, a animação do CSS termina do mesmo
+ * jeito e a cortina sai. Abertura que depende de script para sumir é uma tela
+ * preta esperando para acontecer.
  */
 
 /**
- * Duração da abertura.
+ * Duração da cortina, em milissegundos.
  *
- * O briefing pede entre 1,5 e 3,5 segundos. Estava em 1,7 e ficou curta demais:
- * a marca mal aparecia antes de a cena abrir. Em 3,2 a sequência tem tempo de
- * respirar, e como o conteúdo já está pintado por baixo do véu, alongar aqui
- * não custa carregamento.
+ * O briefing pede entre 1,5 e 3,5 segundos. Este número é a fonte da verdade:
+ * o layout injeta ele como variável CSS e o QA mede contra ele.
  */
 export const DURACAO_ABERTURA = 3200;
 
-const CHAVE = "dlx:abriu";
+/** Onde a abertura roda. Só na home: em /estoque ela seria um obstáculo. */
+export const ROTA_ABERTURA = "/";
 
 /**
- * Decide se a abertura roda, e marca como vista no mesmo passo.
+ * O script que decide, antes da primeira pintura.
  *
- * Marca no começo, não no fim: quem sai da página no meio da abertura não deve
+ * Roda bloqueante no head, então acontece antes de o navegador pintar o body.
+ * É por isso que ele é uma string e não um componente: componente é React, e
+ * React só entra depois da pintura, que é exatamente o problema que esta
+ * abertura já teve.
+ *
+ * Marca a sessão no começo, não no fim: quem sai no meio da abertura não deve
  * ver ela de novo na mesma sessão.
  */
-export function deveAbrir(): boolean {
-  if (typeof window === "undefined") return false;
+export const SCRIPT_ABERTURA = `
+(function () {
   try {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
-    if (sessionStorage.getItem(CHAVE) === "1") return false;
-    sessionStorage.setItem(CHAVE, "1");
-    return true;
-  } catch {
-    // Navegador com armazenamento bloqueado: não roda abertura nenhuma, para
-    // não repetir a cada navegação.
-    return false;
+    if (location.pathname !== ${JSON.stringify(ROTA_ABERTURA)}) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (sessionStorage.getItem("dlx:abriu") === "1") return;
+    sessionStorage.setItem("dlx:abriu", "1");
+    document.documentElement.dataset.abrir = "1";
+  } catch (e) {
+    /* Sem armazenamento, sem abertura. Melhor não ter do que repetir sempre. */
   }
-}
+})();
+`.trim();
+
+/** Encerra a cortina no primeiro gesto, sem esperar a animação terminar. */
+export const SCRIPT_PULAR = `
+(function () {
+  var raiz = document.documentElement;
+  if (raiz.dataset.abrir !== "1") return;
+  function pular() { raiz.dataset.abrir = "0"; }
+  ["pointerdown", "wheel", "keydown", "touchstart"].forEach(function (ev) {
+    addEventListener(ev, pular, { once: true, passive: true });
+  });
+})();
+`.trim();

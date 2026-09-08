@@ -35,6 +35,11 @@
 
   /* Movimento de luz abrindo: entra devagar, assenta e para. Nada estala. */
   --e-saida: cubic-bezier(0.22, 1, 0.36, 1);
+  /* A cortina precisa de peso, nao de mola. Com o --e-saida ela despachava
+     quatro quintos do curso no primeiro terco do tempo e o resto virava um
+     fiapo parado no topo, que se le como travada. Este parte devagar, corre no
+     meio e assenta. */
+  --e-cortina: cubic-bezier(0.72, 0, 0.16, 1);
   --d-micro: 200ms;
   --d-ui: 400ms;
   --d-revela: 760ms;
@@ -207,6 +212,183 @@ html[data-motion="on"] .mascara > * {
 html[data-motion="on"] .mascara.dentro > * {
   transform: none;
   transition: transform var(--d-cine) var(--e-saida);
+}
+
+/* ------------------------------- a abertura ------------------------------ */
+
+/* A cortina existe no HTML desde o servidor, mas nasce desligada. Quem liga é
+   o script bloqueante do head, antes da primeira pintura, marcando data-abrir
+   no html. Então nunca existe um quadro com a cortina no lugar errado: ou ela
+   está lá desde o primeiro, ou não está em nenhum.
+
+   Quem anima daqui para a frente e o CSS sozinho. Sem React, sem rede, sem
+   depender do pacote do 3D. Se o JavaScript morrer no meio, a animacao termina
+   e a cortina sai assim mesmo. */
+
+.cortina,
+.cortina-luz {
+  display: none;
+}
+
+html[data-abrir="1"] .cortina {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: var(--grafite);
+  /* Absorve o primeiro clique em vez de deixar passar. Quem toca a tela para
+     pular a abertura nao quer abrir o WhatsApp sem querer. */
+  pointer-events: auto;
+  animation: cortina-sai var(--d-abertura, 3200ms) var(--e-cortina) forwards;
+}
+
+html[data-abrir="1"] .cortina-luz {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 91;
+  display: block;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.75) 22%,
+    #ffffff 50%,
+    rgba(255, 255, 255, 0.75) 78%,
+    transparent
+  );
+  animation: cortina-luz var(--d-abertura, 3200ms) var(--e-cortina) forwards;
+}
+
+.cortina-marca {
+  text-align: center;
+  padding-inline: 6vw;
+}
+
+.cortina-nome {
+  font-family: var(--fonte-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  font-size: clamp(3rem, 13vw, 10rem);
+  line-height: 1;
+  margin: 0;
+  color: var(--branco);
+  animation: cortina-nome var(--d-abertura, 3200ms) var(--e-saida) forwards;
+}
+
+.cortina-risco {
+  display: block;
+  height: 1px;
+  width: min(52vw, 22rem);
+  margin: clamp(1rem, 2.4vw, 1.8rem) auto clamp(0.9rem, 2vw, 1.4rem);
+  background: rgba(255, 255, 255, 0.42);
+  transform-origin: center;
+  animation: cortina-risco var(--d-abertura, 3200ms) var(--e-saida) forwards;
+}
+
+.cortina-lugar {
+  font-family: var(--fonte-texto), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.56);
+  animation: cortina-lugar var(--d-abertura, 3200ms) var(--e-saida) forwards;
+}
+
+/* A cortina segura ate 60% e recolhe para cima no resto, entregando a cena de
+   baixo para cima. E de baixo que vem a manchete e o botao, entao e de la que
+   a leitura comeca.
+
+   Termina em visibility hidden, e nao so em clip-path, para nao sobrar um
+   retangulo invisivel comendo clique. */
+@keyframes cortina-sai {
+  0%,
+  58% {
+    clip-path: inset(0 0 0 0);
+    visibility: visible;
+  }
+  99.9% {
+    visibility: visible;
+  }
+  100% {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+  }
+}
+
+/* So opacidade e transform, nunca letter-spacing nem margem. Texto que muda de
+   largura no meio da animacao conta como deslocamento de layout e estraga o
+   CLS, mesmo estando dentro de uma cortina que vai embora. */
+@keyframes cortina-nome {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0.32em, 0);
+  }
+  16%,
+  46% {
+    opacity: 1;
+    transform: none;
+  }
+  58%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -0.16em, 0) scale(0.97);
+  }
+}
+
+@keyframes cortina-risco {
+  0%,
+  14% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  44%,
+  48% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  58%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+@keyframes cortina-lugar {
+  0%,
+  26% {
+    opacity: 0;
+  }
+  38%,
+  46% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Mesma duracao e mesmo ponto de virada da cortina, entao a linha fica colada
+   na borda dela em vez de correr por conta propria. */
+@keyframes cortina-luz {
+  0%,
+  58% {
+    transform: translate3d(0, 100svh, 0);
+    opacity: 0;
+  }
+  62% {
+    opacity: 0.9;
+  }
+  92% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
 }
 
 /* ------------------------------ acessível -------------------------------- */

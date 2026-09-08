@@ -1,3 +1,4 @@
+import Cortina from "@/components/cortina";
 import Movimento from "@/components/movimento";
 import Navegacao from "@/components/navegacao";
 import Heroi from "@/components/heroi";
@@ -37,6 +38,7 @@ export default function Home() {
       <Movimento />
       <Navegacao />
       <main>
+        <Cortina />
         <Heroi />
         <SecaoServicos />
         <SecaoEstoqueChamada inicial={CARROS_INICIAIS} />

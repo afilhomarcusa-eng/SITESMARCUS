@@ -311,78 +311,102 @@ async function conversao(navegador) {
 /* --------------------------------------------------- abertura e movimento */
 
 async function abertura(navegador) {
-  // O CTA principal precisa estar cheio e clicável durante a abertura inteira.
-  // Abertura que apaga a ação principal custa conversa, e ninguém pega isso no
-  // olho porque dura poucos segundos.
+  /* --------------------------- a cortina esta no HTML --------------------- */
+
+  // O defeito relatado foi "o site abre antes da abertura", e ele sobreviveu a
+  // duas correcoes porque o teste daqui media a coisa errada: perguntava se o
+  // elemento do veu EXISTIA. Existia. Passava verde enquanto o problema estava
+  // na tela do cliente.
+  //
+  // A causa era o veu nascer do React, depois da hidratacao, enquanto o HTML do
+  // servidor ja tinha sido pintado sem ele. Entao o primeiro teste agora e
+  // sobre o HTML cru, do jeito que o navegador recebe, antes de qualquer script
+  // rodar.
+  const cru = await (await fetch(BASE + "/")).text();
+  checar(
+    cru.includes('class="cortina"'),
+    "a cortina vem pronta no HTML do servidor, sem depender de React",
+  );
+  const iScript = cru.indexOf("dataset.abrir");
+  checar(
+    iScript > -1 && iScript < cru.indexOf("<body"),
+    "o script que decide a abertura e bloqueante e vem antes do body",
+  );
+
+  /* ------------------------------ ela cobre mesmo ------------------------- */
+
   const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 } });
-  const pagina = await ctx.newPage();
-  await pagina.goto(BASE + "/", { waitUntil: "domcontentloaded" });
-
-  const inicio = Date.now();
-  for (const t of [120, 500, 1000, 1600, 2300, 3000]) {
-    const falta = t - (Date.now() - inicio);
-    if (falta > 0) await pagina.waitForTimeout(falta);
-
-    const estado = await pagina.evaluate((sel) => {
-      const el = document.querySelector(sel);
-      if (!el) return null;
-      const r = el.getBoundingClientRect();
-      const s = getComputedStyle(el);
-      const meio = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-      return {
-        opacidade: parseFloat(s.opacity),
-        visivel: s.visibility !== "hidden" && r.width > 0 && r.height > 0,
-        noTopo: !!meio && (meio === el || el.contains(meio)),
-      };
-    }, "[data-cta='cabecalho']");
-
-    checar(!!estado, `o CTA do cabeçalho existe em ${t}ms`);
-    if (estado) {
-      checar(estado.opacidade >= 0.99, `CTA cheio em ${t}ms`, `opacidade ${estado.opacidade}`);
-      checar(estado.visivel, `CTA visível em ${t}ms`);
-      checar(estado.noTopo, `CTA clicável, nada por cima, em ${t}ms`);
-    }
-    await pagina.screenshot({ path: path.join(SAIDA, `abertura-${t}ms.png`) });
-  }
-  await pagina.close();
-
-  /* ------------------------------------------------------ a abertura em si */
-
-  // Três coisas precisam ser verdade, e as três já falharam alguma vez.
-  //
-  // 1. A cena tem que estar PINTADA desde o começo, com a foto em opacidade
-  //    cheia. É o véu que esconde. Se alguém voltar a animar a opacidade do
-  //    conteúdo, o LCP passa a medir o fim da abertura, e já mediu 4,2s assim.
-  //
-  // 2. A abertura tem que estar acontecendo, ou seja o véu tem que estar lá
-  //    cobrindo, e não a cena aberta com o céu ainda animando por trás. Foi
-  //    esse o defeito relatado: dois relógios começando em momentos
-  //    diferentes, o conteúdo abrindo antes.
-  //
-  // 3. A abertura tem que TERMINAR. Véu que não sai é uma tela preta.
   const pAb = await ctx.newPage();
   const t0 = Date.now();
   await pAb.goto(BASE + "/", { waitUntil: "domcontentloaded" });
-  await pAb.waitForTimeout(450);
+  await pAb.waitForTimeout(400);
 
-  const cedo = await pAb.evaluate(() => {
+  // Cobrir de verdade, medido ponto a ponto com elementFromPoint, inclusive em
+  // cima do cabecalho: era por ali que o site vazava.
+  const cobertura = await pAb.evaluate(() => {
+    const c = document.querySelector(".cortina");
+    if (!c) return { existe: false, vazou: ["a cortina nem esta na tela"], opacidadeFoto: -1 };
+    const L = innerWidth;
+    const A = innerHeight;
+    const pontos = [
+      ["canto superior esquerdo", 6, 6],
+      ["faixa do cabecalho", L / 2, 30],
+      ["botao de WhatsApp do cabecalho", L - 70, 30],
+      ["centro da tela", L / 2, A / 2],
+      ["pe da dobra", L / 2, A - 8],
+      ["canto inferior direito", L - 6, A - 6],
+    ];
     const foto = document.querySelector("[data-foto-carro]");
     return {
+      existe: true,
       opacidadeFoto: foto ? parseFloat(getComputedStyle(foto).opacity) : -1,
-      temVeu: !!document.querySelector("[data-abertura]"),
+      vazou: pontos
+        .filter(([, x, y]) => {
+          const el = document.elementFromPoint(x, y);
+          return !(el && (el === c || c.contains(el)));
+        })
+        .map(([nome]) => nome),
     };
   });
+  checar(cobertura.existe, "aos 400ms a cortina esta na tela");
   checar(
-    cedo.opacidadeFoto >= 0.99,
-    "a foto do herói já está pintada aos 450ms",
-    "opacidade " + cedo.opacidadeFoto,
+    cobertura.vazou.length === 0,
+    "aos 400ms nenhum pedaco do site aparece por cima da cortina",
+    "vazou em: " + cobertura.vazou.join(", "),
   );
-  checar(cedo.temVeu, "aos 450ms a abertura ainda está cobrindo a cena");
+  // A cena por baixo ja tem que estar pintada. Se alguem voltar a animar a
+  // opacidade do conteudo, o LCP passa a medir o fim da abertura: ja mediu 4,2s
+  // assim, e foi por isso que esta abertura precisou ser reescrita a primeira
+  // vez.
+  checar(
+    cobertura.opacidadeFoto >= 0.99,
+    "por baixo da cortina a foto do heroi ja esta pintada aos 400ms",
+    "opacidade " + cobertura.opacidadeFoto,
+  );
+  // Quadros ao longo da abertura, para olhar e nao so contar.
+  //
+  // O tempo e sempre medido a partir de t0 e o que falta e descontado a cada
+  // volta. Tirar foto custa algumas centenas de milissegundos, entao uma fila
+  // de waitForTimeout somados cai bem depois do instante pedido: o quadro que
+  // eu tinha marcado como 1600ms estava saindo perto dos 2400ms, ja com a
+  // cortina quase fora, e por pouco isso nao passou por defeito da animacao.
+  for (const t of [400, 1200, 2000, 2200, 2500, 2900]) {
+    const falta = t - (Date.now() - t0);
+    if (falta > 0) await pAb.waitForTimeout(falta);
+    await pAb.screenshot({ path: path.join(SAIDA, `abertura-${t}ms.png`) });
+  }
+
+  /* ------------------------------- e ela termina -------------------------- */
 
   await pAb
-    .waitForFunction(() => !document.querySelector("[data-abertura]"), undefined, {
-      timeout: 12000,
-    })
+    .waitForFunction(
+      () => {
+      const c = document.querySelector(".cortina");
+      return !c || getComputedStyle(c).visibility === "hidden";
+      },
+      undefined,
+      { timeout: 12000 },
+    )
     .catch(() => {});
   const duracao = Date.now() - t0;
   checar(
@@ -390,34 +414,209 @@ async function abertura(navegador) {
     "a abertura dura entre 2 e 6 segundos e termina",
     "levou " + duracao + "ms",
   );
+
+  // Assim que ela sai, a acao principal tem que estar livre. Cortina que some
+  // da vista mas deixa um retangulo invisivel comendo clique e pior do que
+  // cortina nenhuma.
+  await pAb.waitForTimeout(150);
+  const ctaDepois = await pAb.evaluate(() => {
+const alvo = document.querySelector("[data-cta='cabecalho']");
+      if (!alvo) return null;
+      const r = alvo.getBoundingClientRect();
+      const e = getComputedStyle(alvo);
+      const meio = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return {
+        opacidade: parseFloat(e.opacity),
+        visivel: e.visibility !== "hidden" && r.width > 0 && r.height > 0,
+        noTopo: !!meio && (meio === alvo || alvo.contains(meio)),
+      };
+  });
+  checar(!!ctaDepois, "o CTA do cabecalho existe depois da abertura");
+  if (ctaDepois) {
+    checar(ctaDepois.opacidade >= 0.99, "o CTA fica cheio depois da abertura");
+    checar(ctaDepois.visivel, "o CTA fica visivel depois da abertura");
+    checar(ctaDepois.noTopo, "depois da abertura nada invisivel sobra por cima do CTA");
+  }
+  await pAb.screenshot({ path: path.join(SAIDA, "abertura-fim.png") });
   await pAb.close();
 
-  // Uma vez por sessão.
-  // Uma vez por sessão.
+  /* ------------------------------ e cobre no celular ---------------------- */
+
+  // Mesma medicao a 390 de largura. A barra do celular tem o atalho de Estoque
+  // e o botao de WhatsApp lado a lado no topo, entao e ali que um vazamento
+  // apareceria primeiro para quem chega pelo Instagram, que e quase todo mundo.
+  const ctxM = await navegador.newContext({ viewport: { width: 390, height: 844 } });
+  const pM = await ctxM.newPage();
+  const tM = Date.now();
+  await pM.goto(BASE + "/", { waitUntil: "domcontentloaded" });
+  await pM.waitForTimeout(400);
+  const coberturaM = await pM.evaluate(() => {
+    const c = document.querySelector(".cortina");
+    if (!c) return { existe: false, vazou: ["a cortina nem esta na tela"] };
+    const L = innerWidth;
+    const A = innerHeight;
+    const pontos = [
+      ["topo a esquerda, a marca", 40, 30],
+      ["atalho de Estoque", L / 2, 30],
+      ["botao de WhatsApp", L - 40, 30],
+      ["centro", L / 2, A / 2],
+      ["pe da tela", L / 2, A - 6],
+    ];
+    return {
+      existe: true,
+      vazou: pontos
+        .filter(([, x, y]) => {
+          const el = document.elementFromPoint(x, y);
+          return !(el && (el === c || c.contains(el)));
+        })
+        .map(([nome]) => nome),
+    };
+  });
+  checar(coberturaM.existe, "no celular a cortina esta na tela aos 400ms");
+  checar(
+    coberturaM.vazou.length === 0,
+    "no celular nada do site aparece por cima da cortina",
+    "vazou em: " + coberturaM.vazou.join(", "),
+  );
+  await pM.screenshot({ path: path.join(SAIDA, "abertura-390-400ms.png") });
+  await pM
+    .waitForFunction(
+      () => {
+      const c = document.querySelector(".cortina");
+      return !c || getComputedStyle(c).visibility === "hidden";
+      },
+      undefined,
+      { timeout: 12000 },
+    )
+    .catch(() => {});
+  checar(
+    Date.now() - tM >= 2000 && Date.now() - tM <= 6000,
+    "no celular a abertura tambem termina",
+    "levou " + (Date.now() - tM) + "ms",
+  );
+  await pM.screenshot({ path: path.join(SAIDA, "abertura-390-fim.png") });
+  await pM.close();
+  await ctxM.close();
+
+  /* --------------------------- o primeiro gesto pula ---------------------- */
+
+  const pPula = await ctx.newPage();
+  await pPula.goto(BASE + "/", { waitUntil: "domcontentloaded" });
+  await pPula.waitForTimeout(350);
+  await pPula.mouse.click(240, 420);
+  await pPula.waitForTimeout(150);
+  const depoisDoGesto = await pPula.evaluate(() => ({
+    desligou: document.documentElement.dataset.abrir !== "1",
+    cortinaFora: (() => {
+      const c = document.querySelector(".cortina");
+      return !c || getComputedStyle(c).display === "none";
+    })(),
+    cta: (() => {
+const alvo = document.querySelector("[data-cta='cabecalho']");
+      if (!alvo) return null;
+      const r = alvo.getBoundingClientRect();
+      const e = getComputedStyle(alvo);
+      const meio = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return {
+        opacidade: parseFloat(e.opacity),
+        visivel: e.visibility !== "hidden" && r.width > 0 && r.height > 0,
+        noTopo: !!meio && (meio === alvo || alvo.contains(meio)),
+      };
+    })(),
+  }));
+  checar(depoisDoGesto.desligou, "um gesto encerra a abertura na hora");
+  checar(depoisDoGesto.cortinaFora, "depois do gesto a cortina sai da tela inteira");
+  checar(
+    depoisDoGesto.cta !== null && depoisDoGesto.cta.noTopo === true,
+    "depois do gesto o CTA fica clicavel de imediato",
+  );
+  // O clique que pulou a abertura foi absorvido pela cortina. Se ele
+  // atravessasse, quem toca a tela para pular abriria o WhatsApp sem querer.
+  checar(
+    pPula.url().replace(/\/$/, "") === BASE.replace(/\/$/, ""),
+    "o clique que pula a abertura nao dispara nada por baixo",
+    pPula.url(),
+  );
+  await pPula.close();
+
+  /* ---------------------- ela nao depende do JavaScript ------------------- */
+
+  // O teste que fecha a porta pela qual este defeito entrou tres vezes.
+  //
+  // Derruba os pacotes da pagina: o script bloqueante do head ainda roda e liga
+  // a cortina, mas o React nunca hidrata. Se a saida dela dependesse de
+  // JavaScript, o site inteiro ficaria preso atras de uma tela preta, sem erro
+  // nenhum aparecendo. Quem tira a cortina e o CSS, entao ela sai assim mesmo.
+  const ctxQ = await navegador.newContext({ viewport: { width: 1440, height: 900 } });
+  const pQ = await ctxQ.newPage();
+  // So o JavaScript. O filtro precisa terminar em .js: no Turbopack a folha
+  // de estilo tambem mora em chunks/, e derrubar ela junto testaria outra
+  // coisa, uma pagina sem CSS nenhum, que nao e o cenario aqui.
+  await pQ.route("**/_next/static/chunks/**.js", (rota) => rota.abort());
+  const tQ = Date.now();
+  await pQ.goto(BASE + "/", { waitUntil: "domcontentloaded" });
+  await pQ
+    .waitForFunction(
+      () => {
+      const c = document.querySelector(".cortina");
+      return !c || getComputedStyle(c).visibility === "hidden";
+      },
+      undefined,
+      { timeout: 12000 },
+    )
+    .catch(() => {});
+  const duracaoQ = Date.now() - tQ;
+  checar(
+    duracaoQ <= 6000,
+    "com os pacotes da pagina derrubados a cortina sai do mesmo jeito",
+    "levou " + duracaoQ + "ms",
+  );
+  await pQ.close();
+  await ctxQ.close();
+
+  /* ------------------------------ uma vez por sessao ---------------------- */
+
   const p2 = await ctx.newPage();
   await p2.goto(BASE + "/", { waitUntil: "networkidle" });
   await p2.waitForTimeout(300);
   checar(
     (await p2.evaluate(() => sessionStorage.getItem("dlx:abriu"))) === "1",
-    "a abertura se marca como vista na sessão",
+    "a abertura se marca como vista na sessao",
   );
   await p2.reload({ waitUntil: "domcontentloaded" });
   await p2.waitForTimeout(200);
+  const segundaVisita = await p2.evaluate(() => {
+    const c = document.querySelector(".cortina");
+    return {
+      ligada: document.documentElement.dataset.abrir === "1",
+      display: c ? getComputedStyle(c).display : "ausente",
+    };
+  });
+  checar(!segundaVisita.ligada, "a abertura nao repete ao recarregar");
+  // Desligada, a cortina nao ocupa nada. E o mesmo caminho de quem chega sem
+  // JavaScript: sem o script, sem data-abrir, sem cortina.
   checar(
-    (await p2.evaluate(() => sessionStorage.getItem("dlx:abriu"))) === "1",
-    "a abertura não repete ao recarregar",
+    segundaVisita.display === "none",
+    "com a abertura desligada a cortina nao existe na tela",
+    "display " + segundaVisita.display,
   );
-  // Recarregando, o conteúdo do herói tem que estar visível de imediato, sem
-  // esperar abertura nenhuma.
   const h1Opac = await p2
     .locator("h1 .display")
     .first()
     .evaluate((e) => getComputedStyle(e).opacity);
   checar(
     parseFloat(h1Opac) >= 0.99,
-    "na segunda visita o herói já aparece pronto",
-    `opacidade ${h1Opac}`,
+    "na segunda visita o heroi ja aparece pronto",
+    "opacidade " + h1Opac,
   );
+  // Em /estoque a abertura nunca roda: quem entra ali quer ver carro.
+  const pE = await ctx.newPage();
+  await pE.goto(BASE + "/estoque", { waitUntil: "domcontentloaded" });
+  checar(
+    (await pE.evaluate(() => document.querySelector(".cortina") === null)) === true,
+    "a abertura nao aparece no estoque",
+  );
+  await pE.close();
   await p2.close();
   await ctx.close();
 
@@ -470,7 +669,10 @@ async function abertura(navegador) {
       h1: op(h1),
       cta: op(cta?.parentElement?.parentElement ?? cta),
       foto: op(foto),
-      veu: !!document.querySelector("[data-abertura]"),
+      cortinaPresa: (() => {
+        const c = document.querySelector(".cortina");
+        return !!c && getComputedStyle(c).visibility !== "hidden";
+      })(),
     };
   });
   checar(
@@ -486,7 +688,7 @@ async function abertura(navegador) {
   // O que de fato importa aqui: sem o three, a abertura ainda TERMINA. Se ela
   // dependesse dele, o véu ficaria preso e o site inteiro sumia atrás de uma
   // tela preta, sem erro nenhum na tela.
-  checar(!heroiSem3d.veu, "sem WebGL a abertura termina e o véu sai");
+  checar(!heroiSem3d.cortinaPresa, "sem WebGL a cortina sai do mesmo jeito");
 
   await p3d.screenshot({ path: path.join(SAIDA, "sem-webgl-1440.png"), fullPage: false });
   await p3d.close();
