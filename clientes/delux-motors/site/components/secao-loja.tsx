@@ -1,4 +1,5 @@
-import { EMPRESA, ROTA_URL, whatsapp } from "@/lib/contato";
+import Link from "next/link";
+import { EMPRESA, ROTA_URL } from "@/lib/contato";
 
 /**
  * A loja, apresentada.
@@ -131,20 +132,16 @@ export default function SecaoLoja() {
               </div>
             </dl>
 
-            <a
+            <Link
               data-cta="loja"
-              href={whatsapp(
-                "Olá! Vim pelo site e queria saber o que tem na loja hoje.",
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/comprar"
               className="mt-11 inline-flex items-center gap-3 px-5 py-3.5 text-[0.74rem] uppercase tracking-[0.13em]"
               style={{ border: "1px solid var(--linha)", color: "var(--tinta)" }}
               data-revela
             >
-              Perguntar o que tem hoje
+              Dizer o que procuro
               <span aria-hidden="true">&rarr;</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -76,15 +76,26 @@ async function rolarTudo(pagina) {
   await pagina.waitForTimeout(300);
 }
 
-/** Tudo que precisa abrir conversa, conferido um a um pelo próprio seletor. */
-const CTAS_CONVERSA = [
-  { sel: "[data-cta='cabecalho']", onde: "cabeçalho" },
-  { sel: "[data-cta='heroi']", onde: "herói" },
-  { sel: "[data-cta='servico-comprar']", onde: "serviço comprar" },
-  { sel: "[data-cta='servico-vender']", onde: "serviço vender" },
-  { sel: "[data-cta='servico-consignar']", onde: "serviço consignar" },
-  { sel: "[data-cta='estoque-whatsapp']", onde: "faixa de estoque" },
-  { sel: "[data-cta='final']", onde: "fecho" },
+/**
+ * A saída direta, e as que passam pelo formulário.
+ *
+ * Um botão só abre a conversa em branco: o do cabeçalho, escrito WHATSAPP. Ele
+ * é a saída de quem não quer preencher nada, e foi mantido de propósito.
+ *
+ * Todos os outros levam ao formulário do serviço deles. A regra que existia
+ * antes, de cada botão já carregar a mensagem certa para ninguém começar do
+ * zero, não sumiu: ela mudou de lugar, e agora quem escreve a mensagem é o
+ * formulário, com muito mais coisa dentro dela.
+ */
+const CTA_DIRETO = { sel: "[data-cta='cabecalho']", onde: "cabeçalho" };
+
+const CTAS_FORMULARIO = [
+  { sel: "[data-cta='heroi']", onde: "herói", destino: "/comprar" },
+  { sel: "[data-cta='servico-comprar']", onde: "serviço comprar", destino: "/comprar" },
+  { sel: "[data-cta='servico-vender']", onde: "serviço vender", destino: "/vender" },
+  { sel: "[data-cta='servico-consignar']", onde: "serviço consignar", destino: "/consignar" },
+  { sel: "[data-cta='estoque-whatsapp']", onde: "faixa de estoque", destino: "/comprar" },
+  { sel: "[data-cta='final']", onde: "fecho", destino: "/comprar" },
 ];
 
 const SECOES = ["conteudo", "servicos", "estoque", "loja", "local", "duvidas"];
@@ -193,7 +204,7 @@ async function copy(navegador) {
     viewport: { width: 1440, height: 900 },
     httpCredentials: CREDENCIAL,
   });
-  for (const rota of ["/", "/estoque", "/procuro", "/admin"]) {
+  for (const rota of ["/", "/estoque", "/comprar", "/vender", "/consignar", "/admin"]) {
     const { pagina } = await abrir(ctx, rota);
     const texto = await pagina.evaluate(() => document.body.innerText);
 
@@ -231,29 +242,45 @@ async function conversao(navegador) {
     checar(celular || fixo, `número ${n} tem forma válida`, `${n.length} dígitos`);
   }
 
-  for (const { sel, onde } of CTAS_CONVERSA) {
+  // A saída direta.
+  const direto = pagina.locator(CTA_DIRETO.sel).first();
+  checar((await direto.count()) > 0, `existe o CTA do ${CTA_DIRETO.onde}`);
+  if ((await direto.count()) > 0) {
+    const href = await direto.getAttribute("href");
+    checar(
+      !!href && href.includes(`wa.me/${numero[1]}`),
+      `CTA do ${CTA_DIRETO.onde} abre o WhatsApp no número completo`,
+      href ?? "sem href",
+    );
+    checar(
+      (await direto.getAttribute("target")) !== "_blank" ||
+        ((await direto.getAttribute("rel")) ?? "").includes("noopener"),
+      `CTA do ${CTA_DIRETO.onde} tem rel noopener`,
+    );
+  }
+
+  // Os que passam pelo formulário, cada um no formulário do serviço dele.
+  for (const { sel, onde, destino } of CTAS_FORMULARIO) {
     const el = pagina.locator(sel).first();
     checar((await el.count()) > 0, `existe o CTA do ${onde}`);
     if ((await el.count()) === 0) continue;
     const href = await el.getAttribute("href");
     checar(
-      !!href && href.includes(`wa.me/${numero[1]}`),
-      `CTA do ${onde} aponta para o WhatsApp completo`,
+      href === destino,
+      `CTA do ${onde} leva ao formulário de ${destino}`,
       href ?? "sem href",
-    );
-    checar(
-      (await el.getAttribute("target")) !== "_blank" ||
-        ((await el.getAttribute("rel")) ?? "").includes("noopener"),
-      `CTA do ${onde} tem rel noopener`,
     );
   }
 
-  // Cada serviço abre a conversa com a mensagem dele, não com uma genérica.
-  // Quem chega querendo vender não deveria ter que explicar do zero.
+  // Cada formulário já chega escrito com o assunto dele. É a mesma regra de
+  // antes, de ninguém começar uma conversa em branco tendo que explicar do
+  // zero, agora cumprida pelo formulário em vez do link.
   const msgs = {};
   for (const id of ["comprar", "vender", "consignar"]) {
-    const href = await pagina.locator(`[data-cta='servico-${id}']`).first().getAttribute("href");
-    msgs[id] = decodeURIComponent((href ?? "").split("text=")[1] ?? "");
+    const pf = await pagina.context().newPage();
+    await pf.goto(BASE + "/" + id, { waitUntil: "networkidle" });
+    msgs[id] = await pf.locator("[data-previa]").innerText();
+    await pf.close();
   }
   checar(/comprar/i.test(msgs.comprar), "a mensagem de comprar fala em comprar", msgs.comprar);
   checar(/vender/i.test(msgs.vender), "a mensagem de vender fala em vender", msgs.vender);
@@ -383,18 +410,6 @@ async function abertura(navegador) {
     "por baixo da cortina a foto do heroi ja esta pintada aos 400ms",
     "opacidade " + cobertura.opacidadeFoto,
   );
-  // Quadros ao longo da abertura, para olhar e nao so contar.
-  //
-  // O tempo e sempre medido a partir de t0 e o que falta e descontado a cada
-  // volta. Tirar foto custa algumas centenas de milissegundos, entao uma fila
-  // de waitForTimeout somados cai bem depois do instante pedido: o quadro que
-  // eu tinha marcado como 1600ms estava saindo perto dos 2400ms, ja com a
-  // cortina quase fora, e por pouco isso nao passou por defeito da animacao.
-  for (const t of [400, 1200, 2000, 2200, 2500, 2900]) {
-    const falta = t - (Date.now() - t0);
-    if (falta > 0) await pAb.waitForTimeout(falta);
-    await pAb.screenshot({ path: path.join(SAIDA, `abertura-${t}ms.png`) });
-  }
 
   /* ------------------------------- e ela termina -------------------------- */
 
@@ -414,6 +429,31 @@ async function abertura(navegador) {
     "a abertura dura entre 2 e 6 segundos e termina",
     "levou " + duracao + "ms",
   );
+
+  /* Quadros ao longo da abertura, para olhar e nao so contar.
+   *
+   * Numa PAGINA A PARTE, e essa separacao e o ponto.
+   *
+   * Tirar foto pausa a pintura, e animacao de CSS anda pelo relogio do
+   * compositor: cada captura congela a cortina por algumas centenas de
+   * milissegundos. Com seis fotos na mesma pagina em que eu media a duracao, a
+   * abertura "levava" 6,6 segundos e o teste acusava um defeito que nao
+   * existia. O instrumento estava mudando o que ele media.
+   *
+   * Entao quem posa e uma pagina, e quem e cronometrada e outra.
+   *
+   * O tempo tambem e sempre medido a partir do inicio, descontando o que falta:
+   * somar esperas ignora o custo da captura, e o quadro marcado 1600ms saia
+   * perto dos 2400ms. */
+  const pFotos = await ctx.newPage();
+  const tFoto = Date.now();
+  await pFotos.goto(BASE + "/", { waitUntil: "domcontentloaded" });
+  for (const t of [400, 1200, 2000, 2400, 2800]) {
+    const falta = t - (Date.now() - tFoto);
+    if (falta > 0) await pFotos.waitForTimeout(falta);
+    await pFotos.screenshot({ path: path.join(SAIDA, `abertura-${t}ms.png`) });
+  }
+  await pFotos.close();
 
   // Assim que ela sai, a acao principal tem que estar livre. Cortina que some
   // da vista mas deixa um retangulo invisivel comendo clique e pior do que
@@ -437,7 +477,6 @@ const alvo = document.querySelector("[data-cta='cabecalho']");
     checar(ctaDepois.visivel, "o CTA fica visivel depois da abertura");
     checar(ctaDepois.noTopo, "depois da abertura nada invisivel sobra por cima do CTA");
   }
-  await pAb.screenshot({ path: path.join(SAIDA, "abertura-fim.png") });
   await pAb.close();
 
   /* ------------------------------ e cobre no celular ---------------------- */
@@ -965,83 +1004,269 @@ async function estoqueEGerencia(navegador) {
  * preenchido chegue ao destino. Digitar e o valor não aparecer na mensagem é um
  * defeito que passa despercebido, porque a tela continua bonita.
  */
+/** Um carro real do estoque, para os testes que precisam de uma ficha. */
+const CARRO_TESTE = "ram-laramie-1500-classic-2022";
+
 async function procura(navegador) {
   const ctx = await navegador.newContext({ viewport: { width: 1440, height: 1000 } });
-  const { pagina, erros } = await abrir(ctx, "/procuro");
-  await rolarTudo(pagina);
-  checar(erros.length === 0, "a página de procura não tem erro de console", erros.join(" | "));
-  checar((await pagina.locator("h1").count()) === 1, "a página de procura tem um h1");
 
-  const presasProcura = await pagina.evaluate(() =>
-    [...document.querySelectorAll("[data-revela], .mascara")]
-      .filter((e) => parseFloat(getComputedStyle(e).opacity) < 0.9)
-      .map((e) => e.textContent.trim().slice(0, 30)),
-  );
-  checar(
-    presasProcura.length === 0,
-    "nenhuma revelação presa em /procuro",
-    presasProcura.slice(0, 3).join(" | "),
-  );
+  for (const rota of ["/comprar", "/vender", "/consignar"]) {
+    const { pagina, erros } = await abrir(ctx, rota);
+    await rolarTudo(pagina);
+    checar(erros.length === 0, `sem erro de console em ${rota}`, erros.join(" | "));
+    checar((await pagina.locator("h1").count()) === 1, `${rota} tem um h1 so`);
 
-  // Nada é obrigatório: o botão já funciona com o formulário em branco.
-  const vazio = await pagina.locator("[data-cta='procuro']").getAttribute("href");
-  checar(
-    !!vazio && vazio.includes("wa.me/"),
-    "com o formulário em branco o botão já abre uma conversa",
-    vazio ?? "",
-  );
-  const semNada = await pagina.locator("[data-previa]").innerText();
-  checar(
-    semNada.length > 20,
-    "com o formulário em branco a mensagem ainda faz sentido",
-    semNada,
-  );
-  checar(
-    (await pagina.locator("form [required]").count()) === 0,
-    "nenhum campo do formulário é obrigatório",
-  );
+    const presas = await pagina.evaluate(() =>
+      [...document.querySelectorAll("[data-revela], .mascara")]
+        .filter((e) => parseFloat(getComputedStyle(e).opacity) < 0.9)
+        .map((e) => e.textContent.trim().slice(0, 30)),
+    );
+    checar(presas.length === 0, `nenhuma revelacao presa em ${rota}`, presas.slice(0, 3).join(" | "));
 
-  // Preenche e confere que TUDO chega na mensagem e no link.
-  const campos = pagina.locator("form input[type='text'], form textarea");
-  await campos.nth(0).fill("Marcus");
-  await campos.nth(1).fill("Uma picape para trabalho");
-  await campos.nth(2).fill("2019");
-  await campos.nth(3).fill("Corolla 2015 com 90 mil km");
-  await pagina.locator("form select").nth(0).selectOption("RAM");
-  await pagina.locator("form select").nth(1).selectOption("De 120 a 200 mil");
-  await pagina.waitForTimeout(300);
+    // Nada obrigatorio. O cliente pediu isso em voz alta, e alem disso e o que
+    // faz o formulario ser respondido: quem nao sabe a quilometragem de cabeca
+    // nao pode ficar travado por causa dela.
+    checar(
+      (await pagina.locator("form [required]").count()) === 0,
+      `nenhum campo obrigatorio em ${rota}`,
+    );
+    const vazio = await pagina.locator("[data-cta='formulario']").getAttribute("href");
+    checar(
+      !!vazio && vazio.includes("wa.me/5571983402324"),
+      `em branco, ${rota} ja abre a conversa no numero da loja`,
+      vazio ?? "",
+    );
+    const semNada = await pagina.locator("[data-previa]").innerText();
+    checar(semNada.length > 20, `em branco, a mensagem de ${rota} ainda faz sentido`, semNada);
 
-  const previa = await pagina.locator("[data-previa]").innerText();
-  const href = await pagina.locator("[data-cta='procuro']").getAttribute("href");
-  const noLink = decodeURIComponent((href ?? "").split("text=")[1] ?? "");
+    /* Preenche TODOS os campos, sem lista fixa.
+     *
+     * O teste antigo conferia seis valores escolhidos a mao. Campo novo entrava
+     * no formulario sem ninguem conferir se ele chegava ao WhatsApp, que e
+     * justamente o defeito silencioso: a tela continua bonita e a informacao
+     * some no caminho. Aqui ele varre o que existe na pagina, marca cada campo
+     * com um valor unico, e cobra todos de volta. */
+    const marcas = [];
 
-  for (const [rotulo, valor] of [
-    ["nome", "Marcus"],
-    ["o que procura", "picape para trabalho"],
-    ["ano", "2019"],
-    ["troca", "Corolla 2015"],
-    ["marca", "RAM"],
-    ["faixa de preço", "120 a 200 mil"],
-  ]) {
-    checar(previa.includes(valor), `a prévia mostra ${rotulo}`, previa.split(String.fromCharCode(10)).join(" | "));
-    checar(noLink.includes(valor), `o link do WhatsApp leva ${rotulo}`, noLink.split(String.fromCharCode(10)).join(" | "));
+    const nTexto = await pagina.locator("form input[type='text']").count();
+    for (let i = 0; i < nTexto; i++) {
+      const m = `Campo${i}Zqx`;
+      await pagina.locator("form input[type='text']").nth(i).fill(m);
+      marcas.push(["texto " + i, m]);
+    }
+
+    const nArea = await pagina.locator("form textarea").count();
+    for (let i = 0; i < nArea; i++) {
+      const m = `Texto${i}Zqx`;
+      await pagina.locator("form textarea").nth(i).fill(m);
+      marcas.push(["area " + i, m]);
+    }
+
+    const nSel = await pagina.locator("form select").count();
+    for (let i = 0; i < nSel; i++) {
+      const sel = pagina.locator("form select").nth(i);
+      const valores = await sel.locator("option").evaluateAll((os) =>
+        os.map((o) => o.value).filter((v) => v !== ""),
+      );
+      checar(valores.length > 0, `a lista ${i} de ${rota} tem opcao de verdade`);
+      const escolha = valores[valores.length - 1];
+      await sel.selectOption(escolha);
+      marcas.push(["lista " + i, escolha]);
+    }
+
+    checar(marcas.length >= 6, `${rota} tem campos suficientes para valer a pena`, String(marcas.length));
+    await pagina.waitForTimeout(320);
+
+    const previa = await pagina.locator("[data-previa]").innerText();
+    const href = await pagina.locator("[data-cta='formulario']").getAttribute("href");
+    const noLink = decodeURIComponent((href ?? "").split("text=")[1] ?? "");
+    const umaLinha = (t) => t.split(String.fromCharCode(10)).join(" | ");
+
+    for (const [qual, valor] of marcas) {
+      checar(previa.includes(valor), `${rota}: a previa mostra ${qual}`, umaLinha(previa));
+      checar(noLink.includes(valor), `${rota}: o link do WhatsApp leva ${qual}`, umaLinha(noLink));
+    }
+
+    checar(
+      (href ?? "").includes("wa.me/5571983402324"),
+      `${rota} aponta para o numero da loja`,
+      href ?? "",
+    );
+
+    // Campo em branco nao vira linha vazia. Esvazia um e o rotulo dele tem que
+    // sumir junto, em vez de sobrar um "Cor:" sozinho no fim da mensagem.
+    await pagina.locator("form input[type='text']").nth(nTexto - 1).fill("");
+    await pagina.waitForTimeout(250);
+    const depois = await pagina.locator("[data-previa]").innerText();
+    checar(
+      !depois.includes(marcas[nTexto - 1][1]),
+      `${rota}: campo esvaziado sai da mensagem`,
+      umaLinha(depois),
+    );
+    checar(
+      !/:\s*$/m.test(depois) && !depois.includes("nao informado") && !depois.includes("não informado"),
+      `${rota}: campo em branco nao vira linha vazia`,
+      umaLinha(depois),
+    );
+
+    await pagina.screenshot({
+      path: path.join(SAIDA, `formulario${rota.replace("/", "-")}-1440.png`),
+      fullPage: true,
+    });
+    await pagina.close();
   }
 
-  checar(
-    (href ?? "").includes("wa.me/5571983402324"),
-    "o formulário aponta para o número da loja",
-    href ?? "",
-  );
+  /* ------------------------- trocar de servico pelas abas ----------------- */
 
-  // Campo em branco não vira linha vazia na mensagem.
-  checar(
-    !/:\s*$/m.test(previa) && !previa.includes("não informado"),
-    "campo em branco não vira linha vazia na mensagem",
-    previa.split(String.fromCharCode(10)).join(" | "),
-  );
+  const pAba = await ctx.newPage();
+  await pAba.goto(BASE + "/comprar", { waitUntil: "networkidle" });
+  for (const id of ["vender", "consignar", "comprar"]) {
+    await pAba.locator(`[data-aba='${id}']`).click();
+    await pAba.waitForURL(`**/${id}`, { timeout: 8000 }).catch(() => {});
+    checar(
+      new URL(pAba.url()).pathname === `/${id}`,
+      `a aba ${id} leva ao formulario de ${id}`,
+      pAba.url(),
+    );
+  }
+  await pAba.close();
 
-  await pagina.screenshot({ path: path.join(SAIDA, "procuro-1440.png"), fullPage: true });
+  /* ------------------- o carro chega escrito, vindo da ficha -------------- */
+
+  const pCarro = await ctx.newPage();
+  await pCarro.goto(BASE + "/estoque/" + CARRO_TESTE, { waitUntil: "networkidle" });
+  const destino = await pCarro.locator("[data-cta='carro']").getAttribute("href");
+  checar(
+    (destino ?? "").startsWith("/comprar?carro="),
+    "o botao da ficha leva ao formulario, com o carro no endereco",
+    destino ?? "",
+  );
+  await pCarro.locator("[data-cta='carro']").click();
+  await pCarro.waitForURL("**/comprar**", { timeout: 8000 }).catch(() => {});
+  await pCarro.waitForTimeout(300);
+  const jaEscrito = await pCarro.locator("[data-previa]").innerText();
+  checar(
+    jaEscrito.includes("Laramie"),
+    "o carro da ficha ja chega escrito na mensagem",
+    jaEscrito.split(String.fromCharCode(10)).join(" | "),
+  );
+  await pCarro.close();
+
+  // Endereco antigo continua chegando em algum lugar. Ele ja pode ter sido
+  // mandado para alguem no WhatsApp.
+  const pVelho = await ctx.newPage();
+  const resposta = await pVelho.goto(BASE + "/procuro", { waitUntil: "domcontentloaded" });
+  checar(
+    new URL(pVelho.url()).pathname === "/comprar" && (resposta?.status() ?? 0) < 400,
+    "o endereco antigo /procuro cai no formulario de compra",
+    pVelho.url(),
+  );
+  await pVelho.close();
+
+  await ctx.close();
+}
+
+/* ------------------------------------ o mapa ----------------------------- */
+
+/**
+ * O mapa fica nas cores do Google, sem filtro.
+ *
+ * Ele ja esteve dessaturado para combinar com o preto e branco do resto do
+ * site, e o cliente pediu para tirar. Faz sentido: mapa e ferramenta antes de
+ * ser composicao. Verde de praca, azul de mar e amarelo de avenida sao as cores
+ * que a pessoa ja sabe ler sem pensar, e tingir isso custa orientacao para
+ * ganhar harmonia.
+ *
+ * O teste existe porque um filtro volta facil, numa passada de deixar tudo
+ * coerente, e ninguem repara ate alguem tentar se achar no mapa.
+ */
+async function mapaSemFiltro(navegador) {
+  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 900 } });
+  const pagina = await ctx.newPage();
+  await pagina.goto(BASE + "/", { waitUntil: "domcontentloaded" });
+
+  const mapa = pagina.locator("iframe[src*='google.com/maps']");
+  checar((await mapa.count()) === 1, "existe um mapa na pagina");
+  if ((await mapa.count()) === 1) {
+    const filtro = await mapa.evaluate((e) => getComputedStyle(e).filter);
+    checar(filtro === "none", "o mapa esta nas cores do Google, sem filtro por cima", filtro);
+    const doPai = await mapa.evaluate((e) => getComputedStyle(e.parentElement).filter);
+    checar(doPai === "none", "o quadro do mapa tambem nao tem filtro", doPai);
+  }
+
   await pagina.close();
+  await ctx.close();
+}
+
+/* ---------------------------- para onde vao os botoes --------------------- */
+
+/**
+ * Todo botao de WhatsApp leva ao formulario, menos um.
+ *
+ * O cliente foi exato: qualquer botao de WhatsApp abre o formulario, com uma
+ * excecao, o do canto superior direito escrito WHATSAPP. Essa excecao e a saida
+ * direta de quem so quer falar e nao quer preencher nada, e por isso ela nao
+ * pode ser perdida numa mudanca futura sem alguem perceber.
+ *
+ * O teste varre as paginas e olha para todo link que aponta para o wa.me. Se
+ * aparecer um que nao seja o do cabecalho nem o botao de envio do proprio
+ * formulario, ele falha e diz qual e.
+ */
+async function paraOndeVaoOsBotoes(navegador) {
+  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 1000 } });
+  const permitidos = new Set(["cabecalho", "formulario"]);
+
+  for (const rota of [
+    "/",
+    "/estoque",
+    "/estoque/" + CARRO_TESTE,
+    "/comprar",
+    "/vender",
+    "/consignar",
+  ]) {
+    const pagina = await ctx.newPage();
+    await pagina.goto(BASE + rota, { waitUntil: "networkidle" });
+
+    const diretos = await pagina.evaluate(() =>
+      [...document.querySelectorAll("a[href*='wa.me']")].map((a) => ({
+        cta: a.dataset.cta ?? "(sem marca)",
+        texto: (a.textContent ?? "").trim().slice(0, 40),
+      })),
+    );
+
+    const fora = diretos.filter((d) => !permitidos.has(d.cta));
+    checar(
+      fora.length === 0,
+      `em ${rota}, so o cabecalho e o envio do formulario vao direto ao WhatsApp`,
+      fora.map((f) => `${f.cta} (${f.texto})`).join(", "),
+    );
+    checar(
+      diretos.some((d) => d.cta === "cabecalho"),
+      `o botao WHATSAPP do cabecalho continua abrindo a conversa em ${rota}`,
+    );
+
+    // E os outros botoes tem que ir para algum formulario de verdade.
+    const chamadas = await pagina.evaluate(() =>
+      [...document.querySelectorAll("a[data-cta]")]
+        .filter((a) => !["cabecalho", "formulario"].includes(a.dataset.cta ?? ""))
+        .map((a) => ({ cta: a.dataset.cta, href: a.getAttribute("href") ?? "" })),
+    );
+    const quebradas = chamadas.filter(
+      (c) =>
+        !/^\/(comprar|vender|consignar|estoque)/.test(c.href) &&
+        !c.href.startsWith("/#") &&
+        !c.href.startsWith("http") &&
+        !c.href.startsWith("tel:"),
+    );
+    checar(
+      quebradas.length === 0,
+      `em ${rota} nenhum botao aponta para lugar nenhum`,
+      quebradas.map((q) => `${q.cta} -> ${q.href}`).join(", "),
+    );
+
+    await pagina.close();
+  }
+
   await ctx.close();
 }
 
@@ -1169,6 +1394,8 @@ async function main() {
     await conversao(navegador);
     await abertura(navegador);
     await procura(navegador);
+    await paraOndeVaoOsBotoes(navegador);
+    await mapaSemFiltro(navegador);
     await porta(navegador);
     await estoqueEGerencia(navegador);
     await retratos(navegador);

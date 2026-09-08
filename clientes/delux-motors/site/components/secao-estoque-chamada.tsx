@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import type { Carro } from "@/lib/carros";
 import { useEstoque } from "@/lib/estoque";
-import { EMPRESA, whatsapp } from "@/lib/contato";
+import { EMPRESA } from "@/lib/contato";
 import { brl } from "@/lib/fmt";
 import CartaoCarro from "./cartao-carro";
 
@@ -92,31 +92,23 @@ export default function SecaoEstoqueChamada({ inicial }: { inicial: Carro[] }) {
               no Instagram, em @{EMPRESA.instagram}, e quem pergunta no WhatsApp
               descobre antes de todo mundo.
             </p>
-            <a
+            <Link
               data-cta="estoque-whatsapp"
-              href={whatsapp(
-                "Olá! Vim pelo site e queria saber quais carros vocês têm disponíveis agora.",
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/comprar"
               className="inline-flex items-center gap-3 px-6 py-4 text-[0.76rem] font-medium uppercase tracking-[0.13em]"
               style={{ background: "var(--tinta)", color: "var(--branco)" }}
             >
-              Perguntar o que tem hoje
+              Dizer o que procuro
               <span aria-hidden="true">&rarr;</span>
-            </a>
+            </Link>
           </div>
         )}
 
         {total ? (
           <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4 md:mt-16">
-            <a
+            <Link
               data-cta="estoque-whatsapp"
-              href={whatsapp(
-                "Olá! Vim pelo site e queria saber quais carros vocês têm disponíveis agora.",
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/comprar"
               className="group inline-flex items-center gap-3 px-6 py-4 text-[0.76rem] font-medium uppercase tracking-[0.13em]"
               style={{ background: "var(--tinta)", color: "var(--branco)" }}
             >
@@ -128,7 +120,7 @@ export default function SecaoEstoqueChamada({ inicial }: { inicial: Carro[] }) {
               >
                 &rarr;
               </span>
-            </a>
+            </Link>
             <p className="text-[0.84rem]" style={{ color: "var(--tinta-2)" }}>
               O estoque gira toda semana, e o que entra sai primeiro no
               Instagram.

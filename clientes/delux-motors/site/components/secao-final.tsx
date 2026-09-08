@@ -6,7 +6,6 @@ import {
   HORARIO,
   ROTA_URL,
   SERVICOS,
-  whatsapp,
 } from "@/lib/contato";
 
 /**
@@ -17,12 +16,12 @@ import {
  * terminada, em vez de página que simplesmente acabou.
  */
 
-const MSG = "Olá! Vim pelo site da Delux Motors e queria falar com vocês.";
-
 const LINKS = [
   { href: "/#servicos", rotulo: "Serviços" },
   { href: "/estoque", rotulo: "Estoque" },
-  { href: "/procuro", rotulo: "Não achou?" },
+  { href: "/comprar", rotulo: "Comprar" },
+  { href: "/vender", rotulo: "Vender" },
+  { href: "/consignar", rotulo: "Consignar" },
   { href: "/#loja", rotulo: "A loja" },
   { href: "/#local", rotulo: "Como chegar" },
   { href: "/#duvidas", rotulo: "Dúvidas" },
@@ -61,15 +60,13 @@ export default function SecaoFinal() {
                 continua na loja, na Boca do Rio, se você quiser ver de perto.
               </p>
 
-              <a
+              <Link
                 data-cta="final"
-                href={whatsapp(MSG)}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/comprar"
                 className="group mb-4 flex w-full items-center justify-between gap-6 px-6 py-5 text-[0.78rem] font-medium uppercase tracking-[0.14em] sm:w-auto"
                 style={{ background: "var(--tinta)", color: "var(--branco)" }}
               >
-                Chamar no WhatsApp
+                Falar com a loja
                 <span
                   aria-hidden="true"
                   className="inline-block transition-transform duration-300 group-hover:translate-x-1.5"
@@ -77,20 +74,19 @@ export default function SecaoFinal() {
                 >
                   &rarr;
                 </span>
-              </a>
+              </Link>
 
               <div className="flex flex-wrap gap-x-5 gap-y-2">
                 {SERVICOS.map((s) => (
-                  <a
+                  <Link
                     key={s.id}
-                    href={whatsapp(s.mensagem)}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    data-cta={`final-${s.id}`}
+                    href={`/${s.id}`}
                     className="text-[0.78rem] underline decoration-[var(--tinta-3)] underline-offset-4 transition-colors duration-200 hover:text-[var(--tinta)]"
                     style={{ color: "var(--tinta-2)" }}
                   >
                     {s.verbo}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>

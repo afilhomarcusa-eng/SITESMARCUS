@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { CARROS_INICIAIS } from "@/lib/carros";
 import { lerTudo, useFoto, type CarroSalvo } from "@/lib/estoque";
 import { brl, km, nome } from "@/lib/fmt";
-import { CONTATO, SERVICOS, whatsapp } from "@/lib/contato";
+import { CONTATO } from "@/lib/contato";
 
 /**
  * A ficha de um carro.
@@ -62,18 +62,14 @@ export default function FichaCarro({ slug }: { slug: string }) {
           equipe responde com o que tem hoje na loja.
         </p>
         <div className="flex flex-wrap gap-4">
-          <a
+          <Link
             data-cta="nao-achou"
-            href={whatsapp(
-              "Olá! Vim pelo site e o carro que eu abri não estava mais lá. Queria ver o que tem disponível.",
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/comprar"
             className="px-6 py-3.5 text-[0.74rem] font-medium uppercase tracking-[0.13em]"
             style={{ background: "var(--tinta)", color: "var(--branco)" }}
           >
-            Ver o que tem hoje
-          </a>
+            Dizer o que procuro
+          </Link>
           <Link
             href="/estoque"
             className="px-5 py-3.5 text-[0.74rem] uppercase tracking-[0.13em]"
@@ -188,13 +184,11 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
             </ul>
           ) : null}
 
-          <a
+          {/* O carro vai junto no endereço, e chega escrito no formulário.
+              Assim ninguém precisa digitar de novo o que já estava na tela. */}
+          <Link
             data-cta="carro"
-            href={whatsapp(
-              `Olá! Vim pelo site e queria saber mais sobre o ${titulo} ${carro.ano}, de ${brl(carro.preco)}.`,
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={`/comprar?carro=${carro.slug}`}
             className="group mb-3 flex items-center justify-between gap-6 px-6 py-5 text-[0.76rem] font-medium uppercase tracking-[0.14em]"
             style={{ background: "var(--tinta)", color: "var(--branco)" }}
           >
@@ -206,7 +200,7 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
             >
               &rarr;
             </span>
-          </a>
+          </Link>
           <p className="dado mb-10 text-[0.72rem]" style={{ color: "var(--tinta-3)" }}>
             Ou ligue: {CONTATO.exibicao}
           </p>
@@ -250,14 +244,13 @@ function Ficha({ carro }: { carro: CarroSalvo }) {
 
           <p className="corpo text-[0.84rem]">
             Tem o seu para dar de entrada? A gente{" "}
-            <a
-              href={whatsapp(SERVICOS[1].mensagem)}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              data-cta="ficha-vender"
+              href="/vender"
               className="underline underline-offset-4 hover:text-[var(--tinta)]"
             >
               avalia na mesma conversa
-            </a>
+            </Link>
             .
           </p>
         </div>

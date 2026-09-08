@@ -12,7 +12,9 @@ import { CONTATO, EMPRESA, whatsapp } from "@/lib/contato";
 const LINKS = [
   { href: "/#servicos", rotulo: "Serviços" },
   { href: "/estoque", rotulo: "Estoque" },
-  { href: "/procuro", rotulo: "Não achou?" },
+  { href: "/comprar", rotulo: "Comprar" },
+  { href: "/vender", rotulo: "Vender" },
+  { href: "/consignar", rotulo: "Consignar" },
   { href: "/#loja", rotulo: "A loja" },
   { href: "/#local", rotulo: "Como chegar" },
 ];

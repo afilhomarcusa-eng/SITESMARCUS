@@ -98,10 +98,13 @@ export default function SecaoLocal() {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               className="absolute inset-0 h-full w-full"
-              style={{
-                border: 0,
-                filter: "grayscale(1) invert(0.9) contrast(0.82) sepia(0.25)",
-              }}
+              // Mapa sem filtro nenhum, nas cores do Google. Ele estava
+              // dessaturado para combinar com o preto e branco do resto, mas
+              // mapa é ferramenta antes de ser composição: as cores do Google
+              // são as que a pessoa já sabe ler, verde de praça, azul de mar,
+              // amarelo de avenida. Tingir isso custa orientação para economizar
+              // harmonia.
+              style={{ border: 0 }}
             />
           </div>
         </div>

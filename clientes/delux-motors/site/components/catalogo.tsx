@@ -15,7 +15,7 @@ import {
   type Filtro,
 } from "@/lib/filtros";
 import { brl } from "@/lib/fmt";
-import { EMPRESA, SERVICOS, whatsapp } from "@/lib/contato";
+import { EMPRESA, SERVICOS } from "@/lib/contato";
 import CartaoCarro from "./cartao-carro";
 
 /**
@@ -111,7 +111,7 @@ function Vazio({ filtrando, limpar }: { filtrando: boolean; limpar: () => void }
         ) : null}
         <Link
           data-cta="vazio"
-          href="/procuro"
+          href="/comprar"
           className="px-6 py-3.5 text-[0.74rem] font-medium uppercase tracking-[0.13em]"
           style={{ background: "var(--tinta)", color: "var(--branco)" }}
         >
@@ -126,12 +126,10 @@ function Vazio({ filtrando, limpar }: { filtrando: boolean; limpar: () => void }
         style={{ background: "var(--linha)", borderColor: "var(--linha)" }}
       >
         {SERVICOS.map((s) => (
-          <a
+          <Link
             key={s.id}
             data-cta={`vazio-${s.id}`}
-            href={whatsapp(s.mensagem)}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={`/${s.id}`}
             className="group px-0 py-7 sm:px-6"
             style={{ background: "var(--branco)" }}
           >
@@ -140,7 +138,7 @@ function Vazio({ filtrando, limpar }: { filtrando: boolean; limpar: () => void }
             <p className="text-[0.86rem]" style={{ color: "var(--tinta-2)" }}>
               {s.resumo}
             </p>
-          </a>
+          </Link>
         ))}
       </div>
     </div>

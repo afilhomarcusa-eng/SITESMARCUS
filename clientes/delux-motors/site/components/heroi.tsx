@@ -2,13 +2,11 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { CONTATO, EMPRESA, HORARIO, whatsapp } from "@/lib/contato";
+import { CONTATO, EMPRESA, HORARIO } from "@/lib/contato";
 import { CARROS_INICIAIS } from "@/lib/carros";
 import { brl } from "@/lib/fmt";
 
 const Ceu = dynamic(() => import("./ceu"), { ssr: false });
-
-const MSG = "Olá! Vim pelo site da Delux Motors e queria falar com vocês.";
 
 /**
  * A chegada.
@@ -114,15 +112,17 @@ export default function Heroi() {
           </p>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
-            <a
+            {/* Vai para o formulário de compra, e não direto para a conversa.
+                A pessoa escolhe outro serviço numa aba lá em cima se for o
+                caso. A saída direta para o WhatsApp continua existindo, no
+                botão do cabeçalho, para quem só quer falar. */}
+            <Link
               data-cta="heroi"
-              href={whatsapp(MSG)}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/comprar"
               className="group inline-flex items-center gap-3 px-6 py-4 text-[0.78rem] font-medium uppercase tracking-[0.14em]"
               style={{ background: "var(--tinta)", color: "var(--branco)" }}
             >
-              Falar no WhatsApp
+              Falar com a loja
               <span
                 aria-hidden="true"
                 className="inline-block transition-transform duration-300 group-hover:translate-x-1"
@@ -130,7 +130,7 @@ export default function Heroi() {
               >
                 &rarr;
               </span>
-            </a>
+            </Link>
 
             <Link
               data-cta="heroi-estoque"

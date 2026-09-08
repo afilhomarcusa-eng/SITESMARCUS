@@ -1,4 +1,5 @@
-import { SERVICOS, whatsapp } from "@/lib/contato";
+import Link from "next/link";
+import { SERVICOS } from "@/lib/contato";
 
 /**
  * As três portas.
@@ -87,11 +88,12 @@ export default function SecaoServicos() {
                 ))}
               </ol>
 
-              <a
+              {/* Cada porta leva ao formulário da própria porta. Quem quer
+                  vender não cai numa conversa em branco tendo que explicar do
+                  zero o que quer. */}
+              <Link
                 data-cta={`servico-${s.id}`}
-                href={whatsapp(s.mensagem)}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={`/${s.id}`}
                 className="inline-flex shrink-0 items-center gap-3 self-start px-5 py-3.5 text-[0.74rem] uppercase tracking-[0.13em] transition-colors duration-300"
                 style={{
                   border: "1px solid var(--tinta)",
@@ -106,7 +108,7 @@ export default function SecaoServicos() {
                 >
                   &rarr;
                 </span>
-              </a>
+              </Link>
             </article>
           ))}
         </div>
