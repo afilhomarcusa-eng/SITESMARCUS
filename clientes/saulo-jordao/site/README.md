@@ -92,6 +92,13 @@ na mensagem, os filtros conferidos pelo resultado, e a abertura medida por
 cobertura ponto a ponto, com o JavaScript derrubado e com o JavaScript
 desligado.
 
+Para olhar as capturas seção por seção, em vez de olhar a página inteira
+reduzida, onde nenhum defeito de celular aparece:
+
+```bash
+node scripts/prancha-qa.mjs qa/390-home.png prancha.png 844
+```
+
 Duas regras valem mais que a contagem:
 
 1. Quando um teste passa com o defeito na tela, ele está medindo a coisa errada.
