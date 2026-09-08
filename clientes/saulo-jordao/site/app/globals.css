@@ -1,0 +1,1839 @@
+/* =========================================================================
+   Saulo Jordão Premium Cars
+   Conceito: "A prancha". Todo carro é fotografado em pé, no mesmo trecho de
+   calçada de Aracaju. O site é essa série de retratos montada sobre papel.
+
+   As cores foram medidas nas próprias fotos, não escolhidas de paleta pronta:
+   a cerca verde do fundo das fotos deu o acento, o asfalto deu o cinza, e o
+   papel veio do concreto claro da calçada ao meio-dia.
+   ========================================================================= */
+
+:root {
+  /* Papel */
+  --papel: #f4f2ed;
+  --papel-claro: #fbfaf8;
+  --papel-fundo: #e8e5dd;
+
+  /* Tinta */
+  --tinta: #14140f;
+  --tinta-media: #4c4c43;
+
+  /* Medidos nas fotos */
+  --cerca: #4b5345; /* média da faixa de vegetação, sete fotos */
+  --cerca-viva: #6e7a63;
+  --asfalto: #7c8188; /* média da faixa de chão, sete fotos */
+
+  --linha: rgba(20, 20, 15, 0.16);
+  --linha-fraca: rgba(20, 20, 15, 0.08);
+
+  /* Tipografia */
+  --fonte-display: var(--fonte-serif), "Times New Roman", serif;
+  --fonte-texto: var(--fonte-grotesk), system-ui, sans-serif;
+
+  --t-monumento: clamp(3.4rem, 11vw, 9.5rem);
+  --t-display: clamp(2.5rem, 6vw, 5rem);
+  --t-titulo: clamp(1.75rem, 3.4vw, 2.9rem);
+  --t-subtitulo: clamp(1.15rem, 1.7vw, 1.45rem);
+  --t-corpo: clamp(1rem, 1.05vw, 1.09rem);
+  --t-fino: 0.75rem;
+
+  /* Espaço. Escala irregular de propósito: seção não tem todas a mesma altura */
+  --e1: 6px;
+  --e2: 12px;
+  --e3: 20px;
+  --e4: 32px;
+  --e5: 52px;
+  --e6: 84px;
+  --e7: 136px;
+
+  --margem: clamp(20px, 5vw, 88px);
+  --largura: 1560px;
+
+  /* Movimento: peso, não mola */
+  --saida: cubic-bezier(0.16, 1, 0.3, 1);
+  --entrada: cubic-bezier(0.7, 0, 0.2, 1);
+  --d-micro: 220ms;
+  --d-interface: 460ms;
+  --d-revelacao: 900ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fonte-texto);
+  font-size: var(--t-corpo);
+  line-height: 1.55;
+  font-feature-settings: "tnum" 1;
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto; /* o atributo height do HTML não pode mandar na altura */
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-display);
+  font-weight: 400;
+  line-height: 0.94;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--cerca);
+  color: var(--papel-claro);
+}
+
+:focus-visible {
+  outline: 2px solid var(--cerca);
+  outline-offset: 3px;
+}
+
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.so-leitor:focus {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: auto;
+  height: auto;
+  clip-path: none;
+  padding: 10px 16px;
+  background: var(--tinta);
+  color: var(--papel);
+  z-index: 200;
+}
+
+/* ---------- utilitários de composição ---------- */
+
+.faixa {
+  padding-inline: var(--margem);
+}
+
+.medida {
+  max-width: var(--largura);
+  margin-inline: auto;
+}
+
+/* A etiqueta: o rótulo miúdo que organiza a prancha */
+.fino {
+  font-size: var(--t-fino);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--asfalto);
+  font-weight: 500;
+}
+
+.fino-tinta {
+  color: var(--tinta);
+}
+
+.serie {
+  font-variant-numeric: tabular-nums;
+}
+
+.regra {
+  border: 0;
+  border-top: 1px solid var(--linha);
+  margin: 0;
+}
+
+/* ---------- botões e links ---------- */
+
+.acao {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--tinta);
+  color: var(--papel-claro);
+  border: 1px solid var(--tinta);
+  padding: 15px 26px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background var(--d-micro) var(--saida),
+    color var(--d-micro) var(--saida);
+}
+
+.acao svg {
+  width: 15px;
+  height: 15px;
+  transition: transform var(--d-micro) var(--saida);
+}
+
+.acao:hover {
+  background: var(--cerca);
+  border-color: var(--cerca);
+}
+
+.acao:hover svg {
+  transform: translateX(4px);
+}
+
+.acao-vazada {
+  background: transparent;
+  color: var(--tinta);
+  border-color: var(--linha);
+}
+
+.acao-vazada:hover {
+  background: transparent;
+  border-color: var(--tinta);
+  color: var(--tinta);
+}
+
+.acao-clara {
+  background: var(--papel-claro);
+  color: var(--tinta);
+  border-color: var(--papel-claro);
+}
+
+.acao-clara:hover {
+  background: var(--cerca-viva);
+  border-color: var(--cerca-viva);
+  color: var(--papel-claro);
+}
+
+/* Link com sublinhado que corre, não com troca de cor */
+.link-corre {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  padding-bottom: 3px;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size var(--d-interface) var(--saida);
+}
+
+.link-corre:hover {
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+
+.link-corre svg {
+  width: 13px;
+  height: 13px;
+  transition: transform var(--d-micro) var(--saida);
+}
+
+.link-corre:hover svg {
+  transform: translate(3px, -3px);
+}
+
+/* =========================================================================
+   A ABERTURA
+   Quatro folhas de papel recuam até formar a moldura 3:4 do site, com o nome
+   dentro. Depois as folhas saem para as bordas e a chapa sobe.
+   Tudo em CSS, sobre HTML que veio do servidor: não existe quadro em que a
+   página exista sem ela, e ela sai mesmo se o JavaScript falhar.
+   ========================================================================= */
+
+.cortina {
+  display: none;
+}
+
+html[data-abrir="1"] .cortina {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  --jan-h: 62vh;
+  --jan-w: calc(62vh * 0.75);
+  animation: cortina-sai var(--d-abertura) forwards;
+}
+
+@media (max-width: 900px) {
+  html[data-abrir="1"] .cortina {
+    --jan-w: 72vw;
+    --jan-h: calc(72vw * 1.3333);
+  }
+}
+
+/* A chapa: fundo de tinta com o nome. Sobe no fim, como folha sendo levantada */
+.cortina-chapa {
+  position: absolute;
+  inset: 0;
+  background: var(--tinta);
+  color: var(--papel-claro);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  animation: chapa-sobe var(--d-abertura) forwards;
+}
+
+.cortina-nome {
+  font-family: var(--fonte-display);
+  font-size: clamp(2rem, 6.4vw, 4.6rem);
+  line-height: 1;
+  animation: nome-assenta var(--d-abertura) forwards;
+}
+
+.cortina-linha {
+  font-size: var(--t-fino);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cerca-viva);
+  animation: linha-entra var(--d-abertura) forwards;
+}
+
+.folha {
+  position: absolute;
+  background: var(--papel);
+  display: block;
+}
+
+.folha-cima {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50vh;
+  border-bottom: 1px solid var(--cerca);
+  animation: folha-cima var(--d-abertura) forwards;
+}
+
+.folha-baixo {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50vh;
+  border-top: 1px solid var(--cerca);
+  animation: folha-baixo var(--d-abertura) forwards;
+}
+
+.folha-esq {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 50vw;
+  border-right: 1px solid var(--cerca);
+  animation: folha-esq var(--d-abertura) forwards;
+}
+
+.folha-dir {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 50vw;
+  border-left: 1px solid var(--cerca);
+  animation: folha-dir var(--d-abertura) forwards;
+}
+
+@keyframes folha-cima {
+  0% {
+    transform: translateY(0);
+    animation-timing-function: var(--saida);
+  }
+  30% {
+    transform: translateY(calc(var(--jan-h) / -2));
+    animation-timing-function: linear;
+  }
+  52% {
+    transform: translateY(calc(var(--jan-h) / -2));
+    animation-timing-function: var(--entrada);
+  }
+  100% {
+    transform: translateY(-50vh);
+  }
+}
+
+@keyframes folha-baixo {
+  0% {
+    transform: translateY(0);
+    animation-timing-function: var(--saida);
+  }
+  30% {
+    transform: translateY(calc(var(--jan-h) / 2));
+    animation-timing-function: linear;
+  }
+  52% {
+    transform: translateY(calc(var(--jan-h) / 2));
+    animation-timing-function: var(--entrada);
+  }
+  100% {
+    transform: translateY(50vh);
+  }
+}
+
+@keyframes folha-esq {
+  0% {
+    transform: translateX(0);
+    animation-timing-function: var(--saida);
+  }
+  30% {
+    transform: translateX(calc(var(--jan-w) / -2));
+    animation-timing-function: linear;
+  }
+  52% {
+    transform: translateX(calc(var(--jan-w) / -2));
+    animation-timing-function: var(--entrada);
+  }
+  100% {
+    transform: translateX(-50vw);
+  }
+}
+
+@keyframes folha-dir {
+  0% {
+    transform: translateX(0);
+    animation-timing-function: var(--saida);
+  }
+  30% {
+    transform: translateX(calc(var(--jan-w) / 2));
+    animation-timing-function: linear;
+  }
+  52% {
+    transform: translateX(calc(var(--jan-w) / 2));
+    animation-timing-function: var(--entrada);
+  }
+  100% {
+    transform: translateX(50vw);
+  }
+}
+
+@keyframes chapa-sobe {
+  0%,
+  52% {
+    transform: translateY(0);
+    animation-timing-function: var(--entrada);
+  }
+  92%,
+  100% {
+    transform: translateY(-101%);
+  }
+}
+
+@keyframes nome-assenta {
+  0% {
+    opacity: 0;
+    letter-spacing: 0.42em;
+    animation-timing-function: var(--saida);
+  }
+  38% {
+    opacity: 1;
+    letter-spacing: 0.01em;
+  }
+  100% {
+    opacity: 1;
+    letter-spacing: 0.01em;
+  }
+}
+
+@keyframes linha-entra {
+  0%,
+  22% {
+    opacity: 0;
+  }
+  46%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* A cortina para de interceptar clique assim que começa a sair de vez: o botão
+   principal já está pintado embaixo e tem que poder ser clicado.
+
+   Os pares de quadro colados (51.9 e 52, 99.9 e 100) não são capricho.
+   pointer-events e visibility são propriedades discretas, e o navegador vira o
+   valor no MEIO do intervalo entre dois quadros, não no quadro onde está
+   escrito. Com os quadros soltos, a cortina virava atravessável a clique no
+   meio da abertura e voltava a interceptar depois: quem clicasse para pular
+   acabava abrindo o link que estava embaixo. Declarando o valor dos dois lados
+   da virada, ela acontece exatamente onde foi pedida. */
+@keyframes cortina-sai {
+  0% {
+    pointer-events: auto;
+    visibility: visible;
+  }
+  51.9% {
+    pointer-events: auto;
+    visibility: visible;
+  }
+  52% {
+    pointer-events: none;
+    visibility: visible;
+  }
+  99.9% {
+    pointer-events: none;
+    visibility: visible;
+  }
+  100% {
+    pointer-events: none;
+    visibility: hidden;
+  }
+}
+
+/* =========================================================================
+   CABEÇALHO
+   ========================================================================= */
+
+.cabecalho {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+  padding: 14px var(--margem);
+  background: color-mix(in srgb, var(--papel) 88%, transparent);
+  backdrop-filter: blur(9px);
+  border-bottom: 1px solid var(--linha-fraca);
+}
+
+.marca {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  text-decoration: none;
+  font-family: var(--fonte-display);
+  font-size: 1.32rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.marca span {
+  font-family: var(--fonte-texto);
+  font-size: var(--t-fino);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--asfalto);
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: var(--e4);
+}
+
+.menu a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  position: relative;
+  padding-block: 4px;
+}
+
+.menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--tinta);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--d-interface) var(--saida);
+}
+
+.menu a:hover::after,
+.menu a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.cabecalho-acao {
+  padding: 11px 20px;
+  font-size: 0.88rem;
+}
+
+/* Barra de baixo no celular: o estoque fica à vista, não dentro de sanfona */
+.barra-mobile {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .menu {
+    display: none;
+  }
+
+  .barra-mobile {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 45;
+    background: color-mix(in srgb, var(--papel) 94%, transparent);
+    backdrop-filter: blur(9px);
+    border-top: 1px solid var(--linha);
+  }
+
+  .barra-mobile a {
+    flex: 1;
+    text-align: center;
+    padding: 14px 6px;
+    text-decoration: none;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+  }
+
+  .barra-mobile a + a {
+    border-left: 1px solid var(--linha-fraca);
+  }
+
+  .barra-mobile a[aria-current="page"] {
+    color: var(--cerca);
+  }
+
+  body {
+    padding-bottom: 52px;
+  }
+}
+
+/* =========================================================================
+   HERÓI
+   Fundo: o nome em corpo monumental. Meio: o retrato. Frente: a etiqueta,
+   que cruza a foto. O nome é decoração e se repete no cabeçalho, por isso
+   pode ser coberto. Nenhum texto que só existe aqui fica atrás de nada.
+   ========================================================================= */
+
+.heroi {
+  position: relative;
+  overflow: hidden;
+  padding: var(--e5) var(--margem);
+  min-height: min(92svh, 940px);
+  display: grid;
+  align-content: center;
+}
+
+.heroi-grade {
+  position: relative;
+  z-index: 2;
+  max-width: var(--largura);
+  margin-inline: auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.86fr);
+  gap: clamp(24px, 4vw, 72px);
+  align-items: center;
+}
+
+.heroi-texto {
+  max-width: 42ch;
+}
+
+.heroi h1 {
+  font-size: clamp(2.4rem, 3.9vw, 3.9rem);
+  max-width: 15ch;
+  margin-block: var(--e3) var(--e3);
+}
+
+.heroi h1 em {
+  font-style: italic;
+  color: var(--cerca);
+}
+
+.heroi-linha {
+  color: var(--tinta-media);
+  max-width: 44ch;
+  font-size: var(--t-subtitulo);
+  line-height: 1.45;
+}
+
+.heroi-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  margin-top: var(--e4);
+}
+
+/* A faixa de dados atravessa as duas colunas. É ela que ocupa a largura em
+   tela grande: sem ela, 1920 vira um vão de papel entre o texto e a foto. */
+.heroi-dados {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: var(--e5);
+  border-top: 1px solid var(--linha);
+}
+
+.heroi-dados div {
+  display: grid;
+  gap: 4px;
+  padding: var(--e3) var(--e3) 0 0;
+}
+
+.heroi-dados div + div {
+  border-left: 1px solid var(--linha);
+  padding-left: var(--e3);
+}
+
+.heroi-dados strong {
+  font-family: var(--fonte-display);
+  font-size: 1.7rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* O retrato, a moldura vazia atrás dele e a etiqueta que passa na frente.
+   São os três planos: a moldura recua, o retrato ocupa o meio e a etiqueta
+   cruza a foto. A moldura vazia é a mesma figura da abertura, agora parada, e
+   é ela que dá a profundidade: o retrato tapa metade dela. */
+.heroi-retrato {
+  position: relative;
+  justify-self: end;
+  display: grid;
+  justify-items: end;
+}
+
+.heroi-mont {
+  position: absolute;
+  z-index: 0;
+  right: 42px;
+  top: -34px;
+  height: min(56svh, 520px);
+  aspect-ratio: 3 / 4;
+  border: 1px solid var(--linha);
+  pointer-events: none;
+}
+
+.heroi-moldura {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: var(--papel-fundo);
+  height: min(56svh, 520px);
+  aspect-ratio: 3 / 4;
+  max-width: 100%;
+}
+
+.heroi-moldura img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.heroi-etiqueta {
+  position: absolute;
+  z-index: 3;
+  left: -40px;
+  bottom: 42px;
+  width: min(310px, 78%);
+  background: var(--papel-claro);
+  border: 1px solid var(--linha);
+  border-left: 3px solid var(--cerca);
+  padding: 16px 18px 18px;
+  display: grid;
+  gap: 6px;
+  text-decoration: none;
+  box-shadow: 0 24px 48px -34px rgba(20, 20, 15, 0.5);
+  transition: transform var(--d-interface) var(--saida);
+}
+
+.heroi-etiqueta:hover {
+  transform: translateY(-4px);
+}
+
+.heroi-etiqueta strong {
+  font-family: var(--fonte-display);
+  font-size: 1.32rem;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.heroi-etiqueta .preco {
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+/* =========================================================================
+   SEÇÕES
+   ========================================================================= */
+
+.secao {
+  padding: var(--e6) var(--margem);
+}
+
+.secao-fundo {
+  background: var(--papel-fundo);
+}
+
+.secao-tinta {
+  background: var(--tinta);
+  color: var(--papel);
+}
+
+.secao-tinta .fino {
+  color: var(--cerca-viva);
+}
+
+.cabeca {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--e4);
+  flex-wrap: wrap;
+  margin-bottom: var(--e5);
+}
+
+.cabeca h2 {
+  font-size: var(--t-titulo);
+  max-width: 18ch;
+}
+
+.cabeca-nota {
+  color: var(--tinta-media);
+  max-width: 40ch;
+  font-size: 0.98rem;
+}
+
+/* ---------- grade de carros ---------- */
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: clamp(16px, 2vw, 30px) clamp(14px, 1.6vw, 24px);
+}
+
+@media (min-width: 1700px) {
+  .grade {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.cartao {
+  display: grid;
+  gap: 12px;
+  text-decoration: none;
+  align-content: start;
+}
+
+.cartao-moldura {
+  position: relative;
+  overflow: hidden;
+  background: var(--papel-fundo);
+  aspect-ratio: 3 / 4;
+}
+
+.cartao-moldura img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 700ms var(--saida);
+}
+
+.cartao:hover .cartao-moldura img {
+  transform: scale(1.045);
+}
+
+.cartao-serie {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  background: var(--papel-claro);
+  padding: 4px 8px;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+
+.cartao-nota {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background: var(--cerca);
+  color: var(--papel-claro);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  padding: 8px 12px;
+}
+
+.cartao-topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cartao h3 {
+  font-size: 1.18rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.cartao-marca {
+  font-size: var(--t-fino);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--asfalto);
+}
+
+.cartao-ficha {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  color: var(--tinta-media);
+  font-size: 0.86rem;
+}
+
+.cartao-preco {
+  font-size: 1.02rem;
+  border-top: 1px solid var(--linha-fraca);
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cartao-preco svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity var(--d-interface) var(--saida),
+    transform var(--d-interface) var(--saida);
+}
+
+.cartao:hover .cartao-preco svg {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ---------- quem é Saulo ---------- */
+
+.quem {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(28px, 5vw, 90px);
+  align-items: start;
+}
+
+.quem-texto p + p {
+  margin-top: var(--e3);
+}
+
+.quem-texto p {
+  font-size: var(--t-subtitulo);
+  line-height: 1.5;
+  max-width: 46ch;
+  color: var(--tinta-media);
+}
+
+.quem-texto p:first-of-type {
+  color: var(--tinta);
+  font-family: var(--fonte-display);
+  font-size: var(--t-titulo);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+.numeros {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--linha);
+}
+
+.numeros div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--linha);
+}
+
+.numeros strong {
+  font-family: var(--fonte-display);
+  font-size: clamp(1.9rem, 3vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.numeros span {
+  text-align: right;
+  color: var(--asfalto);
+  font-size: 0.86rem;
+  max-width: 22ch;
+}
+
+/* ---------- as três portas ---------- */
+
+.portas {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--linha);
+}
+
+.porta {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  gap: clamp(16px, 3vw, 48px);
+  align-items: center;
+  padding: clamp(24px, 3vw, 40px) 0;
+  border-bottom: 1px solid var(--linha);
+  text-decoration: none;
+  transition: padding-left var(--d-interface) var(--saida);
+}
+
+.porta:hover {
+  padding-left: 12px;
+}
+
+.porta-numero {
+  font-family: var(--fonte-display);
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  line-height: 1;
+  color: var(--linha);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--d-interface) var(--saida);
+}
+
+.porta:hover .porta-numero {
+  color: var(--cerca);
+}
+
+.porta h3 {
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  margin-bottom: 6px;
+}
+
+.porta p {
+  color: var(--tinta-media);
+  max-width: 52ch;
+  font-size: 0.98rem;
+}
+
+.porta-seta {
+  width: 26px;
+  height: 26px;
+  color: var(--asfalto);
+  transition:
+    transform var(--d-interface) var(--saida),
+    color var(--d-interface) var(--saida);
+}
+
+.porta:hover .porta-seta {
+  transform: translate(6px, -6px);
+  color: var(--tinta);
+}
+
+/* ---------- chamada final ---------- */
+
+.final {
+  position: relative;
+  padding: var(--e7) var(--margem);
+  overflow: hidden;
+}
+
+/* A moldura da abertura volta aqui, agora desenhada e parada: o começo e o
+   fim do site referenciam a mesma figura. */
+.final-moldura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(46vh, 78vw);
+  aspect-ratio: 3 / 4;
+  border: 1px solid rgba(244, 242, 237, 0.18);
+  pointer-events: none;
+}
+
+.final-conteudo {
+  position: relative;
+  z-index: 2;
+  max-width: var(--largura);
+  margin-inline: auto;
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: var(--e3);
+}
+
+.final h2 {
+  font-size: var(--t-display);
+  max-width: 16ch;
+}
+
+.final p {
+  color: rgba(244, 242, 237, 0.72);
+  max-width: 46ch;
+}
+
+.final-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  justify-content: center;
+  margin-top: var(--e2);
+}
+
+/* =========================================================================
+   ESTOQUE
+   ========================================================================= */
+
+.topo-pagina {
+  padding: var(--e6) var(--margem) var(--e4);
+  max-width: var(--largura);
+  margin-inline: auto;
+}
+
+.topo-pagina h1 {
+  font-size: var(--t-display);
+  margin-block: var(--e2) var(--e3);
+  max-width: 20ch;
+}
+
+.topo-pagina p {
+  color: var(--tinta-media);
+  max-width: 54ch;
+  font-size: var(--t-subtitulo);
+}
+
+.filtros {
+  position: sticky;
+  top: 57px;
+  z-index: 30;
+  background: color-mix(in srgb, var(--papel) 92%, transparent);
+  backdrop-filter: blur(9px);
+  border-block: 1px solid var(--linha);
+  padding: 14px var(--margem);
+  margin-bottom: var(--e5);
+}
+
+.filtros-linha {
+  max-width: var(--largura);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.busca {
+  position: relative;
+  flex: 1 1 240px;
+  max-width: 340px;
+}
+
+.busca input {
+  width: 100%;
+  font: inherit;
+  font-size: 0.92rem;
+  padding: 10px 34px 10px 12px;
+  border: 1px solid var(--linha);
+  background: var(--papel-claro);
+  color: var(--tinta);
+  border-radius: 2px;
+}
+
+.busca input::placeholder {
+  color: var(--asfalto);
+}
+
+.busca button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 6px;
+  color: var(--asfalto);
+  line-height: 0;
+}
+
+.busca svg {
+  width: 14px;
+  height: 14px;
+}
+
+.pilulas {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pilula {
+  border: 1px solid var(--linha);
+  background: transparent;
+  border-radius: 2px;
+  padding: 8px 13px;
+  font-size: 0.86rem;
+  cursor: pointer;
+  transition:
+    background var(--d-micro) var(--saida),
+    border-color var(--d-micro) var(--saida),
+    color var(--d-micro) var(--saida);
+}
+
+.pilula:hover {
+  border-color: var(--tinta);
+}
+
+.pilula[aria-pressed="true"] {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: var(--papel-claro);
+}
+
+.ordenar {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ordenar select {
+  font: inherit;
+  font-size: 0.86rem;
+  padding: 9px 12px;
+  border: 1px solid var(--linha);
+  background: var(--papel-claro);
+  color: var(--tinta);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.contagem {
+  max-width: var(--largura);
+  margin: 0 auto var(--e3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+  flex-wrap: wrap;
+}
+
+.limpar {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--linha);
+  cursor: pointer;
+  padding: 2px 0;
+  font-size: 0.86rem;
+  color: var(--tinta-media);
+}
+
+.limpar:hover {
+  color: var(--tinta);
+  border-color: var(--tinta);
+}
+
+.vazio {
+  max-width: 46ch;
+  padding: var(--e6) 0;
+}
+
+.vazio h2 {
+  font-size: var(--t-titulo);
+  margin-bottom: var(--e2);
+}
+
+.vazio p {
+  color: var(--tinta-media);
+  margin-bottom: var(--e3);
+}
+
+/* =========================================================================
+   FICHA DO CARRO
+   ========================================================================= */
+
+.ficha {
+  padding: var(--e5) var(--margem) 0;
+  max-width: var(--largura);
+  margin-inline: auto;
+}
+
+.volta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 0.88rem;
+  color: var(--tinta-media);
+  margin-bottom: var(--e4);
+}
+
+.volta svg {
+  width: 13px;
+  height: 13px;
+}
+
+.volta:hover {
+  color: var(--tinta);
+}
+
+.ficha-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 72px);
+  align-items: start;
+}
+
+.ficha-moldura {
+  position: relative;
+  overflow: hidden;
+  background: var(--papel-fundo);
+  aspect-ratio: 3 / 4;
+}
+
+.ficha-moldura img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ficha-dados {
+  position: sticky;
+  top: 88px;
+}
+
+.ficha h1 {
+  font-size: clamp(2rem, 3.6vw, 3.2rem);
+  margin-block: var(--e2) var(--e3);
+}
+
+.ficha-preco {
+  font-family: var(--fonte-display);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-bottom: var(--e3);
+  border-bottom: 1px solid var(--linha);
+}
+
+.ficha-nota {
+  background: var(--cerca);
+  color: var(--papel-claro);
+  padding: 12px 16px;
+  margin-block: var(--e3);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.tabela {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--e4);
+  margin-top: var(--e3);
+}
+
+.tabela dt {
+  font-size: var(--t-fino);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--asfalto);
+  padding: 11px 0;
+  border-bottom: 1px solid var(--linha-fraca);
+}
+
+.tabela dd {
+  margin: 0;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--linha-fraca);
+  text-align: right;
+}
+
+.conferido {
+  list-style: none;
+  padding: 0;
+  margin: var(--e4) 0 0;
+  display: grid;
+  gap: 9px;
+}
+
+.conferido li {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 10px;
+  align-items: start;
+  font-size: 0.95rem;
+}
+
+.conferido svg {
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  color: var(--cerca);
+}
+
+.itens {
+  columns: 2;
+  column-gap: var(--e4);
+  list-style: none;
+  padding: 0;
+  margin: var(--e3) 0 0;
+  font-size: 0.92rem;
+  color: var(--tinta-media);
+}
+
+.itens li {
+  break-inside: avoid;
+  padding: 5px 0;
+}
+
+.ficha-acoes {
+  display: flex;
+  gap: var(--e2);
+  flex-wrap: wrap;
+  margin-top: var(--e4);
+}
+
+/* A tira: as outras fotos, cada uma aparecendo uma vez só */
+.tira {
+  margin-top: var(--e6);
+  padding-bottom: var(--e6);
+}
+
+.tira-rolo {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--e3);
+  scrollbar-width: thin;
+}
+
+.tira-rolo figure {
+  margin: 0;
+  flex: 0 0 clamp(200px, 24vw, 320px);
+  scroll-snap-align: start;
+}
+
+.tira-rolo img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: var(--papel-fundo);
+}
+
+.tira-rolo figcaption {
+  margin-top: 8px;
+  font-size: var(--t-fino);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--asfalto);
+}
+
+/* =========================================================================
+   FORMULÁRIO
+   ========================================================================= */
+
+.form-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+  padding: 0 var(--margem) var(--e7);
+  max-width: var(--largura);
+  margin-inline: auto;
+}
+
+.campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--e3);
+}
+
+.campo {
+  display: grid;
+  gap: 7px;
+}
+
+.campo-largo {
+  grid-column: 1 / -1;
+}
+
+.campo label {
+  font-size: var(--t-fino);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--asfalto);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  font: inherit;
+  font-size: 0.98rem;
+  padding: 12px 14px;
+  border: 1px solid var(--linha);
+  background: var(--papel-claro);
+  color: var(--tinta);
+  border-radius: 2px;
+  width: 100%;
+}
+
+.campo textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.campo small {
+  color: var(--asfalto);
+  font-size: 0.78rem;
+}
+
+.previa {
+  position: sticky;
+  top: 88px;
+  background: var(--tinta);
+  color: var(--papel);
+  padding: var(--e4);
+}
+
+.previa h2 {
+  font-size: 1.25rem;
+  margin-bottom: var(--e2);
+  color: var(--papel-claro);
+}
+
+.previa-texto {
+  white-space: pre-wrap;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: rgba(244, 242, 237, 0.82);
+  min-height: 120px;
+}
+
+.previa-aviso {
+  margin-top: var(--e3);
+  padding-top: var(--e3);
+  border-top: 1px solid rgba(244, 242, 237, 0.16);
+  font-size: 0.82rem;
+  color: rgba(244, 242, 237, 0.6);
+}
+
+.form-envio {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  flex-wrap: wrap;
+  margin-top: var(--e2);
+}
+
+/* =========================================================================
+   RODAPÉ
+   ========================================================================= */
+
+.rodape {
+  border-top: 1px solid var(--linha);
+  padding: var(--e5) var(--margem) var(--e4);
+}
+
+.rodape-grade {
+  max-width: var(--largura);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(2, minmax(0, 0.6fr));
+  gap: var(--e4);
+}
+
+.rodape h2 {
+  font-size: 1.7rem;
+  margin-bottom: 10px;
+}
+
+.rodape ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 9px;
+  font-size: 0.92rem;
+}
+
+.rodape a {
+  text-decoration: none;
+}
+
+.rodape a:hover {
+  color: var(--cerca);
+}
+
+.rodape-fim {
+  max-width: var(--largura);
+  margin: var(--e5) auto 0;
+  padding-top: var(--e3);
+  border-top: 1px solid var(--linha-fraca);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--e3);
+  flex-wrap: wrap;
+  color: var(--asfalto);
+  font-size: 0.8rem;
+}
+
+/* =========================================================================
+   MOVIMENTO
+   Máscara vertical, como folha sendo posta na mesa. Nada de opacidade mais
+   translateY em tudo, que é a assinatura de site gerado.
+   ========================================================================= */
+
+/* Quem esconde é o CSS, e só quando existe JavaScript vivo para revelar de
+   volta. `data-js` é marcado pelo script bloqueante do head. Sem script, nada
+   fica escondido esperando um observador que nunca vai rodar.
+
+   Quem esconde é máscara, e não clip-path, por um motivo que custou uma
+   sessão de depuração: o Chrome desconta o clip-path do retângulo que o
+   IntersectionObserver mede, então o elemento escondido com clip nunca é dado
+   como visível e nunca é revelado. Ele se esconde do próprio gatilho. Máscara
+   é pintura pura, não mexe em layout nem no cálculo de interseção. */
+html[data-js="1"] [data-revelar] {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 100%);
+  mask-image: linear-gradient(to bottom, #000 0 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 0%;
+  mask-size: 100% 0%;
+  transform: translateY(14px);
+  transition:
+    -webkit-mask-size var(--d-revelacao) var(--saida),
+    mask-size var(--d-revelacao) var(--saida),
+    transform var(--d-revelacao) var(--saida);
+  transition-delay: var(--atraso, 0ms);
+}
+
+html[data-js="1"] [data-revelar="visivel"] {
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  transform: none;
+}
+
+/* O retrato do herói entra por escala, não por máscara: é a foto que chega.
+   Nunca por opacidade, porque o herói tem que estar pintado no primeiro quadro
+   para a abertura não custar carregamento. */
+html[data-js="1"] [data-entrada-foto] img {
+  transform: scale(1.06);
+  transition: transform 1500ms var(--saida);
+}
+
+html[data-js="1"] [data-entrada-foto="visivel"] img {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  [data-revelar] {
+    -webkit-mask-image: none;
+    mask-image: none;
+    transform: none;
+  }
+
+  [data-entrada-foto] img {
+    transform: none;
+  }
+}
+
+/* =========================================================================
+   TELAS ESTREITAS
+   O celular não é o desktop espremido: o retrato entra no fluxo, a etiqueta
+   passa para baixo dele, e a ordem de leitura muda.
+   ========================================================================= */
+
+@media (max-width: 1080px) {
+  .quem,
+  .ficha-grade,
+  .form-grade {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ficha-dados,
+  .previa {
+    position: static;
+  }
+
+  .rodape-grade {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .heroi {
+    min-height: 0;
+    padding-top: var(--e5);
+  }
+
+  .heroi-grade {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--e5);
+  }
+
+  .heroi-monumento {
+    top: auto;
+    bottom: 8px;
+    transform: none;
+    font-size: 22vw;
+    opacity: 0.75;
+  }
+
+  .heroi-retrato {
+    justify-self: stretch;
+    justify-items: stretch;
+  }
+
+  .heroi-mont {
+    display: none;
+  }
+
+  .heroi-moldura {
+    height: auto;
+    width: 100%;
+  }
+
+  .heroi-etiqueta {
+    position: static;
+    width: 100%;
+    margin-top: -1px;
+    box-shadow: none;
+  }
+
+  .heroi-texto {
+    max-width: none;
+  }
+
+  .porta {
+    grid-template-columns: 54px minmax(0, 1fr) 22px;
+    gap: var(--e3);
+  }
+
+  .campos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .itens {
+    columns: 1;
+  }
+
+  .filtros {
+    top: 55px;
+  }
+
+  .ordenar {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .ordenar select {
+    flex: 1;
+  }
+}
+
+/* Telas de 360px: o botão de WhatsApp do cabeçalho passava 4px da borda e
+   isso já é rolagem horizontal. O nome da marca continua inteiro; quem encolhe
+   é o subtítulo e o espaçamento do botão. */
+@media (max-width: 440px) {
+  .cabecalho {
+    padding-inline: 14px;
+    gap: 10px;
+  }
+
+  .marca {
+    font-size: 1.18rem;
+  }
+
+  .marca span {
+    display: none;
+  }
+
+  .cabecalho-acao {
+    padding: 10px 14px;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 620px) {
+  .grade {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 10px;
+  }
+
+  .cartao h3 {
+    font-size: 1rem;
+  }
+
+  .cartao-ficha {
+    font-size: 0.78rem;
+    gap: 8px;
+  }
+
+  .rodape-grade {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* A faixa de dados em três colunas cortava a faixa de preço no meio. No
+     celular ela vira lista, com a linha entre uma e outra. */
+  .heroi-dados {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: var(--e4);
+  }
+
+  .heroi-dados div {
+    padding: 14px 0;
+  }
+
+  .heroi-dados div + div {
+    border-left: 0;
+    border-top: 1px solid var(--linha-fraca);
+    padding-left: 0;
+  }
+
+  /* Marca em cima, modelo embaixo: lado a lado a 390px o nome do carro
+     espremia contra "Mercedes-Benz" e quebrava em três linhas. */
+  .cartao-topo {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 3px;
+  }
+}

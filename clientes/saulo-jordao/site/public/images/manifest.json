@@ -1,0 +1,2165 @@
+{
+  "geradoEm": "2026-09-08T19:55:57.872Z",
+  "imagens": {
+    "audi-rs5-capa-420.webp": {
+      "origem": "audi-rs5-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "audi-rs5-capa-840.webp": {
+      "origem": "audi-rs5-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "audi-rs5-retrato-720.webp": {
+      "origem": "audi-rs5-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "audi-rs5-retrato-1440.webp": {
+      "origem": "audi-rs5-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "audi-rs5-tira-1-320.webp": {
+      "origem": "audi-rs5-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "audi-rs5-tira-1-640.webp": {
+      "origem": "audi-rs5-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "audi-rs5-tira-2-320.webp": {
+      "origem": "audi-rs5-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "audi-rs5-tira-2-640.webp": {
+      "origem": "audi-rs5-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "audi-rs5-tira-3-320.webp": {
+      "origem": "audi-rs5-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "audi-rs5-tira-3-640.webp": {
+      "origem": "audi-rs5-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "audi-rs5-tira-4-320.webp": {
+      "origem": "audi-rs5-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "audi-rs5-tira-4-640.webp": {
+      "origem": "audi-rs5-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "audi-rs5-tira-5-320.webp": {
+      "origem": "audi-rs5-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "audi-rs5-tira-5-640.webp": {
+      "origem": "audi-rs5-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-m2-capa-420.webp": {
+      "origem": "bmw-m2-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "bmw-m2-capa-840.webp": {
+      "origem": "bmw-m2-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "bmw-m2-retrato-720.webp": {
+      "origem": "bmw-m2-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "bmw-m2-retrato-1440.webp": {
+      "origem": "bmw-m2-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "bmw-m2-tira-1-320.webp": {
+      "origem": "bmw-m2-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-m2-tira-1-640.webp": {
+      "origem": "bmw-m2-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-m2-tira-2-320.webp": {
+      "origem": "bmw-m2-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-m2-tira-2-640.webp": {
+      "origem": "bmw-m2-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-m2-tira-3-320.webp": {
+      "origem": "bmw-m2-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-m2-tira-3-640.webp": {
+      "origem": "bmw-m2-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-m2-tira-4-320.webp": {
+      "origem": "bmw-m2-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-m2-tira-4-640.webp": {
+      "origem": "bmw-m2-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-m2-tira-5-320.webp": {
+      "origem": "bmw-m2-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-m2-tira-5-640.webp": {
+      "origem": "bmw-m2-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x1-capa-420.webp": {
+      "origem": "bmw-x1-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "bmw-x1-capa-840.webp": {
+      "origem": "bmw-x1-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "bmw-x1-retrato-720.webp": {
+      "origem": "bmw-x1-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "bmw-x1-retrato-1440.webp": {
+      "origem": "bmw-x1-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "bmw-x1-tira-1-320.webp": {
+      "origem": "bmw-x1-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x1-tira-1-640.webp": {
+      "origem": "bmw-x1-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x1-tira-2-320.webp": {
+      "origem": "bmw-x1-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x1-tira-2-640.webp": {
+      "origem": "bmw-x1-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x1-tira-3-320.webp": {
+      "origem": "bmw-x1-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x1-tira-3-640.webp": {
+      "origem": "bmw-x1-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x1-tira-4-320.webp": {
+      "origem": "bmw-x1-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x1-tira-4-640.webp": {
+      "origem": "bmw-x1-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x1-tira-5-320.webp": {
+      "origem": "bmw-x1-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x1-tira-5-640.webp": {
+      "origem": "bmw-x1-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x4-capa-420.webp": {
+      "origem": "bmw-x4-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "bmw-x4-capa-840.webp": {
+      "origem": "bmw-x4-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "bmw-x4-retrato-720.webp": {
+      "origem": "bmw-x4-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "bmw-x4-retrato-1440.webp": {
+      "origem": "bmw-x4-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "bmw-x4-tira-1-320.webp": {
+      "origem": "bmw-x4-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x4-tira-1-640.webp": {
+      "origem": "bmw-x4-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x4-tira-2-320.webp": {
+      "origem": "bmw-x4-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x4-tira-2-640.webp": {
+      "origem": "bmw-x4-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x4-tira-3-320.webp": {
+      "origem": "bmw-x4-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x4-tira-3-640.webp": {
+      "origem": "bmw-x4-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x4-tira-4-320.webp": {
+      "origem": "bmw-x4-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x4-tira-4-640.webp": {
+      "origem": "bmw-x4-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x4-tira-5-320.webp": {
+      "origem": "bmw-x4-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x4-tira-5-640.webp": {
+      "origem": "bmw-x4-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2023-capa-420.webp": {
+      "origem": "bmw-x6-2023-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2134
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "bmw-x6-2023-capa-840.webp": {
+      "origem": "bmw-x6-2023-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2134
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "bmw-x6-2023-retrato-720.webp": {
+      "origem": "bmw-x6-2023-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2134
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "bmw-x6-2023-retrato-1440.webp": {
+      "origem": "bmw-x6-2023-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2134
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "bmw-x6-2023-tira-1-320.webp": {
+      "origem": "bmw-x6-2023-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2023-tira-1-640.webp": {
+      "origem": "bmw-x6-2023-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2023-tira-2-320.webp": {
+      "origem": "bmw-x6-2023-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2023-tira-2-640.webp": {
+      "origem": "bmw-x6-2023-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2023-tira-3-320.webp": {
+      "origem": "bmw-x6-2023-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2023-tira-3-640.webp": {
+      "origem": "bmw-x6-2023-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2023-tira-4-320.webp": {
+      "origem": "bmw-x6-2023-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2023-tira-4-640.webp": {
+      "origem": "bmw-x6-2023-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2023-tira-5-320.webp": {
+      "origem": "bmw-x6-2023-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2023-tira-5-640.webp": {
+      "origem": "bmw-x6-2023-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2025-capa-420.webp": {
+      "origem": "bmw-x6-2025-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "bmw-x6-2025-capa-840.webp": {
+      "origem": "bmw-x6-2025-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "bmw-x6-2025-retrato-720.webp": {
+      "origem": "bmw-x6-2025-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "bmw-x6-2025-retrato-1440.webp": {
+      "origem": "bmw-x6-2025-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "bmw-x6-2025-tira-1-320.webp": {
+      "origem": "bmw-x6-2025-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2025-tira-1-640.webp": {
+      "origem": "bmw-x6-2025-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2025-tira-2-320.webp": {
+      "origem": "bmw-x6-2025-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2025-tira-2-640.webp": {
+      "origem": "bmw-x6-2025-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2025-tira-3-320.webp": {
+      "origem": "bmw-x6-2025-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2025-tira-3-640.webp": {
+      "origem": "bmw-x6-2025-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2025-tira-4-320.webp": {
+      "origem": "bmw-x6-2025-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2025-tira-4-640.webp": {
+      "origem": "bmw-x6-2025-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2025-tira-5-320.webp": {
+      "origem": "bmw-x6-2025-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bmw-x6-2025-tira-5-640.webp": {
+      "origem": "bmw-x6-2025-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bronco-badlands-capa-420.webp": {
+      "origem": "bronco-badlands-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "bronco-badlands-capa-840.webp": {
+      "origem": "bronco-badlands-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "bronco-badlands-retrato-720.webp": {
+      "origem": "bronco-badlands-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "bronco-badlands-retrato-1440.webp": {
+      "origem": "bronco-badlands-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "bronco-badlands-tira-1-320.webp": {
+      "origem": "bronco-badlands-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bronco-badlands-tira-1-640.webp": {
+      "origem": "bronco-badlands-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bronco-badlands-tira-2-320.webp": {
+      "origem": "bronco-badlands-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bronco-badlands-tira-2-640.webp": {
+      "origem": "bronco-badlands-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bronco-badlands-tira-3-320.webp": {
+      "origem": "bronco-badlands-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bronco-badlands-tira-3-640.webp": {
+      "origem": "bronco-badlands-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bronco-badlands-tira-4-320.webp": {
+      "origem": "bronco-badlands-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bronco-badlands-tira-4-640.webp": {
+      "origem": "bronco-badlands-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "bronco-badlands-tira-5-320.webp": {
+      "origem": "bronco-badlands-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "bronco-badlands-tira-5-640.webp": {
+      "origem": "bronco-badlands-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "corvette-stingray-capa-420.webp": {
+      "origem": "corvette-stingray-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "corvette-stingray-capa-840.webp": {
+      "origem": "corvette-stingray-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "corvette-stingray-retrato-720.webp": {
+      "origem": "corvette-stingray-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "corvette-stingray-retrato-1440.webp": {
+      "origem": "corvette-stingray-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "corvette-stingray-tira-1-320.webp": {
+      "origem": "corvette-stingray-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "corvette-stingray-tira-1-640.webp": {
+      "origem": "corvette-stingray-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "corvette-stingray-tira-2-320.webp": {
+      "origem": "corvette-stingray-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "corvette-stingray-tira-2-640.webp": {
+      "origem": "corvette-stingray-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "corvette-stingray-tira-3-320.webp": {
+      "origem": "corvette-stingray-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "corvette-stingray-tira-3-640.webp": {
+      "origem": "corvette-stingray-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "corvette-stingray-tira-4-320.webp": {
+      "origem": "corvette-stingray-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "corvette-stingray-tira-4-640.webp": {
+      "origem": "corvette-stingray-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "corvette-stingray-tira-5-320.webp": {
+      "origem": "corvette-stingray-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "corvette-stingray-tira-5-640.webp": {
+      "origem": "corvette-stingray-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "jeep-commander-capa-420.webp": {
+      "origem": "jeep-commander-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "jeep-commander-capa-840.webp": {
+      "origem": "jeep-commander-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "jeep-commander-retrato-720.webp": {
+      "origem": "jeep-commander-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "jeep-commander-retrato-1440.webp": {
+      "origem": "jeep-commander-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "jeep-commander-tira-1-320.webp": {
+      "origem": "jeep-commander-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "jeep-commander-tira-1-640.webp": {
+      "origem": "jeep-commander-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "jeep-commander-tira-2-320.webp": {
+      "origem": "jeep-commander-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "jeep-commander-tira-2-640.webp": {
+      "origem": "jeep-commander-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "jeep-commander-tira-3-320.webp": {
+      "origem": "jeep-commander-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "jeep-commander-tira-3-640.webp": {
+      "origem": "jeep-commander-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "mercedes-glc300-capa-420.webp": {
+      "origem": "mercedes-glc300-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "mercedes-glc300-capa-840.webp": {
+      "origem": "mercedes-glc300-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "mercedes-glc300-retrato-720.webp": {
+      "origem": "mercedes-glc300-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "mercedes-glc300-retrato-1440.webp": {
+      "origem": "mercedes-glc300-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "mercedes-glc300-tira-1-320.webp": {
+      "origem": "mercedes-glc300-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "mercedes-glc300-tira-1-640.webp": {
+      "origem": "mercedes-glc300-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "mercedes-glc300-tira-2-320.webp": {
+      "origem": "mercedes-glc300-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "mercedes-glc300-tira-2-640.webp": {
+      "origem": "mercedes-glc300-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "mercedes-glc300-tira-3-320.webp": {
+      "origem": "mercedes-glc300-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "mercedes-glc300-tira-3-640.webp": {
+      "origem": "mercedes-glc300-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "mercedes-glc300-tira-4-320.webp": {
+      "origem": "mercedes-glc300-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "mercedes-glc300-tira-4-640.webp": {
+      "origem": "mercedes-glc300-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "mercedes-glc300-tira-5-320.webp": {
+      "origem": "mercedes-glc300-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "mercedes-glc300-tira-5-640.webp": {
+      "origem": "mercedes-glc300-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2844
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "mustang-dark-horse-capa-420.webp": {
+      "origem": "mustang-dark-horse-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "mustang-dark-horse-capa-840.webp": {
+      "origem": "mustang-dark-horse-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "mustang-dark-horse-retrato-720.webp": {
+      "origem": "mustang-dark-horse-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "mustang-dark-horse-retrato-1440.webp": {
+      "origem": "mustang-dark-horse-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "mustang-dark-horse-tira-1-320.webp": {
+      "origem": "mustang-dark-horse-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "mustang-dark-horse-tira-1-640.webp": {
+      "origem": "mustang-dark-horse-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "mustang-dark-horse-tira-2-320.webp": {
+      "origem": "mustang-dark-horse-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "mustang-dark-horse-tira-2-640.webp": {
+      "origem": "mustang-dark-horse-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "mustang-dark-horse-tira-3-320.webp": {
+      "origem": "mustang-dark-horse-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "mustang-dark-horse-tira-3-640.webp": {
+      "origem": "mustang-dark-horse-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "mustang-dark-horse-tira-4-320.webp": {
+      "origem": "mustang-dark-horse-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "mustang-dark-horse-tira-4-640.webp": {
+      "origem": "mustang-dark-horse-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "mustang-dark-horse-tira-5-320.webp": {
+      "origem": "mustang-dark-horse-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "mustang-dark-horse-tira-5-640.webp": {
+      "origem": "mustang-dark-horse-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "porsche-718-capa-420.webp": {
+      "origem": "porsche-718-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "porsche-718-capa-840.webp": {
+      "origem": "porsche-718-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "porsche-718-retrato-720.webp": {
+      "origem": "porsche-718-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "porsche-718-retrato-1440.webp": {
+      "origem": "porsche-718-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "porsche-718-tira-1-320.webp": {
+      "origem": "porsche-718-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "porsche-718-tira-1-640.webp": {
+      "origem": "porsche-718-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "porsche-718-tira-2-320.webp": {
+      "origem": "porsche-718-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "porsche-718-tira-2-640.webp": {
+      "origem": "porsche-718-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "porsche-718-tira-3-320.webp": {
+      "origem": "porsche-718-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "porsche-718-tira-3-640.webp": {
+      "origem": "porsche-718-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "porsche-718-tira-4-320.webp": {
+      "origem": "porsche-718-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "porsche-718-tira-4-640.webp": {
+      "origem": "porsche-718-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "porsche-718-tira-5-320.webp": {
+      "origem": "porsche-718-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "porsche-718-tira-5-640.webp": {
+      "origem": "porsche-718-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "porsche-911-capa-420.webp": {
+      "origem": "porsche-911-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 420,
+        "h": 560
+      },
+      "slotCss": 420
+    },
+    "porsche-911-capa-840.webp": {
+      "origem": "porsche-911-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 840,
+        "h": 1120
+      },
+      "slotCss": 420
+    },
+    "porsche-911-retrato-720.webp": {
+      "origem": "porsche-911-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 720,
+        "h": 960
+      },
+      "slotCss": 720
+    },
+    "porsche-911-retrato-1440.webp": {
+      "origem": "porsche-911-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1440,
+        "h": 1920
+      },
+      "slotCss": 720
+    },
+    "porsche-911-tira-1-320.webp": {
+      "origem": "porsche-911-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "porsche-911-tira-1-640.webp": {
+      "origem": "porsche-911-01.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "porsche-911-tira-2-320.webp": {
+      "origem": "porsche-911-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "porsche-911-tira-2-640.webp": {
+      "origem": "porsche-911-02.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "porsche-911-tira-3-320.webp": {
+      "origem": "porsche-911-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "porsche-911-tira-3-640.webp": {
+      "origem": "porsche-911-03.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "porsche-911-tira-4-320.webp": {
+      "origem": "porsche-911-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "porsche-911-tira-4-640.webp": {
+      "origem": "porsche-911-04.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "porsche-911-tira-5-320.webp": {
+      "origem": "porsche-911-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 320,
+        "h": 427
+      },
+      "slotCss": 320
+    },
+    "porsche-911-tira-5-640.webp": {
+      "origem": "porsche-911-05.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 640,
+        "h": 853
+      },
+      "slotCss": 320
+    },
+    "heroi-760.webp": {
+      "origem": "corvette-stingray-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 760,
+        "h": 1013
+      },
+      "slotCss": 760
+    },
+    "heroi-1520.webp": {
+      "origem": "corvette-stingray-00.jpg",
+      "nativa": {
+        "w": 1600,
+        "h": 2133
+      },
+      "exportada": {
+        "w": 1520,
+        "h": 2027
+      },
+      "slotCss": 760
+    }
+  }
+}

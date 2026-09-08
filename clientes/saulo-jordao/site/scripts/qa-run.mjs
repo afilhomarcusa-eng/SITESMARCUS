@@ -1,0 +1,103 @@
+/**
+ * Sobe o build de produção numa porta própria, roda o QA e derruba o servidor.
+ *
+ * O build acontece com nenhum servidor em pé. Reconstruir por baixo de um
+ * servidor de produção rodando deixa a pasta de saída inconsistente, e o
+ * sintoma engana: o HTML continua carregando enquanto a folha de estilo passa a
+ * dar erro, então a página aparece sem estilo nenhum e qualquer medida tirada
+ * depois disso está errada.
+ *
+ *   npm run qa           build novo e QA
+ *   npm run qa:rapido    QA contra o build que já existe
+ */
+
+import { spawn } from "node:child_process";
+import { setTimeout as esperar } from "node:timers/promises";
+
+const PORTA = process.env.QA_PORTA ?? "3314";
+const BASE = `http://127.0.0.1:${PORTA}`;
+const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+const npx = process.platform === "win32" ? "npx.cmd" : "npx";
+
+function rodar(cmd, args, opcoes = {}) {
+  return new Promise((ok, erro) => {
+    const p = spawn(cmd, args, { stdio: "inherit", shell: true, ...opcoes });
+    p.on("exit", (c) => (c === 0 ? ok() : erro(new Error(`${cmd} saiu com ${c}`))));
+    p.on("error", erro);
+  });
+}
+
+/**
+ * Mata qualquer coisa que já esteja segurando a porta.
+ *
+ * Sem isto, um servidor sobrando de uma execução anterior continua respondendo,
+ * o novo nem sobe, e o QA acaba medindo o build velho. O sintoma engana:
+ * parece defeito do site.
+ */
+async function liberarPorta() {
+  await new Promise((ok) => {
+    const cmd =
+      process.platform === "win32"
+        ? `for /f "tokens=5" %a in ('netstat -ano ^| findstr :${PORTA} ^| findstr LISTENING') do taskkill /F /PID %a`
+        : `lsof -ti tcp:${PORTA} | xargs -r kill -9`;
+    const p = spawn(cmd, { stdio: "ignore", shell: true });
+    p.on("exit", ok);
+    p.on("error", ok);
+  });
+  await esperar(700);
+}
+
+async function noAr() {
+  for (let i = 0; i < 60; i++) {
+    try {
+      const r = await fetch(BASE, { method: "HEAD" });
+      if (r.ok || r.status < 500) return true;
+    } catch {
+      /* ainda subindo */
+    }
+    await esperar(500);
+  }
+  return false;
+}
+
+const pular = process.argv.includes("--sem-build");
+let servidor;
+
+try {
+  await liberarPorta();
+
+  if (!pular) {
+    console.log("\n  build de produção, sem servidor no ar\n");
+    await rodar(npm, ["run", "build"]);
+  }
+
+  console.log(`\n  subindo em ${BASE}\n`);
+  servidor = spawn(npx, ["next", "start", "-p", PORTA], {
+    stdio: "ignore",
+    shell: true,
+    detached: process.platform !== "win32",
+  });
+
+  if (!(await noAr())) throw new Error("o servidor não subiu a tempo");
+
+  // Confere que quem respondeu é este site, e não sobra de outra execução.
+  // Medir o servidor errado é pior do que não medir.
+  const marca = await (await fetch(BASE + "/")).text();
+  if (!marca.includes("Saulo Jord")) {
+    throw new Error("quem respondeu na porta não é este site");
+  }
+
+  await rodar("node", ["scripts/qa.mjs"], { env: { ...process.env, QA_BASE: BASE } });
+} finally {
+  if (servidor?.pid) {
+    if (process.platform === "win32") {
+      spawn("taskkill", ["/pid", String(servidor.pid), "/T", "/F"], { stdio: "ignore" });
+    } else {
+      try {
+        process.kill(-servidor.pid);
+      } catch {
+        servidor.kill("SIGTERM");
+      }
+    }
+  }
+}
