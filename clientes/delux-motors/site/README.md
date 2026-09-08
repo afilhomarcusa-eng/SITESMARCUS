@@ -9,7 +9,7 @@ Tailwind, um shader de céu em WebGL, Lenis para a rolagem.
 npm install
 npm run dev          # desenvolvimento em localhost:3000
 npm run build        # build de produção
-npm run qa           # build + navegador de verdade + 323 verificações
+npm run qa           # build + navegador de verdade + 350 verificações
 npm run perf         # LCP, CLS e peso, com o servidor já no ar
 ```
 
@@ -24,6 +24,7 @@ verificações e grava as telas em `qa/`. **As telas são para olhar.**
 | `/` | Página de venda: herói, os três serviços, estoque, a loja, como chegar, dúvidas |
 | `/estoque` | O catálogo, separado, com busca, filtro e ordenação |
 | `/estoque/[slug]` | Um carro |
+| `/procuro` | Diga o que você procura. Monta a mensagem e abre o WhatsApp |
 | `/admin` | Gerência do estoque |
 
 A home é organizada em torno de **três portas**, e não fui eu que decidi: as
@@ -52,11 +53,22 @@ carro.
 
 ### A abertura
 
-O dia chegando. A tela começa numa luz baixa e morna, a claridade sobe pela borda
-de baixo, o céu abre, a marca se apresenta no meio da tela e recolhe, e o carro
-aparece embaixo do céu que já estava lá. Não existe corte entre abertura e herói:
-é a mesma imagem em dois momentos. Roda uma vez por sessão e o primeiro gesto
-encerra.
+O dia chegando. A cena já está montada e pintada, e o que existe por cima é um
+véu escuro que recua de baixo para cima, como a luz entrando. A marca se
+apresenta no meio da tela e recolhe. Roda uma vez por sessão, dura 3,2s e o
+primeiro gesto encerra.
+
+**O conteúdo fica em opacidade cheia o tempo todo**, inclusive a foto. Quem
+esconde é o véu. Isso resolve duas coisas de uma vez: o navegador conta a
+pintura para o LCP e o elemento está pintado desde o começo, então a abertura
+pode ser longa sem custar carregamento; e não existe uma segunda animação para
+sair de sincronia com esta.
+
+Isso não foi de primeira. A abertura já teve dois relógios, um no herói e outro
+no céu, e eles começavam em momentos diferentes: o do DOM na montagem, o do céu
+quando o pacote do three baixava. O conteúdo abria antes de o céu terminar. A
+saída não foi sincronizar dois relógios, foi ter um só. O céu hoje desenha
+sempre o estado assentado e pode chegar quando quiser.
 
 O céu é um shader porque um degradê desse tamanho em CSS mostra faixas: o
 navegador interpola em 8 bits sem ruído. Num degradê quase todo branco isso
@@ -125,6 +137,26 @@ filtro.** Quatro carros estão sem combustível na legenda de origem e dois sem
 tração. Sem essa regra o filtro ganhava uma pílula em branco ao lado de
 "Híbrido", e o de câmbio aparecia com "Automático" sozinho, prometendo separar
 algo que não separa.
+
+## O formulário de interesse
+
+`/procuro` é a página para quem não achou no estoque. Todos os campos são
+opcionais, e é assim de propósito: campo obrigatório em formulário de interesse
+serve para o visitante desistir no meio.
+
+**Ele não envia nada para lugar nenhum.** A loja não tem servidor nem CRM, e um
+formulário que diz "enviado com sucesso" sem mandar nada é pior do que não
+existir: o cliente perde o contato e nunca fica sabendo. Aqui os campos montam
+uma mensagem, o visitante lê ela inteira ao lado enquanto digita, e o botão abre
+o WhatsApp com o texto pronto.
+
+Campo em branco não vira linha na mensagem. Uma mensagem cheia de "não
+informado" faz o visitante parecer desorganizado e a loja perder tempo lendo
+linha vazia.
+
+O QA confere o que o briefing pede de um formulário: que **todo campo digitado
+chegue ao destino**, tanto na prévia quanto no link. Digitar e o valor não
+aparecer é um defeito que passa despercebido, porque a tela continua bonita.
 
 ### Alertas
 
@@ -202,6 +234,13 @@ público, com o preço formatado, e carro sem foto não herdando a lataria de ou
 A porta da gerência, pelos dois lados: sem credencial dá 401, com a errada
 também, só a certa entra, a senha não aparece na resposta do servidor, e o
 resto do site continua aberto.
+
+A abertura: a foto já pintada aos 450ms, o véu ainda cobrindo aos 450ms, e o véu
+saindo entre 2 e 6 segundos. Os três nasceram de defeitos reais, um deles o
+relatado pelo cliente, de a cena abrir antes de a abertura terminar.
+
+O formulário: com tudo em branco o botão já abre conversa, nenhum campo é
+obrigatório, e cada valor digitado aparece na prévia e no link.
 
 Quando um defeito for corrigido, a verificação dele entra no mesmo passo. Foi
 assim que entraram a do título cortado, a da revelação presa fora da home, a do

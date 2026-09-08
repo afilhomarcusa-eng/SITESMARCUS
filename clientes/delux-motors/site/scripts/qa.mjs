@@ -193,7 +193,7 @@ async function copy(navegador) {
     viewport: { width: 1440, height: 900 },
     httpCredentials: CREDENCIAL,
   });
-  for (const rota of ["/", "/estoque", "/admin"]) {
+  for (const rota of ["/", "/estoque", "/procuro", "/admin"]) {
     const { pagina } = await abrir(ctx, rota);
     const texto = await pagina.evaluate(() => document.body.innerText);
 
@@ -346,37 +346,53 @@ async function abertura(navegador) {
   }
   await pagina.close();
 
-  // Quanto tempo até a loja estar na tela.
-  //
-  // A abertura segura a pintura do maior elemento, então ela é o LCP na
-  // prática. Sem este teste a sequência cresce de novo sem ninguém notar: já
-  // esteve em 4,2s e em 2,9s, as duas reprovando o alvo.
-  const pTempo = await ctx.newPage();
-  const t0 = Date.now();
-  await pTempo.goto(BASE + "/", { waitUntil: "domcontentloaded" });
-  await pTempo
-    .locator("[data-foto-carro]")
-    .evaluate(
-      (e) =>
-        new Promise((ok) => {
-          const ver = () =>
-            parseFloat(getComputedStyle(e).opacity) >= 0.95
-              ? ok(true)
-              : requestAnimationFrame(ver);
-          ver();
-        }),
-      undefined,
-      { timeout: 12000 },
-    )
-    .catch(() => {});
-  const ateAparecer = Date.now() - t0;
-  checar(
-    ateAparecer <= 2500,
-    "o carro aparece em até 2,5s na primeira visita",
-    `levou ${ateAparecer}ms`,
-  );
-  await pTempo.close();
+  /* ------------------------------------------------------ a abertura em si */
 
+  // Três coisas precisam ser verdade, e as três já falharam alguma vez.
+  //
+  // 1. A cena tem que estar PINTADA desde o começo, com a foto em opacidade
+  //    cheia. É o véu que esconde. Se alguém voltar a animar a opacidade do
+  //    conteúdo, o LCP passa a medir o fim da abertura, e já mediu 4,2s assim.
+  //
+  // 2. A abertura tem que estar acontecendo, ou seja o véu tem que estar lá
+  //    cobrindo, e não a cena aberta com o céu ainda animando por trás. Foi
+  //    esse o defeito relatado: dois relógios começando em momentos
+  //    diferentes, o conteúdo abrindo antes.
+  //
+  // 3. A abertura tem que TERMINAR. Véu que não sai é uma tela preta.
+  const pAb = await ctx.newPage();
+  const t0 = Date.now();
+  await pAb.goto(BASE + "/", { waitUntil: "domcontentloaded" });
+  await pAb.waitForTimeout(450);
+
+  const cedo = await pAb.evaluate(() => {
+    const foto = document.querySelector("[data-foto-carro]");
+    return {
+      opacidadeFoto: foto ? parseFloat(getComputedStyle(foto).opacity) : -1,
+      temVeu: !!document.querySelector("[data-abertura]"),
+    };
+  });
+  checar(
+    cedo.opacidadeFoto >= 0.99,
+    "a foto do herói já está pintada aos 450ms",
+    "opacidade " + cedo.opacidadeFoto,
+  );
+  checar(cedo.temVeu, "aos 450ms a abertura ainda está cobrindo a cena");
+
+  await pAb
+    .waitForFunction(() => !document.querySelector("[data-abertura]"), undefined, {
+      timeout: 12000,
+    })
+    .catch(() => {});
+  const duracao = Date.now() - t0;
+  checar(
+    duracao >= 2000 && duracao <= 6000,
+    "a abertura dura entre 2 e 6 segundos e termina",
+    "levou " + duracao + "ms",
+  );
+  await pAb.close();
+
+  // Uma vez por sessão.
   // Uma vez por sessão.
   const p2 = await ctx.newPage();
   await p2.goto(BASE + "/", { waitUntil: "networkidle" });
@@ -450,7 +466,12 @@ async function abertura(navegador) {
     const cta = document.querySelector("[data-cta='heroi']");
     const foto = document.querySelector("[data-foto-carro]");
     const op = (e) => (e ? parseFloat(getComputedStyle(e).opacity) : -1);
-    return { h1: op(h1), cta: op(cta?.parentElement?.parentElement ?? cta), foto: op(foto) };
+    return {
+      h1: op(h1),
+      cta: op(cta?.parentElement?.parentElement ?? cta),
+      foto: op(foto),
+      veu: !!document.querySelector("[data-abertura]"),
+    };
   });
   checar(
     heroiSem3d.h1 >= 0.99,
@@ -462,6 +483,11 @@ async function abertura(navegador) {
     "sem WebGL a foto do carro aparece",
     `opacidade ${heroiSem3d.foto}`,
   );
+  // O que de fato importa aqui: sem o three, a abertura ainda TERMINA. Se ela
+  // dependesse dele, o véu ficaria preso e o site inteiro sumia atrás de uma
+  // tela preta, sem erro nenhum na tela.
+  checar(!heroiSem3d.veu, "sem WebGL a abertura termina e o véu sai");
+
   await p3d.screenshot({ path: path.join(SAIDA, "sem-webgl-1440.png"), fullPage: false });
   await p3d.close();
   await ctx3d.close();
@@ -724,6 +750,99 @@ async function estoqueEGerencia(navegador) {
   await ctx.close();
 }
 
+/* --------------------------------------------------------- diga o que procura */
+
+/**
+ * O formulário de interesse.
+ *
+ * A regra que ele tem que cumprir: nenhum formulário pode fingir que enviou. A
+ * loja não tem servidor, então este aqui monta uma mensagem, mostra ela inteira
+ * antes de mandar, e o botão abre o WhatsApp com o texto pronto.
+ *
+ * O teste confere o que o briefing pede de um formulário: que todo campo
+ * preenchido chegue ao destino. Digitar e o valor não aparecer na mensagem é um
+ * defeito que passa despercebido, porque a tela continua bonita.
+ */
+async function procura(navegador) {
+  const ctx = await navegador.newContext({ viewport: { width: 1440, height: 1000 } });
+  const { pagina, erros } = await abrir(ctx, "/procuro");
+  await rolarTudo(pagina);
+  checar(erros.length === 0, "a página de procura não tem erro de console", erros.join(" | "));
+  checar((await pagina.locator("h1").count()) === 1, "a página de procura tem um h1");
+
+  const presasProcura = await pagina.evaluate(() =>
+    [...document.querySelectorAll("[data-revela], .mascara")]
+      .filter((e) => parseFloat(getComputedStyle(e).opacity) < 0.9)
+      .map((e) => e.textContent.trim().slice(0, 30)),
+  );
+  checar(
+    presasProcura.length === 0,
+    "nenhuma revelação presa em /procuro",
+    presasProcura.slice(0, 3).join(" | "),
+  );
+
+  // Nada é obrigatório: o botão já funciona com o formulário em branco.
+  const vazio = await pagina.locator("[data-cta='procuro']").getAttribute("href");
+  checar(
+    !!vazio && vazio.includes("wa.me/"),
+    "com o formulário em branco o botão já abre uma conversa",
+    vazio ?? "",
+  );
+  const semNada = await pagina.locator("[data-previa]").innerText();
+  checar(
+    semNada.length > 20,
+    "com o formulário em branco a mensagem ainda faz sentido",
+    semNada,
+  );
+  checar(
+    (await pagina.locator("form [required]").count()) === 0,
+    "nenhum campo do formulário é obrigatório",
+  );
+
+  // Preenche e confere que TUDO chega na mensagem e no link.
+  const campos = pagina.locator("form input[type='text'], form textarea");
+  await campos.nth(0).fill("Marcus");
+  await campos.nth(1).fill("Uma picape para trabalho");
+  await campos.nth(2).fill("2019");
+  await campos.nth(3).fill("Corolla 2015 com 90 mil km");
+  await pagina.locator("form select").nth(0).selectOption("RAM");
+  await pagina.locator("form select").nth(1).selectOption("De 120 a 200 mil");
+  await pagina.waitForTimeout(300);
+
+  const previa = await pagina.locator("[data-previa]").innerText();
+  const href = await pagina.locator("[data-cta='procuro']").getAttribute("href");
+  const noLink = decodeURIComponent((href ?? "").split("text=")[1] ?? "");
+
+  for (const [rotulo, valor] of [
+    ["nome", "Marcus"],
+    ["o que procura", "picape para trabalho"],
+    ["ano", "2019"],
+    ["troca", "Corolla 2015"],
+    ["marca", "RAM"],
+    ["faixa de preço", "120 a 200 mil"],
+  ]) {
+    checar(previa.includes(valor), `a prévia mostra ${rotulo}`, previa.split(String.fromCharCode(10)).join(" | "));
+    checar(noLink.includes(valor), `o link do WhatsApp leva ${rotulo}`, noLink.split(String.fromCharCode(10)).join(" | "));
+  }
+
+  checar(
+    (href ?? "").includes("wa.me/5571983402324"),
+    "o formulário aponta para o número da loja",
+    href ?? "",
+  );
+
+  // Campo em branco não vira linha vazia na mensagem.
+  checar(
+    !/:\s*$/m.test(previa) && !previa.includes("não informado"),
+    "campo em branco não vira linha vazia na mensagem",
+    previa.split(String.fromCharCode(10)).join(" | "),
+  );
+
+  await pagina.screenshot({ path: path.join(SAIDA, "procuro-1440.png"), fullPage: true });
+  await pagina.close();
+  await ctx.close();
+}
+
 /* ------------------------------------------------------- a porta da gerência */
 
 /**
@@ -847,6 +966,7 @@ async function main() {
     await copy(navegador);
     await conversao(navegador);
     await abertura(navegador);
+    await procura(navegador);
     await porta(navegador);
     await estoqueEGerencia(navegador);
     await retratos(navegador);

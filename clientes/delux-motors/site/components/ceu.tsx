@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { DURACAO_ABERTURA } from "@/lib/abertura";
 
 /**
  * O céu.
@@ -9,12 +8,17 @@ import { DURACAO_ABERTURA } from "@/lib/abertura";
  * É o céu de Salvador que aparece nas fotos do estoque, em preto e branco,
  * como o resto da interface. Os carros deles são fotografados de dia, no pátio
  * da loja, com o céu aberto atrás. Este shader reconstrói aquela luz sem a cor,
- * e ele é ao mesmo tempo o fundo do herói e a abertura.
+ * e ele é o fundo do herói.
  *
- * A abertura é o dia chegando: a tela começa numa luz baixa, a
- * claridade sobe pela borda de baixo e o céu abre até assentar, que é quando o
- * site já está lá. Não existe corte entre abertura e herói, é a mesma imagem em
- * dois momentos.
+ * Este componente NÃO participa da abertura, e isso é de propósito. Ele
+ * desenha sempre o céu assentado, e pode chegar quando quiser: o pacote do
+ * three é assíncrono e ninguém sabe quando ele baixa. Enquanto não chega, o
+ * degradê de CSS que está no fundo mostra o mesmo céu, então a troca não
+ * aparece.
+ *
+ * Quem faz a abertura é o véu do herói, com o relógio de lib/abertura.ts. Já
+ * tentamos animar o céu junto e o resultado foi os dois começarem em momentos
+ * diferentes, com o conteúdo abrindo antes de o céu terminar.
  *
  * O degradê termina exatamente na cor de fundo da página, então a emenda entre
  * o herói e a primeira seção não aparece.
@@ -24,15 +28,6 @@ import { DURACAO_ABERTURA } from "@/lib/abertura";
  * antes da quantização e o degradê fica limpo, que é a diferença entre parecer
  * um céu e parecer um plano de fundo.
  */
-
-type Props = {
-  /**
-   * Roda a subida da claridade. Quem decide isso é o herói, em lib/abertura.ts,
-   * porque o relógio da abertura não pode depender do pacote do three chegar.
-   * Aqui só se anima o céu.
-   */
-  abertura: boolean;
-};
 
 const VERT = /* glsl */ `
   varying vec2 vUv;
@@ -47,7 +42,6 @@ const FRAG = /* glsl */ `
   varying vec2 vUv;
 
   uniform float uTempo;
-  uniform float uSobe;   // 0 = luz baixa, 1 = dia assentado
   uniform vec2  uRes;
 
   // Sem cor, só luz. Os tons vieram da luminância das fotos do estoque.
@@ -87,8 +81,8 @@ const FRAG = /* glsl */ `
     vec2 uv = vUv;
     float razao = uRes.x / max(uRes.y, 1.0);
 
-    // A claridade sobe durante a abertura e para no lugar dela.
-    float h = mix(-0.35, 0.34, uSobe);
+    // A altura do horizonte. Fixa: o céu não anima, quem anima é o véu.
+    const float h = 0.34;
 
     // Deriva lenta, quase parada. Céu que corre vira protetor de tela.
     vec2 p = vec2(uv.x * razao * 1.5 + uTempo * 0.006, uv.y * 2.2);
@@ -118,16 +112,11 @@ const FRAG = /* glsl */ `
     float grao = hash(uv * uRes + fract(uTempo) * 91.7) - 0.5;
     cor += grao * 0.012;
 
-    // A abertura começa com a luz baixa e abre para o dia. Sem virar sépia:
-    // é a mesma luz, só mais fechada.
-    float luz = smoothstep(0.0, 0.7, uSobe);
-    cor = mix(cor * 0.62, cor, luz);
-
     gl_FragColor = vec4(cor, 1.0);
   }
 `;
 
-export default function Ceu({ abertura }: Props) {
+export default function Ceu() {
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -163,7 +152,6 @@ export default function Ceu({ abertura }: Props) {
         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
         const uniforms = {
           uTempo: { value: 0 },
-          uSobe: { value: abertura ? 0 : 1 },
           uRes: { value: new THREE.Vector2(alvo.clientWidth, alvo.clientHeight) },
         };
         const malha = new THREE.Mesh(
@@ -189,17 +177,6 @@ export default function Ceu({ abertura }: Props) {
         }
         medir();
 
-        // O primeiro gesto encerra a subida, igual ao relógio do herói.
-        let pulou = false;
-        const pular = () => {
-          pulou = true;
-        };
-        if (abertura) {
-          for (const ev of ["pointerdown", "wheel", "keydown", "touchstart"] as const) {
-            window.addEventListener(ev, pular, { once: true, passive: true });
-          }
-        }
-
         let t0 = 0;
         let raf = 0;
         let visivel = true;
@@ -209,19 +186,11 @@ export default function Ceu({ abertura }: Props) {
         });
         obs.observe(alvo);
 
-        // Saída exponencial: sobe rápido e assenta devagar, como luz abrindo.
-        const facil = (x: number) => 1 - Math.pow(1 - x, 3.2);
-
         function quadro(agora: number) {
           raf = requestAnimationFrame(quadro);
           if (!visivel) return;
           if (!t0) t0 = agora;
           uniforms.uTempo.value = (agora - t0) / 1000;
-
-          if (abertura) {
-            const p = pulou ? 1 : Math.min(1, (agora - t0) / DURACAO_ABERTURA);
-            uniforms.uSobe.value = facil(p);
-          }
           renderer.render(cena, camera);
         }
         raf = requestAnimationFrame(quadro);
@@ -232,9 +201,6 @@ export default function Ceu({ abertura }: Props) {
           cancelAnimationFrame(raf);
           obs.disconnect();
           window.removeEventListener("resize", medir);
-          for (const ev of ["pointerdown", "wheel", "keydown", "touchstart"] as const) {
-            window.removeEventListener(ev, pular);
-          }
           malha.geometry.dispose();
           (malha.material as import("three").Material).dispose();
           renderer.dispose();
@@ -249,7 +215,7 @@ export default function Ceu({ abertura }: Props) {
       cancelado = true;
       limpar?.();
     };
-  }, [abertura]);
+  }, []);
 
   return (
     <div

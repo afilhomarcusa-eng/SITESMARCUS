@@ -16,9 +16,15 @@ const MSG = "Olá! Vim pelo site da Delux Motors e queria falar com vocês.";
  * A chegada.
  *
  * A abertura não é uma tela de carregamento na frente do site: é o próprio
- * site num momento anterior. A luz sobe pela borda de baixo, o céu de Salvador
- * abre, a marca se apresenta no meio da tela e recolhe, e o carro aparece
- * embaixo do céu que já estava lá. Nunca há corte.
+ * site num momento anterior. A cena já está montada e pintada, e o que existe
+ * por cima é um véu escuro que recua de baixo para cima, como a luz do dia
+ * entrando. A marca se apresenta no meio da tela e recolhe. Nunca há corte.
+ *
+ * O conteúdo fica em opacidade cheia o tempo todo, inclusive a foto. Quem
+ * esconde é o véu. Isso resolve duas coisas de uma vez: o navegador conta a
+ * pintura para o LCP e o elemento está pintado desde o começo, então a abertura
+ * pode ser longa sem custar carregamento; e não existe segunda animação para
+ * sair de sincronia com esta.
  *
  * O carro do herói é do estoque de verdade e está identificado, com preço e
  * link. Foto de carro em site de revenda sem dizer que carro é vira papel de
@@ -38,9 +44,6 @@ export default function Heroi() {
   // baixava: o tempo de carregar a biblioteca entrava na conta e empurrava o
   // LCP para quase três segundos.
   const [p, setP] = useState(1);
-  // Valor estável: se isto mudasse a cada quadro, o efeito do céu remontaria e
-  // o WebGL seria recriado quadro a quadro.
-  const [rodarAbertura, setRodarAbertura] = useState(false);
   const abriuRef = useRef(false);
 
   /**
@@ -62,10 +65,8 @@ export default function Heroi() {
   useLayoutEffect(() => {
     if (!deveAbrir()) return;
     abriuRef.current = true;
-    /* eslint-disable react-hooks/set-state-in-effect */
-    setRodarAbertura(true);
+    /* eslint-disable-next-line react-hooks/set-state-in-effect */
     setP(0);
-    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   useEffect(() => {
@@ -94,55 +95,38 @@ export default function Heroi() {
     };
   }, []);
 
-  // Os tempos não se sobrepõem e são apertados de propósito. A foto do herói é
-  // o maior elemento da tela, então o momento em que ela aparece É o LCP.
   const trava = (x: number) => Math.max(0, Math.min(1, x));
-  const marcaEntra = trava((p - 0.2) / 0.2);
-  const marcaSai = trava((p - 0.44) / 0.14);
-  const carro = trava((p - 0.48) / 0.2);
-  const conteudo = trava((p - 0.56) / 0.22);
+
+  // A luz sobe da borda de baixo até passar do topo. O véu é o negativo disso.
+  const luz = trava(p / 0.66);
+  // Sobe rápido e assenta devagar, como luz do dia entrando.
+  const subida = 1 - Math.pow(1 - luz, 2.6);
+  const borda = -8 + subida * 128; // em porcentagem da altura da tela
+
+  // A marca entra cedo, segura enquanto a luz sobe, e recolhe no fim.
+  const marcaEntra = trava((p - 0.1) / 0.18);
+  const marcaSai = trava((p - 0.62) / 0.18);
 
   return (
     <section
       id="conteudo"
       className="relative isolate flex min-h-svh flex-col justify-end overflow-hidden pb-10 pt-28 md:pb-14"
     >
-      <Ceu abertura={rodarAbertura} />
+      <Ceu />
 
-      {/* O carro. Painel retrato à direita no desktop, faixa embaixo no
-          celular, com o céu do shader continuando em volta. */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 flex w-full items-end justify-end md:w-[58%]">
-        <img
-          data-foto-carro
-          src={`/images/${DESTAQUE.foto}-1-1280.webp`}
-          alt={`${DESTAQUE.marca} ${DESTAQUE.modelo} ${DESTAQUE.versao} ${DESTAQUE.ano}, no pátio da Delux Motors`}
-          width={1280}
-          height={1697}
-          fetchPriority="high"
-          decoding="async"
-          className="h-[52svh] w-full object-cover object-bottom md:h-[84svh] md:w-auto md:max-w-none"
-          style={{
-            opacity: carro,
-            // Quase sem cor de propósito. No herói a foto é atmosfera, e a cor
-            // fica guardada para o catálogo, onde ela ajuda a escolher carro.
-            filter: "saturate(0.28) contrast(1.05)",
-            transition: "opacity 600ms var(--e-saida)",
-          }}
-        />
-      </div>
+      {/* No celular o carro é um bloco no fluxo, embaixo do texto, e só o topo
+          dele esmaece no céu. No desktop ele é painel à direita e a costura é
+          na horizontal.
 
-      {/* No celular o carro é faixa e a costura com o céu é na vertical. No
-          desktop ele é painel e a costura é na horizontal.
-
-          As duas máscaras vivem aqui, na folha de estilo, e não no style
-          inline do elemento. Estilo inline vence regra de media query, então a
-          máscara do celular ficava valendo também no desktop: o painel não
-          tinha esmaecimento nenhum do lado esquerdo e a emenda com o céu
-          aparecia como uma linha reta atravessando a tela. */}
+          As duas máscaras vivem aqui, na folha de estilo, e não no style inline
+          do elemento. Estilo inline vence regra de media query, então a máscara
+          do celular ficava valendo também no desktop: o painel não tinha
+          esmaecimento nenhum do lado esquerdo e a emenda com o céu aparecia
+          como uma linha reta atravessando a tela. */}
       <style>{`
         [data-foto-carro] {
-          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 16%, #000 40%);
-          mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 16%, #000 40%);
+          -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 12%, #000 30%);
+          mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 12%, #000 30%);
         }
         @media (min-width: 768px) {
           [data-foto-carro] {
@@ -160,38 +144,21 @@ export default function Heroi() {
         }
       `}</style>
 
-      {/* Véu por trás do texto. O céu e o carro são claros e a tinta é escura,
-          então aqui o véu é da cor da página, não sombra. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[15] md:hidden"
-        style={{
-          background:
-            "linear-gradient(to bottom, var(--branco) 0%, rgba(255,255,255,0.94) 40%, rgba(255,255,255,0.48) 58%, transparent 78%)",
-          opacity: conteudo,
-          transition: "opacity 900ms var(--e-saida)",
-        }}
-      />
+      {/* Véu de leitura, só no desktop. Ali a copy fica por cima da foto e
+          precisa de chão. No celular a foto está embaixo do texto, no fluxo, e
+          não há nada para velar. Não é animado: faz parte da composição, não da
+          abertura. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-[15] hidden md:block"
         style={{
           background:
             "linear-gradient(95deg, var(--branco) 0%, rgba(255,255,255,0.94) 34%, rgba(255,255,255,0.45) 56%, transparent 76%)",
-          opacity: conteudo,
-          transition: "opacity 900ms var(--e-saida)",
         }}
       />
 
       {/* o que precisa ser lido */}
-      <div
-        className="casca relative z-20"
-        style={{
-          opacity: conteudo,
-          transform: `translate3d(0, ${(1 - conteudo) * 2.5}rem, 0)`,
-          transition: "opacity 800ms var(--e-saida), transform 800ms var(--e-saida)",
-        }}
-      >
+      <div className="casca relative z-20">
         <div className="max-w-[54ch]">
           <p className="etiqueta mb-5">
             {EMPRESA.bairro} · {EMPRESA.cidade}, {EMPRESA.estado}
@@ -216,7 +183,7 @@ export default function Heroi() {
           <p className="corpo mb-8 max-w-[46ch]">
             Loja de carros na Av. Octávio Mangabeira. A gente compra o seu,
             vende os nossos selecionados e cuida da consignação do começo ao
-            fim. Sem formulário e sem espera: a conversa começa no WhatsApp.
+            fim. A conversa começa no WhatsApp, direto com quem está na loja.
           </p>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
@@ -285,8 +252,34 @@ export default function Heroi() {
           </span>
         </Link>
 
-        {/* No celular, este vão é o espaço do carro. */}
-        <div aria-hidden="true" className="h-[26svh] md:hidden" />
+        {/* O CARRO.
+            No celular é um bloco no fluxo, logo depois da legenda: o texto em
+            cima, a foto embaixo, um debaixo do outro. Antes ele era absoluto
+            também aqui, ancorado no fim da SEÇÃO, que é mais alta que a tela, e
+            brigava com a faixa de dados: sobrava um pedaço do meio da picape
+            cortado pela borda.
+            No desktop volta a ser painel à direita, fora do fluxo. */}
+        <div className="relative -mx-[calc((100vw-var(--casca))/2)] mt-8 md:absolute md:inset-y-0 md:right-0 md:mx-0 md:mt-0 md:flex md:w-[58%] md:items-end md:justify-end">
+          <img
+            data-foto-carro
+            src={`/images/${DESTAQUE.foto}-1-1280.webp`}
+            alt={`${DESTAQUE.marca} ${DESTAQUE.modelo} ${DESTAQUE.versao} ${DESTAQUE.ano}, no pátio da Delux Motors`}
+            width={1280}
+            height={1697}
+            fetchPriority="high"
+            decoding="async"
+            className="h-[38svh] w-full object-cover object-[50%_56%] md:h-[84svh] md:w-auto md:max-w-none md:object-bottom"
+            style={{
+              // Quase sem cor de propósito. No herói a foto é atmosfera, e a
+              // cor fica guardada para o catálogo, onde ajuda a escolher carro.
+              //
+              // Sem animação de opacidade: a foto é o maior elemento da tela e
+              // precisa estar pintada desde o primeiro quadro, senão o LCP passa
+              // a medir o fim da abertura.
+              filter: "saturate(0.28) contrast(1.05)",
+            }}
+          />
+        </div>
 
         <dl className="faixa-dados risco -mx-[calc((100vw-var(--casca))/2)] mt-9 grid grid-cols-2 gap-x-6 gap-y-6 px-[calc((100vw-var(--casca))/2)] pb-6 pt-6 md:mx-0 md:mt-12 md:grid-cols-4 md:gap-x-10 md:px-0 md:pb-0">
           {[
@@ -304,22 +297,45 @@ export default function Heroi() {
         <p className="so-leitor">{HORARIO.domingo}</p>
       </div>
 
-      {/* A marca no meio da tela, só durante a abertura. Fica fora do fluxo e
-          não recebe clique, então nunca fica na frente do botão do cabeçalho. */}
+      {/* A ABERTURA.
+          Um véu escuro cobrindo a cena inteira, que recua de baixo para cima.
+          A cena por baixo já está montada e pintada: o véu só decide quando ela
+          é vista. Sai do fluxo e não recebe clique, então o botão do cabeçalho
+          continua clicável do primeiro quadro ao último. */}
+      {p < 1 ? (
+        <div
+          data-abertura
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 z-40"
+          style={{
+            background: `linear-gradient(to top,
+              transparent ${borda - 26}%,
+              rgba(10,10,10,0.55) ${borda - 9}%,
+              rgba(10,10,10,0.97) ${borda}%,
+              rgba(10,10,10,0.99) 100%)`,
+          }}
+        />
+      ) : null}
+
+      {/* A marca, no meio da tela, só durante a abertura. */}
       {p < 1 ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
+          className="pointer-events-none fixed inset-0 z-40 flex items-center justify-center"
           style={{
             opacity: marcaEntra * (1 - marcaSai),
-            transform: `scale(${1 - marcaSai * 0.22})`,
+            transform: `scale(${1 - marcaSai * 0.14})`,
           }}
         >
-          <p className="cromo display text-center text-[clamp(3rem,13vw,10rem)] leading-none">
+          <p
+            className="display text-center text-[clamp(3rem,13vw,10rem)] leading-none"
+            style={{ color: "var(--branco)" }}
+          >
             Delux
           </p>
         </div>
       ) : null}
+
     </section>
   );
 }

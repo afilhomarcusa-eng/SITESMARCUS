@@ -22,6 +22,7 @@ const MSG = "Olá! Vim pelo site da Delux Motors e queria falar com vocês.";
 const LINKS = [
   { href: "/#servicos", rotulo: "Serviços" },
   { href: "/estoque", rotulo: "Estoque" },
+  { href: "/procuro", rotulo: "Não achou?" },
   { href: "/#loja", rotulo: "A loja" },
   { href: "/#local", rotulo: "Como chegar" },
   { href: "/#duvidas", rotulo: "Dúvidas" },

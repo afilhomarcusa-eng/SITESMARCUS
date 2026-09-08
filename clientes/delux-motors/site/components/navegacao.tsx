@@ -12,6 +12,7 @@ import { CONTATO, EMPRESA, whatsapp } from "@/lib/contato";
 const LINKS = [
   { href: "/#servicos", rotulo: "Serviços" },
   { href: "/estoque", rotulo: "Estoque" },
+  { href: "/procuro", rotulo: "Não achou?" },
   { href: "/#loja", rotulo: "A loja" },
   { href: "/#local", rotulo: "Como chegar" },
 ];
@@ -81,6 +82,18 @@ export default function Navegacao() {
           </nav>
 
           <div className="flex items-center gap-3">
+            {/* Estoque fica visível na barra também no celular, fora do menu
+                sanfona. É o destino que mais interessa a quem chega, e escondê-lo
+                atrás de um botão de menu custa um toque a mais logo no começo. */}
+            <Link
+              data-atalho-estoque
+              href="/estoque"
+              className="px-3 py-2 text-[0.72rem] uppercase tracking-[0.12em] lg:hidden"
+              style={{ border: "1px solid var(--linha)", color: "var(--tinta)" }}
+            >
+              Estoque
+            </Link>
+
             <a
               href={CONTATO.tel}
               className="dado hidden text-[0.76rem] md:block"
@@ -95,7 +108,7 @@ export default function Navegacao() {
               href={whatsapp(MSG)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2.5 text-[0.72rem] font-medium uppercase tracking-[0.13em]"
+              className="inline-flex items-center px-3 py-2.5 text-[0.72rem] font-medium uppercase tracking-[0.13em] sm:px-4"
               style={{ background: "var(--tinta)", color: "var(--branco)" }}
             >
               WhatsApp

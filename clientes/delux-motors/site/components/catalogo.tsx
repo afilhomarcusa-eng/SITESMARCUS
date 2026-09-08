@@ -109,18 +109,14 @@ function Vazio({ filtrando, limpar }: { filtrando: boolean; limpar: () => void }
             Limpar filtros
           </button>
         ) : null}
-        <a
+        <Link
           data-cta="vazio"
-          href={whatsapp(
-            "Olá! Vim pelo site e queria saber quais carros vocês têm disponíveis agora.",
-          )}
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/procuro"
           className="px-6 py-3.5 text-[0.74rem] font-medium uppercase tracking-[0.13em]"
           style={{ background: "var(--tinta)", color: "var(--branco)" }}
         >
           Dizer o que procuro
-        </a>
+        </Link>
       </div>
 
       {/* A página de estoque não pode ser um beco sem saída. Se não tem carro
