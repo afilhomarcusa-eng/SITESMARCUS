@@ -1,0 +1,179 @@
+@import "tailwindcss";
+@import "./site.css";
+
+/* ------------------------------------------------------------------ *
+ * Tokens. Paleta amostrada das duas fotos reais da Milleny:
+ * papel creme da parede, azul cobalto da blusa, coral da capa do livro
+ * "Veiculos", ocre da rede e verde do macaco. Nenhum gradiente.
+ * ------------------------------------------------------------------ */
+:root {
+  --papel:        #f6f0e6;
+  --papel-fundo:  #efe6d8;
+  --papel-alto:   #fdfaf4;
+  --tinta:        #2e2620;
+  --tinta-suave:  #5d5045;
+  --tinta-fraca:  #8b7d70;
+
+  --cobalto:      #1f43b0;
+  --cobalto-claro:#3560d8;
+  --coral:        #e2624a;
+  --ocre:         #e0a33a;
+  --verde:        #4f8f56;
+  --lilas:        #cfc4dd;
+
+  --borda:        #ded1bd;
+
+  /* Tipografia */
+  --fonte-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --fonte-texto:   var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+
+  /* Movimento: peso, nao mola. */
+  --curva-papel:  cubic-bezier(0.62, 0.02, 0.16, 1);
+  --curva-suave:  cubic-bezier(0.33, 0.02, 0.16, 1);
+  --t-micro:      220ms;
+  --t-interface:  460ms;
+  --t-editorial:  820ms;
+  --t-cena:       1250ms;
+
+  /* Espaco */
+  --largura:      78rem;
+  --gutter:       clamp(1.25rem, 4vw, 3.5rem);
+
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* o header e sticky: ancora nao pode parar debaixo dele */
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fonte-texto);
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fibra de papel. Textura, nao ruido colorido. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>\
+<filter id='f'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/>\
+<feColorMatrix type='saturate' values='0'/></filter>\
+<rect width='160' height='160' filter='url(%23f)' opacity='0.5'/></svg>");
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3 {
+  font-family: var(--fonte-display);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  margin: 0;
+  font-variation-settings: "SOFT" 40, "WONK" 1;
+  text-wrap: balance;
+}
+
+p { margin: 0; text-wrap: pretty; }
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--cobalto);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.envelope {
+  width: 100%;
+  max-width: var(--largura);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Rotulo de secao, caixa alta com tracking */
+.rotulo {
+  font-size: 0.72rem;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--tinta-fraca);
+}
+
+/* ---------------- Botoes ---------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--fonte-texto);
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 0.95rem 1.5rem;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform var(--t-micro) var(--curva-suave),
+    background-color var(--t-micro) var(--curva-suave),
+    box-shadow var(--t-micro) var(--curva-suave),
+    color var(--t-micro) var(--curva-suave);
+}
+.btn-primario {
+  background: var(--coral);
+  color: #fff;
+  box-shadow: 0 2px 0 0 #b8452f;
+}
+.btn-primario:hover { background: #d4553d; transform: translateY(-2px); box-shadow: 0 4px 0 0 #b8452f; }
+.btn-primario:active { transform: translateY(1px); box-shadow: 0 1px 0 0 #b8452f; }
+
+.btn-secundario {
+  background: transparent;
+  color: var(--tinta);
+  border-color: var(--borda);
+}
+.btn-secundario:hover { border-color: var(--tinta); transform: translateY(-2px); }
+
+.btn .seta { transition: transform var(--t-micro) var(--curva-suave); }
+.btn:hover .seta { transform: translateX(3px); }
+
+/* ---------------- Revelacao no scroll ---------------- */
+/* Visivel por padrao. So esconde depois que o componente Revelacao avisa que
+   esta vivo, entao bundle quebrado ou JS desligado mostram tudo. */
+.revela {
+  transition:
+    opacity var(--t-editorial) var(--curva-suave),
+    transform var(--t-editorial) var(--curva-suave);
+}
+html[data-revelar="ativo"] .revela:not([data-visivel="true"]) {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+/* ---------------- Movimento reduzido ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  html[data-revelar="ativo"] .revela { opacity: 1 !important; transform: none !important; }
+}

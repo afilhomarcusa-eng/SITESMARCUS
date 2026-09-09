@@ -1,0 +1,222 @@
+[
+  {
+    "arquivo": "/img/milleny-hero-640.avif",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3429,
+    "recorteAltura": 5472,
+    "exportadaLargura": 640,
+    "exportadaAltura": 1021,
+    "bytes": 69057
+  },
+  {
+    "arquivo": "/img/milleny-hero-640.webp",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3429,
+    "recorteAltura": 5472,
+    "exportadaLargura": 640,
+    "exportadaAltura": 1021,
+    "bytes": 82610
+  },
+  {
+    "arquivo": "/img/milleny-hero-900.avif",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3429,
+    "recorteAltura": 5472,
+    "exportadaLargura": 900,
+    "exportadaAltura": 1436,
+    "bytes": 124303
+  },
+  {
+    "arquivo": "/img/milleny-hero-900.webp",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3429,
+    "recorteAltura": 5472,
+    "exportadaLargura": 900,
+    "exportadaAltura": 1436,
+    "bytes": 154606
+  },
+  {
+    "arquivo": "/img/milleny-hero-1200.avif",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3429,
+    "recorteAltura": 5472,
+    "exportadaLargura": 1200,
+    "exportadaAltura": 1915,
+    "bytes": 203372
+  },
+  {
+    "arquivo": "/img/milleny-hero-1200.webp",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3429,
+    "recorteAltura": 5472,
+    "exportadaLargura": 1200,
+    "exportadaAltura": 1915,
+    "bytes": 261704
+  },
+  {
+    "arquivo": "/img/milleny-hero-1600.avif",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3429,
+    "recorteAltura": 5472,
+    "exportadaLargura": 1600,
+    "exportadaAltura": 2553,
+    "bytes": 337021
+  },
+  {
+    "arquivo": "/img/milleny-hero-1600.webp",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3429,
+    "recorteAltura": 5472,
+    "exportadaLargura": 1600,
+    "exportadaAltura": 2553,
+    "bytes": 426870
+  },
+  {
+    "arquivo": "/img/milleny-hero-mobile-480.avif",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3283,
+    "recorteAltura": 3393,
+    "exportadaLargura": 480,
+    "exportadaAltura": 496,
+    "bytes": 27328
+  },
+  {
+    "arquivo": "/img/milleny-hero-mobile-480.webp",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3283,
+    "recorteAltura": 3393,
+    "exportadaLargura": 480,
+    "exportadaAltura": 496,
+    "bytes": 30486
+  },
+  {
+    "arquivo": "/img/milleny-hero-mobile-720.avif",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3283,
+    "recorteAltura": 3393,
+    "exportadaLargura": 720,
+    "exportadaAltura": 744,
+    "bytes": 50969
+  },
+  {
+    "arquivo": "/img/milleny-hero-mobile-720.webp",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3283,
+    "recorteAltura": 3393,
+    "exportadaLargura": 720,
+    "exportadaAltura": 744,
+    "bytes": 59062
+  },
+  {
+    "arquivo": "/img/milleny-hero-mobile-1080.avif",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3283,
+    "recorteAltura": 3393,
+    "exportadaLargura": 1080,
+    "exportadaAltura": 1116,
+    "bytes": 102939
+  },
+  {
+    "arquivo": "/img/milleny-hero-mobile-1080.webp",
+    "origem": "milleny-livro-rede.jpg",
+    "nativaLargura": 3648,
+    "nativaAltura": 5472,
+    "recorteLargura": 3283,
+    "recorteAltura": 3393,
+    "exportadaLargura": 1080,
+    "exportadaAltura": 1116,
+    "bytes": 128426
+  },
+  {
+    "arquivo": "/img/milleny-sobre-480.avif",
+    "origem": "milleny-livro-comportamento.jpg",
+    "nativaLargura": 1170,
+    "nativaAltura": 1164,
+    "recorteLargura": 1006,
+    "recorteAltura": 1164,
+    "exportadaLargura": 480,
+    "exportadaAltura": 555,
+    "bytes": 27227
+  },
+  {
+    "arquivo": "/img/milleny-sobre-480.webp",
+    "origem": "milleny-livro-comportamento.jpg",
+    "nativaLargura": 1170,
+    "nativaAltura": 1164,
+    "recorteLargura": 1006,
+    "recorteAltura": 1164,
+    "exportadaLargura": 480,
+    "exportadaAltura": 555,
+    "bytes": 35532
+  },
+  {
+    "arquivo": "/img/milleny-sobre-720.avif",
+    "origem": "milleny-livro-comportamento.jpg",
+    "nativaLargura": 1170,
+    "nativaAltura": 1164,
+    "recorteLargura": 1006,
+    "recorteAltura": 1164,
+    "exportadaLargura": 720,
+    "exportadaAltura": 833,
+    "bytes": 52535
+  },
+  {
+    "arquivo": "/img/milleny-sobre-720.webp",
+    "origem": "milleny-livro-comportamento.jpg",
+    "nativaLargura": 1170,
+    "nativaAltura": 1164,
+    "recorteLargura": 1006,
+    "recorteAltura": 1164,
+    "exportadaLargura": 720,
+    "exportadaAltura": 833,
+    "bytes": 67812
+  },
+  {
+    "arquivo": "/img/milleny-sobre-1000.avif",
+    "origem": "milleny-livro-comportamento.jpg",
+    "nativaLargura": 1170,
+    "nativaAltura": 1164,
+    "recorteLargura": 1006,
+    "recorteAltura": 1164,
+    "exportadaLargura": 1000,
+    "exportadaAltura": 1157,
+    "bytes": 87216
+  },
+  {
+    "arquivo": "/img/milleny-sobre-1000.webp",
+    "origem": "milleny-livro-comportamento.jpg",
+    "nativaLargura": 1170,
+    "nativaAltura": 1164,
+    "recorteLargura": 1006,
+    "recorteAltura": 1164,
+    "exportadaLargura": 1000,
+    "exportadaAltura": 1157,
+    "bytes": 113164
+  }
+]
