@@ -1,10 +1,13 @@
 /**
- * A abertura, em diafragma.
+ * A abertura: o carro destrava.
  *
- * Quatro folhas de papel cobrem a tela. Elas recuam até formar uma moldura 3:4
- * em pé, que é a moldura do site inteiro, e dentro dela aparece o nome. Depois
- * as folhas terminam de sair para as bordas enquanto a chapa com o nome sobe, e
- * o que estava embaixo desde o primeiro quadro é o herói.
+ * Tela escura. Os dois faróis acendem e piscam duas vezes, do jeito que um
+ * carro responde ao controle quando destrava. Depois eles ficam acesos,
+ * alargam, e a luz cresce até tomar a tela. O branco dessa luz é o papel do
+ * site: a última coisa que a abertura faz é já ser o site.
+ *
+ * A primeira versão era um diafragma de folhas de papel formando uma moldura.
+ * Foi recusada e refeita do zero.
  *
  * Três coisas aqui não são estilo, são regra:
  *
@@ -25,7 +28,7 @@
  */
 
 /** Duração total, em milissegundos. O CSS lê daqui e o QA mede contra isto. */
-export const DURACAO_ABERTURA = 2800;
+export const DURACAO_ABERTURA = 1250;
 
 /** Onde a abertura roda. Só na home: em /estoque ela seria um obstáculo. */
 export const ROTA_ABERTURA = "/";

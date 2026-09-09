@@ -26,9 +26,14 @@
   --linha: rgba(20, 20, 15, 0.16);
   --linha-fraca: rgba(20, 20, 15, 0.08);
 
-  /* Tipografia */
-  --fonte-display: var(--fonte-serif), "Times New Roman", serif;
-  --fonte-texto: var(--fonte-grotesk), system-ui, sans-serif;
+  /* Tipografia
+     Host Grotesk tem eixo óptico e desenho próprio nos números e no "a": em
+     corpo grande ele fica seco e caro, sem virar o grotesco de sempre.
+     Geist Mono cuida de preço, quilometragem e potência, que é onde este site
+     mais é lido, com o alinhamento de painel de instrumento. */
+  --fonte-display: var(--fonte-host), system-ui, sans-serif;
+  --fonte-texto: var(--fonte-host), system-ui, sans-serif;
+  --fonte-mono: var(--fonte-mono-geist), ui-monospace, monospace;
 
   --t-monumento: clamp(3.4rem, 11vw, 9.5rem);
   --t-display: clamp(2.5rem, 6vw, 5rem);
@@ -63,6 +68,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
 }
 
 body {
@@ -90,9 +96,9 @@ h1,
 h2,
 h3 {
   font-family: var(--fonte-display);
-  font-weight: 400;
-  line-height: 0.94;
-  letter-spacing: -0.015em;
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
   margin: 0;
   text-wrap: balance;
 }
@@ -153,11 +159,12 @@ button {
 
 /* A etiqueta: o rótulo miúdo que organiza a prancha */
 .fino {
+  font-family: var(--fonte-mono);
   font-size: var(--t-fino);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--asfalto);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .fino-tinta {
@@ -165,7 +172,9 @@ button {
 }
 
 .serie {
+  font-family: var(--fonte-mono);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 .regra {
@@ -264,245 +273,294 @@ button {
 
 /* =========================================================================
    A ABERTURA
-   Quatro folhas de papel recuam até formar a moldura 3:4 do site, com o nome
-   dentro. Depois as folhas saem para as bordas e a chapa sobe.
+   O carro destrava.
+
+   Tela escura, os dois faróis acendem, piscam duas vezes como quando o alarme
+   destrava, a luz cresce e inunda a tela. O branco da luz é o mesmo papel do
+   site, então a última coisa que a abertura faz é virar o site.
+
    Tudo em CSS, sobre HTML que veio do servidor: não existe quadro em que a
-   página exista sem ela, e ela sai mesmo se o JavaScript falhar.
+   página exista sem ela, e ela sai mesmo se o JavaScript falhar. O padrão é
+   `display: none`, então sem script a abertura simplesmente não acontece.
    ========================================================================= */
 
-.cortina {
-  display: none;
-}
-
-html[data-abrir="1"] .cortina {
-  display: block;
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  --jan-h: 62vh;
-  --jan-w: calc(62vh * 0.75);
-  animation: cortina-sai var(--d-abertura) forwards;
-}
-
-@media (max-width: 900px) {
-  html[data-abrir="1"] .cortina {
-    --jan-w: 72vw;
-    --jan-h: calc(72vw * 1.3333);
-  }
-}
-
-/* A chapa: fundo de tinta com o nome. Sobe no fim, como folha sendo levantada */
-.cortina-chapa {
+/* Os dois faróis. Barras de luz, como assinatura de LED diurno. */
+.farol {
   position: absolute;
-  inset: 0;
-  background: var(--tinta);
-  color: var(--papel-claro);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  animation: chapa-sobe var(--d-abertura) forwards;
+  top: 42%;
+  height: clamp(9px, 1.4vh, 15px);
+  width: clamp(120px, 23vw, 360px);
+  border-radius: 999px;
+  background: #fff6e4;
+  box-shadow:
+    0 0 22px 4px rgba(255, 240, 210, 0.55),
+    0 0 90px 22px rgba(255, 232, 190, 0.28);
+  opacity: 0;
+  transform-origin: center;
+  will-change: opacity, transform;
 }
 
+.farol-esq {
+  right: calc(50% + clamp(20px, 3vw, 54px));
+  transform-origin: right center;
+  animation: farol-esq var(--d-abertura) forwards;
+}
+
+.farol-dir {
+  left: calc(50% + clamp(20px, 3vw, 54px));
+  transform-origin: left center;
+  animation: farol-dir var(--d-abertura) forwards;
+}
+
+/* O nome, na grade do meio, entre os dois faróis. */
 .cortina-nome {
+  position: absolute;
+  top: calc(42% + clamp(54px, 9vh, 96px));
+  left: 50%;
+  transform: translateX(-50%);
   font-family: var(--fonte-display);
-  font-size: clamp(2rem, 6.4vw, 4.6rem);
-  line-height: 1;
-  animation: nome-assenta var(--d-abertura) forwards;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  color: #fff6e4;
+  white-space: nowrap;
+  opacity: 0;
+  animation: cortina-nome var(--d-abertura) forwards;
 }
 
 .cortina-linha {
-  font-size: var(--t-fino);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--cerca-viva);
-  animation: linha-entra var(--d-abertura) forwards;
-}
-
-.folha {
   position: absolute;
+  top: calc(42% + clamp(96px, 14vh, 154px));
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--fonte-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(255, 244, 221, 0.5);
+  white-space: nowrap;
+  opacity: 0;
+  animation: cortina-linha var(--d-abertura) forwards;
+}
+
+/* A luz que cresce a partir dos faróis e vira o papel do site. */
+.clarao {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(
+    ellipse 46% 20% at 50% 42%,
+    #fffaf0 0%,
+    #fff8ea 38%,
+    rgba(255, 248, 234, 0) 74%
+  );
+  opacity: 0;
+  transform: scale(0.35);
+  will-change: opacity, transform;
+  animation: clarao var(--d-abertura) forwards;
+}
+
+/* O papel entra por cima da luz, e é ele que encosta no site sem emenda. */
+.papel-final {
+  position: absolute;
+  inset: 0;
   background: var(--papel);
-  display: block;
+  opacity: 0;
+  animation: papel-final var(--d-abertura) forwards;
 }
 
-.folha-cima {
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50vh;
-  border-bottom: 1px solid var(--cerca);
-  animation: folha-cima var(--d-abertura) forwards;
-}
-
-.folha-baixo {
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50vh;
-  border-top: 1px solid var(--cerca);
-  animation: folha-baixo var(--d-abertura) forwards;
-}
-
-.folha-esq {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 50vw;
-  border-right: 1px solid var(--cerca);
-  animation: folha-esq var(--d-abertura) forwards;
-}
-
-.folha-dir {
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 50vw;
-  border-left: 1px solid var(--cerca);
-  animation: folha-dir var(--d-abertura) forwards;
-}
-
-@keyframes folha-cima {
-  0% {
-    transform: translateY(0);
-    animation-timing-function: var(--saida);
-  }
-  30% {
-    transform: translateY(calc(var(--jan-h) / -2));
-    animation-timing-function: linear;
-  }
-  52% {
-    transform: translateY(calc(var(--jan-h) / -2));
-    animation-timing-function: var(--entrada);
-  }
-  100% {
-    transform: translateY(-50vh);
-  }
-}
-
-@keyframes folha-baixo {
-  0% {
-    transform: translateY(0);
-    animation-timing-function: var(--saida);
-  }
-  30% {
-    transform: translateY(calc(var(--jan-h) / 2));
-    animation-timing-function: linear;
-  }
-  52% {
-    transform: translateY(calc(var(--jan-h) / 2));
-    animation-timing-function: var(--entrada);
-  }
-  100% {
-    transform: translateY(50vh);
-  }
-}
-
-@keyframes folha-esq {
-  0% {
-    transform: translateX(0);
-    animation-timing-function: var(--saida);
-  }
-  30% {
-    transform: translateX(calc(var(--jan-w) / -2));
-    animation-timing-function: linear;
-  }
-  52% {
-    transform: translateX(calc(var(--jan-w) / -2));
-    animation-timing-function: var(--entrada);
-  }
-  100% {
-    transform: translateX(-50vw);
-  }
-}
-
-@keyframes folha-dir {
-  0% {
-    transform: translateX(0);
-    animation-timing-function: var(--saida);
-  }
-  30% {
-    transform: translateX(calc(var(--jan-w) / 2));
-    animation-timing-function: linear;
-  }
-  52% {
-    transform: translateX(calc(var(--jan-w) / 2));
-    animation-timing-function: var(--entrada);
-  }
-  100% {
-    transform: translateX(50vw);
-  }
-}
-
-@keyframes chapa-sobe {
+/* Dois piscadas curtas, do jeito que o carro responde ao controle, e depois
+   os faróis ficam acesos e alargam. Os tempos estão em porcentagem de 2,6s. */
+@keyframes farol-esq {
   0%,
-  52% {
-    transform: translateY(0);
-    animation-timing-function: var(--entrada);
+  10% {
+    opacity: 0;
+    transform: scaleX(0.34);
+  }
+  /* primeira piscada */
+  13%,
+  17% {
+    opacity: 1;
+    transform: scaleX(0.4);
+  }
+  18%,
+  23% {
+    opacity: 0;
+    transform: scaleX(0.4);
+  }
+  /* segunda piscada: destravou */
+  26%,
+  32% {
+    opacity: 1;
+    transform: scaleX(0.46);
+  }
+  33%,
+  38% {
+    opacity: 0.05;
+    transform: scaleX(0.46);
+  }
+  /* acende de vez e alarga */
+  46% {
+    opacity: 1;
+    transform: scaleX(0.62);
+    animation-timing-function: var(--saida);
+  }
+  72% {
+    opacity: 1;
+    transform: scaleX(1.35) translateX(-4%);
   }
   92%,
   100% {
-    transform: translateY(-101%);
+    opacity: 0;
+    transform: scaleX(1.9) translateX(-8%);
   }
 }
 
-@keyframes nome-assenta {
-  0% {
+@keyframes farol-dir {
+  0%,
+  10% {
     opacity: 0;
-    letter-spacing: 0.42em;
+    transform: scaleX(0.34);
+  }
+  /* primeira piscada */
+  13%,
+  17% {
+    opacity: 1;
+    transform: scaleX(0.4);
+  }
+  18%,
+  23% {
+    opacity: 0;
+    transform: scaleX(0.4);
+  }
+  /* segunda piscada: destravou */
+  26%,
+  32% {
+    opacity: 1;
+    transform: scaleX(0.46);
+  }
+  33%,
+  38% {
+    opacity: 0.05;
+    transform: scaleX(0.46);
+  }
+  /* acende de vez e alarga */
+  46% {
+    opacity: 1;
+    transform: scaleX(0.62);
     animation-timing-function: var(--saida);
   }
-  38% {
+  72% {
     opacity: 1;
-    letter-spacing: 0.01em;
+    transform: scaleX(1.35) translateX(+4%);
   }
+  92%,
   100% {
-    opacity: 1;
-    letter-spacing: 0.01em;
+    opacity: 0;
+    transform: scaleX(1.9) translateX(+8%);
   }
 }
 
-@keyframes linha-entra {
+@keyframes cortina-nome {
   0%,
-  22% {
+  36% {
+    opacity: 0;
+    letter-spacing: 0.24em;
+  }
+  52%,
+  78% {
+    opacity: 1;
+    letter-spacing: -0.04em;
+  }
+  90%,
+  100% {
+    opacity: 0;
+    letter-spacing: -0.04em;
+  }
+}
+
+@keyframes cortina-linha {
+  0%,
+  46% {
     opacity: 0;
   }
-  46%,
+  60%,
+  78% {
+    opacity: 1;
+  }
+  88%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes clarao {
+  0%,
+  38% {
+    opacity: 0;
+    transform: scale(0.3);
+    animation-timing-function: var(--entrada);
+  }
+  58% {
+    opacity: 0.4;
+    transform: scale(0.62);
+  }
+  78% {
+    opacity: 0.9;
+    transform: scale(1.5);
+  }
+  92%,
+  100% {
+    opacity: 1;
+    transform: scale(3.4);
+  }
+}
+
+@keyframes papel-final {
+  0%,
+  86% {
+    opacity: 0;
+    animation-timing-function: var(--entrada);
+  }
+  96%,
   100% {
     opacity: 1;
   }
 }
 
-/* A cortina para de interceptar clique assim que começa a sair de vez: o botão
+/* A cortina para de interceptar clique assim que a luz toma a tela: o botão
    principal já está pintado embaixo e tem que poder ser clicado.
 
-   Os pares de quadro colados (51.9 e 52, 99.9 e 100) não são capricho.
+   Os pares de quadro colados (79.9 e 80, 99.9 e 100) não são capricho.
    pointer-events e visibility são propriedades discretas, e o navegador vira o
    valor no MEIO do intervalo entre dois quadros, não no quadro onde está
    escrito. Com os quadros soltos, a cortina virava atravessável a clique no
    meio da abertura e voltava a interceptar depois: quem clicasse para pular
-   acabava abrindo o link que estava embaixo. Declarando o valor dos dois lados
-   da virada, ela acontece exatamente onde foi pedida. */
+   acabava abrindo o link que estava embaixo. */
 @keyframes cortina-sai {
   0% {
     pointer-events: auto;
     visibility: visible;
+    opacity: 1;
   }
-  51.9% {
+  79.9% {
     pointer-events: auto;
     visibility: visible;
+    opacity: 1;
   }
-  52% {
+  80% {
     pointer-events: none;
     visibility: visible;
+    opacity: 1;
   }
   99.9% {
     pointer-events: none;
     visibility: visible;
+    opacity: 1;
   }
   100% {
     pointer-events: none;
     visibility: hidden;
+    opacity: 0;
   }
 }
 
@@ -625,16 +683,16 @@ html[data-abrir="1"] .cortina {
 
 /* =========================================================================
    HERÓI
-   Fundo: o nome em corpo monumental. Meio: o retrato. Frente: a etiqueta,
-   que cruza a foto. O nome é decoração e se repete no cabeçalho, por isso
-   pode ser coberto. Nenhum texto que só existe aqui fica atrás de nada.
+   O nome é o herói, porque quem vende aqui é uma pessoa, não uma loja. Três
+   planos: a moldura vazia atrás, o retrato no meio, e a legenda de uma linha
+   cruzando a foto. Nada de cartão com cinco linhas em cima do carro.
    ========================================================================= */
 
 .heroi {
   position: relative;
   overflow: hidden;
   padding: var(--e5) var(--margem);
-  min-height: min(92svh, 940px);
+  min-height: min(90svh, 920px);
   display: grid;
   align-content: center;
 }
@@ -646,29 +704,36 @@ html[data-abrir="1"] .cortina {
   margin-inline: auto;
   width: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.86fr);
-  gap: clamp(24px, 4vw, 72px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: clamp(24px, 5vw, 90px);
   align-items: center;
 }
 
 .heroi-texto {
-  max-width: 42ch;
+  max-width: 36ch;
 }
 
+/* A assinatura. É o nome dele, em corpo de manchete, porque é o nome que
+   assina cada negócio. */
 .heroi h1 {
-  font-size: clamp(2.4rem, 3.9vw, 3.9rem);
-  max-width: 15ch;
-  margin-block: var(--e3) var(--e3);
+  font-size: clamp(3.2rem, 7.2vw, 7rem);
+  letter-spacing: -0.05em;
+  line-height: 0.94;
+  margin-bottom: var(--e3);
 }
 
-.heroi h1 em {
-  font-style: italic;
-  color: var(--cerca);
+.heroi-cargo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding-bottom: var(--e3);
+  border-bottom: 1px solid var(--linha);
+  margin-bottom: var(--e3);
 }
 
 .heroi-linha {
   color: var(--tinta-media);
-  max-width: 44ch;
+  max-width: 40ch;
   font-size: var(--t-subtitulo);
   line-height: 1.45;
 }
@@ -676,42 +741,12 @@ html[data-abrir="1"] .cortina {
 .heroi-acoes {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--e2);
+  align-items: center;
+  gap: var(--e3);
   margin-top: var(--e4);
 }
 
-/* A faixa de dados atravessa as duas colunas. É ela que ocupa a largura em
-   tela grande: sem ela, 1920 vira um vão de papel entre o texto e a foto. */
-.heroi-dados {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: var(--e5);
-  border-top: 1px solid var(--linha);
-}
-
-.heroi-dados div {
-  display: grid;
-  gap: 4px;
-  padding: var(--e3) var(--e3) 0 0;
-}
-
-.heroi-dados div + div {
-  border-left: 1px solid var(--linha);
-  padding-left: var(--e3);
-}
-
-.heroi-dados strong {
-  font-family: var(--fonte-display);
-  font-size: 1.7rem;
-  font-weight: 400;
-  line-height: 1;
-}
-
-/* O retrato, a moldura vazia atrás dele e a etiqueta que passa na frente.
-   São os três planos: a moldura recua, o retrato ocupa o meio e a etiqueta
-   cruza a foto. A moldura vazia é a mesma figura da abertura, agora parada, e
-   é ela que dá a profundidade: o retrato tapa metade dela. */
+/* O retrato, a moldura vazia atrás dele e a legenda que cruza a foto. */
 .heroi-retrato {
   position: relative;
   justify-self: end;
@@ -722,9 +757,9 @@ html[data-abrir="1"] .cortina {
 .heroi-mont {
   position: absolute;
   z-index: 0;
-  right: 42px;
-  top: -34px;
-  height: min(56svh, 520px);
+  right: 40px;
+  top: -32px;
+  height: min(58svh, 540px);
   aspect-ratio: 3 / 4;
   border: 1px solid var(--linha);
   pointer-events: none;
@@ -735,7 +770,7 @@ html[data-abrir="1"] .cortina {
   z-index: 1;
   overflow: hidden;
   background: var(--papel-fundo);
-  height: min(56svh, 520px);
+  height: min(58svh, 540px);
   aspect-ratio: 3 / 4;
   max-width: 100%;
 }
@@ -746,37 +781,42 @@ html[data-abrir="1"] .cortina {
   object-fit: cover;
 }
 
-.heroi-etiqueta {
+/* Uma linha só, atravessando a borda da foto. */
+.heroi-legenda {
   position: absolute;
   z-index: 3;
-  left: -40px;
-  bottom: 42px;
-  width: min(310px, 78%);
+  left: -36px;
+  bottom: 34px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  white-space: nowrap;
   background: var(--papel-claro);
-  border: 1px solid var(--linha);
   border-left: 3px solid var(--cerca);
-  padding: 16px 18px 18px;
-  display: grid;
-  gap: 6px;
+  padding: 12px 18px;
   text-decoration: none;
-  box-shadow: 0 24px 48px -34px rgba(20, 20, 15, 0.5);
+  box-shadow: 0 20px 44px -34px rgba(20, 20, 15, 0.55);
   transition: transform var(--d-interface) var(--saida);
 }
 
-.heroi-etiqueta:hover {
-  transform: translateY(-4px);
+.heroi-legenda:hover {
+  transform: translateY(-3px);
 }
 
-.heroi-etiqueta strong {
-  font-family: var(--fonte-display);
-  font-size: 1.32rem;
-  font-weight: 400;
-  line-height: 1.1;
+.heroi-legenda strong {
+  font-weight: 500;
+  font-size: 1rem;
 }
 
-.heroi-etiqueta .preco {
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
+.heroi-legenda .seta-legenda {
+  width: 13px;
+  height: 13px;
+  color: var(--asfalto);
+}
+
+.heroi-legenda .preco {
+  font-size: 0.95rem;
+  color: var(--cerca);
 }
 
 /* =========================================================================
@@ -965,6 +1005,21 @@ html[data-abrir="1"] .cortina {
   letter-spacing: -0.015em;
 }
 
+/* A assinatura: o nome dele fechando o próprio texto. Não é foto, e não
+   finge ser manuscrito: é o nome, no corpo de manchete, do mesmo jeito que
+   aparece na abertura e no herói. */
+.assinatura {
+  font-family: var(--fonte-display);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1;
+  margin-top: var(--e5);
+  padding-top: var(--e3);
+  border-top: 1px solid var(--linha);
+  max-width: 14ch;
+}
+
 .numeros {
   display: grid;
   gap: 0;
@@ -995,65 +1050,178 @@ html[data-abrir="1"] .cortina {
   max-width: 22ch;
 }
 
-/* ---------- as três portas ---------- */
+/* ---------- o seletor: três caminhos, uma alavanca ----------
+   Um seletor de marcha de verdade: trilho, encaixes e alavanca que engata.
+   Clicar, arrastar com o teclado ou usar as setas move a alavanca, e o painel
+   ao lado troca junto.
 
-.portas {
+   Sem JavaScript os três painéis aparecem empilhados, um embaixo do outro, com
+   os três botões funcionando. Nada fica escondido esperando um script. */
+
+.seletor {
   display: grid;
-  gap: 0;
+  grid-template-columns: 118px minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
+}
+
+.trilho {
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  height: 250px;
+  padding: 12px 0;
+  border: 1px solid var(--linha);
+  border-radius: 70px;
+  background: var(--papel-claro);
+}
+
+/* O sulco por onde a alavanca corre. */
+.trilho::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 26px;
+  bottom: 26px;
+  width: 3px;
+  transform: translateX(-50%);
+  background: var(--linha-fraca);
+  border-radius: 3px;
+}
+
+/* A alavanca. Anda com peso, e encaixa: a curva tem um freio no fim. */
+.alavanca {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  width: 58px;
+  height: calc((100% - 24px) / 3);
+  transform: translateX(-50%) translateY(calc(var(--engate, 0) * 100%));
+  transition: transform 420ms cubic-bezier(0.34, 1.32, 0.44, 1);
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+
+.alavanca::before {
+  content: "";
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--tinta);
+  box-shadow: 0 10px 24px -12px rgba(20, 20, 15, 0.7);
+}
+
+.alavanca::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--cerca-viva);
+}
+
+.encaixe {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--fonte-mono);
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  color: var(--tinta-media);
+  padding: 0;
+  transition: color var(--d-micro) var(--saida);
+}
+
+.encaixe:hover {
+  color: var(--tinta);
+}
+
+.encaixe[aria-selected="true"] {
+  color: var(--papel-claro);
+}
+
+.painel-caminho {
+  display: grid;
+  align-content: center;
+  gap: var(--e3);
+  padding: clamp(20px, 3vw, 40px) 0;
   border-top: 1px solid var(--linha);
 }
 
-.porta {
-  display: grid;
-  grid-template-columns: 96px minmax(0, 1fr) auto;
-  gap: clamp(16px, 3vw, 48px);
-  align-items: center;
-  padding: clamp(24px, 3vw, 40px) 0;
-  border-bottom: 1px solid var(--linha);
-  text-decoration: none;
-  transition: padding-left var(--d-interface) var(--saida);
+.painel-caminho h3 {
+  font-size: clamp(1.7rem, 3.2vw, 2.6rem);
 }
 
-.porta:hover {
-  padding-left: 12px;
+.painel-caminho p {
+  color: var(--tinta-media);
+  max-width: 52ch;
 }
 
-.porta-numero {
-  font-family: var(--fonte-display);
-  font-size: clamp(2.2rem, 4vw, 3.4rem);
-  line-height: 1;
-  color: var(--linha);
-  font-variant-numeric: tabular-nums;
-  transition: color var(--d-interface) var(--saida);
-}
-
-.porta:hover .porta-numero {
+.painel-caminho .marcha {
+  font-family: var(--fonte-mono);
+  font-size: var(--t-fino);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--cerca);
 }
 
-.porta h3 {
-  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
-  margin-bottom: 6px;
+/* O painel que sai e o que entra não se empurram: quem troca é o conteúdo,
+   e a altura fica com o maior deles. */
+html[data-js="1"] .painel-caminho[data-oculto="1"] {
+  display: none;
 }
 
-.porta p {
-  color: var(--tinta-media);
-  max-width: 52ch;
-  font-size: 0.98rem;
+html[data-js="1"] .painel-caminho[data-oculto="0"] {
+  animation: engatou 420ms var(--saida);
 }
 
-.porta-seta {
-  width: 26px;
-  height: 26px;
-  color: var(--asfalto);
-  transition:
-    transform var(--d-interface) var(--saida),
-    color var(--d-interface) var(--saida);
+@keyframes engatou {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-.porta:hover .porta-seta {
-  transform: translate(6px, -6px);
-  color: var(--tinta);
+@media (max-width: 860px) {
+  .seletor {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--e4);
+  }
+
+  /* No celular o trilho deita: alavanca correndo na horizontal. */
+  .trilho {
+    grid-template-rows: none;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 14px;
+    height: 64px;
+  }
+
+  .trilho::before {
+    left: 26px;
+    right: 26px;
+    top: 50%;
+    bottom: auto;
+    width: auto;
+    height: 3px;
+    transform: translateY(-50%);
+  }
+
+  .alavanca {
+    left: 14px;
+    top: 50%;
+    width: calc((100% - 28px) / 3);
+    height: 52px;
+    transform: translateY(-50%) translateX(calc(var(--engate, 0) * 100%));
+  }
 }
 
 /* ---------- chamada final ---------- */
@@ -1064,17 +1232,26 @@ html[data-abrir="1"] .cortina {
   overflow: hidden;
 }
 
-/* A moldura da abertura volta aqui, agora desenhada e parada: o começo e o
-   fim do site referenciam a mesma figura. */
-.final-moldura {
+/* Os faróis da abertura voltam aqui, agora parados e discretos: o começo e o
+   fim do site acendem a mesma luz. */
+.final-farois {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: min(46vh, 78vw);
-  aspect-ratio: 3 / 4;
-  border: 1px solid rgba(244, 242, 237, 0.18);
+  width: min(760px, 86vw);
+  display: flex;
+  justify-content: space-between;
   pointer-events: none;
+}
+
+.final-farois i {
+  display: block;
+  width: clamp(70px, 12vw, 150px);
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 244, 221, 0.5);
+  box-shadow: 0 0 40px 6px rgba(255, 244, 221, 0.18);
 }
 
 .final-conteudo {
@@ -1557,6 +1734,198 @@ html[data-abrir="1"] .cortina {
 }
 
 /* =========================================================================
+   GERÊNCIA
+   Tela de trabalho, não de venda: densa, sem animação, com a lista de um lado
+   e o carro aberto do outro.
+   ========================================================================= */
+
+.gerencia {
+  max-width: var(--largura);
+  margin-inline: auto;
+}
+
+.gerencia-topo {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--e4);
+  flex-wrap: wrap;
+  padding-bottom: var(--e3);
+  border-bottom: 1px solid var(--linha);
+}
+
+.gerencia-topo h1 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  margin-block: 8px 4px;
+}
+
+.gerencia-estado {
+  color: var(--tinta-media);
+  font-size: 0.9rem;
+}
+
+.gerencia-acoes {
+  display: flex;
+  gap: var(--e2);
+  flex-wrap: wrap;
+}
+
+.gerencia-acoes .acao:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.gerencia-recado {
+  margin-top: var(--e3);
+  padding: 12px 16px;
+  background: var(--papel-fundo);
+  border-left: 3px solid var(--cerca);
+  font-size: 0.92rem;
+}
+
+.gerencia-grade {
+  display: grid;
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 48px);
+  margin-top: var(--e4);
+  align-items: start;
+}
+
+.gerencia-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--linha-fraca);
+}
+
+.gerencia-lista li {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--linha-fraca);
+}
+
+.gerencia-linha {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 12px 4px;
+  cursor: pointer;
+  font-size: 0.92rem;
+}
+
+.gerencia-linha:hover {
+  background: var(--papel-claro);
+}
+
+.gerencia-linha-ativa {
+  background: var(--papel-fundo);
+}
+
+.gerencia-nome {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.gerencia-nome strong {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gerencia-nome small {
+  color: var(--asfalto);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.gerencia-tirar {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0 10px;
+  color: var(--asfalto);
+  line-height: 0;
+}
+
+.gerencia-tirar:hover {
+  color: #a2372f;
+}
+
+.gerencia-tirar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.gerencia-editor {
+  border: 1px solid var(--linha);
+  padding: clamp(16px, 2vw, 28px);
+  background: var(--papel-claro);
+}
+
+.gerencia-nada {
+  color: var(--asfalto);
+}
+
+.gerencia-fotos {
+  margin-top: var(--e4);
+  padding-top: var(--e3);
+  border-top: 1px solid var(--linha);
+}
+
+.gerencia-tira {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.gerencia-slot {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  background: var(--papel-fundo);
+  border: 1px dashed var(--linha);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.gerencia-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gerencia-vazio {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--asfalto);
+  font-size: 0.9rem;
+}
+
+.gerencia-dica {
+  margin-top: 12px;
+  color: var(--asfalto);
+  font-size: 0.8rem;
+  max-width: 52ch;
+}
+
+@media (max-width: 900px) {
+  .gerencia-grade {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* =========================================================================
    RODAPÉ
    ========================================================================= */
 
@@ -1836,4 +2205,286 @@ html[data-js="1"] [data-entrada-foto="visivel"] img {
     align-items: flex-start;
     gap: 3px;
   }
+}
+
+/* Retrato real publicado pelo próprio Saulo. */
+.quem-pessoal{min-width:0}.quem-retrato{margin:0 0 var(--e3);max-width:420px}.quem-retrato img{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover}.quem-retrato figcaption{font-size:.75rem;color:var(--asfalto);padding-top:10px}.quem-pessoal .numeros{max-width:420px}.gerencia-editor fieldset{border:0;padding:0;margin:0;min-width:0}.gerencia button:disabled{opacity:.5;cursor:wait}
+@media(max-width:900px){.quem-pessoal{max-width:520px}.quem-retrato,.quem-pessoal .numeros{max-width:none}}
+
+@media(max-width:900px){.quem-pessoal{max-width:420px}}
+
+/* Silhueta de cupê: os faróis pertencem a um carro, em vez de barras soltas. */
+.carro-abertura{position:absolute;width:min(88vw,1080px);height:auto;left:50%;top:42%;transform:translate(-50%,-51%);opacity:.7;pointer-events:none}.farol{clip-path:polygon(0 20%,92% 0,100% 75%,5% 100%)}
+@media(max-width:620px){.carro-abertura{width:98vw}.farol{width:30vw;min-width:0}.farol-esq{right:calc(50% + 7vw)}.farol-dir{left:calc(50% + 7vw)}}
+
+/* ==========================================================================
+   REDESIGN 2026 — curadoria em movimento
+   A base funcional acima permanece para formulários e gerência. Esta camada
+   substitui a direção pública sem duplicar lógica de dados.
+   ========================================================================== */
+:root {
+  --papel: #f1efe9;
+  --papel-claro: #f8f6f1;
+  --papel-fundo: #e4e1d8;
+  --tinta: #10110f;
+  --tinta-media: #56584f;
+  --cerca: #42483d;
+  --asfalto: #777970;
+  --linha: rgba(16,17,15,.2);
+  --linha-fraca: rgba(16,17,15,.1);
+  --fonte-display: "Manrope Variable", system-ui, sans-serif;
+  --fonte-texto: "Manrope Variable", system-ui, sans-serif;
+  --fonte-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --margem: clamp(20px, 4.2vw, 72px);
+  --largura: 1600px;
+}
+
+body { font-weight: 400; letter-spacing: -.012em; }
+h1,h2,h3 { font-family: var(--fonte-display); font-weight: 430; letter-spacing: -.055em; }
+h1 em,h2 em { font-style: normal; font-weight: 560; }
+.kicker,.fino {
+  font-family: var(--fonte-mono); font-size: 10px; line-height: 1.6;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--asfalto);
+}
+.button,.acao {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  gap: 14px; min-height: 49px; padding: 14px 22px; border: 1px solid var(--tinta);
+  border-radius: 0; background: transparent; color: var(--tinta); text-decoration: none;
+  font-size: 12px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase;
+  overflow: hidden; transition: color .4s ease, background .4s ease, border-color .4s ease;
+}
+.button svg,.acao svg,.text-link svg { width: 15px; transition: transform .4s cubic-bezier(.16,1,.3,1); }
+.button:hover svg,.acao:hover svg,.text-link:hover svg { transform: translateX(5px); }
+.button-dark { background: var(--tinta); color: var(--papel-claro); }
+.button-dark:hover,.acao:hover { background: var(--cerca); border-color: var(--cerca); }
+.button-light { background: var(--papel-claro); border-color: var(--papel-claro); color: var(--tinta); }
+.button-light:hover { background: transparent; color: var(--papel-claro); }
+.text-link { display: inline-flex; align-items: center; gap: 12px; padding-block: 10px; color: inherit; text-decoration: none; border-bottom: 1px solid var(--linha); font-size: 12px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
+
+/* preloader: desenha, vira horizonte, abre o site */
+.preloader { display: none; }
+html[data-abrir="1"] .preloader {
+  display: grid; position: fixed; inset: 0; z-index: 1000; place-items: center;
+  background: var(--papel); animation: preloader-open var(--d-abertura) cubic-bezier(.76,0,.24,1) forwards;
+  clip-path: inset(0 0 0 0); pointer-events: none;
+}
+.preloader-sketch { width: min(680px, 82vw); text-align: center; transform: translateY(-2vh); }
+.preloader-sketch svg { width: 100%; overflow: visible; }
+.preloader-sketch path { stroke: #34362f; stroke-width: 1.15; vector-effect: non-scaling-stroke; }
+.sketch-main,.sketch-detail { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw-line .42s .08s cubic-bezier(.65,0,.35,1) forwards; }
+.sketch-detail { stroke: #686a62 !important; animation-delay: .34s; animation-duration: .24s; }
+.sketch-wheels { animation-delay: .4s; }
+.sketch-light { fill: #9f8c68; opacity: 0; filter: drop-shadow(0 0 4px #d8c49b); animation: light-in .2s .5s ease forwards; }
+.preloader-brand { opacity: 0; transform: translateY(7px); animation: loader-type .28s .48s ease forwards; }
+.preloader-brand strong { display: block; font-family: var(--fonte-display); font-size: 22px; font-weight: 400; }
+.preloader-brand span { display: block; margin-top: 6px; font-family: var(--fonte-mono); font-size: 8px; letter-spacing: .18em; text-transform: uppercase; }
+.preloader-rule { position: absolute; left: 50%; top: 64%; width: 0; height: 1px; background: var(--tinta); transform: translateX(-50%); animation: rule-expand .3s .7s cubic-bezier(.65,0,.35,1) forwards; }
+html[data-abrir="0"] .preloader { display: none; }
+@keyframes draw-line { to { stroke-dashoffset: 0; } }
+@keyframes light-in { to { opacity: .8; } }
+@keyframes loader-type { to { opacity: 1; transform: none; } }
+@keyframes rule-expand { to { width: 100vw; } }
+@keyframes preloader-open { 0%,72% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 100% 0); visibility: hidden; } }
+
+/* header */
+.cabecalho {
+  position: sticky; top: 0; z-index: 90; height: 68px; padding: 0 var(--margem);
+  background: color-mix(in srgb, var(--papel) 93%, transparent); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--linha-fraca); transition: height .35s ease;
+}
+.marca { font-family: var(--fonte-display); font-size: 21px; font-weight: 500; letter-spacing: -.035em; }
+.marca span { font-family: var(--fonte-mono); font-size: 7px; letter-spacing: .18em; text-transform: uppercase; }
+.menu { gap: clamp(22px,3vw,48px); }
+.menu a { font-family: var(--fonte-mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+.cabecalho-acao { min-height: 38px; padding: 9px 17px; font-size: 9px; }
+
+/* hero — texto e carro atravessam a grade, sem duas colunas-cartão */
+.hero { position: relative; min-height: min(820px, calc(100svh - 68px)); max-width: var(--largura); margin: 0 auto; padding: clamp(38px,6vh,72px) var(--margem) 48px; overflow: hidden; display: grid; grid-template-columns: repeat(12,1fr); grid-template-rows: 1fr auto; }
+.hero-copy { grid-column: 1 / 10; z-index: 3; align-self: start; pointer-events: none; }
+.hero-copy a { pointer-events: auto; }
+.hero-kicker { color: var(--tinta); margin-bottom: clamp(28px,5vh,64px); }
+.hero-title { font-size: clamp(64px,8.2vw,136px); line-height: .78; letter-spacing: -.062em; white-space: nowrap; }
+.hero-line { display: block; overflow: hidden; padding-bottom: .16em; margin-bottom: -.16em; }
+.hero-line { width:max-content; }
+.hero-line > span { display: block; }
+.hero-line-em { margin-left: clamp(42px,7vw,120px); padding-left: .04em; }
+.hero-line-em span { font-style: italic; }
+.hero-bottom { display: grid; grid-template-columns: minmax(220px,360px); gap: 25px; margin: clamp(34px,6vh,70px) 0 0 clamp(42px,7vw,120px); }
+.hero-bottom > p { color: var(--tinta-media); max-width: 40ch; font-size: 14px; line-height: 1.65; }
+.hero-actions { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.hero-visual { position: absolute; z-index: 2; width: min(55vw,820px); height: min(76vh,800px); right: var(--margem); top: clamp(40px,7vh,90px); }
+.hero-frame { position: absolute; inset: -20px 24px 32px -24px; border: 1px solid var(--linha); }
+.hero-photo { position: absolute; inset: 0 0 0 18%; overflow: hidden; background: var(--papel-fundo); clip-path: inset(100% 0 0 0); will-change: transform,clip-path; }
+.hero-photo::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(10,12,10,.18),transparent 34%); pointer-events:none; }
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; will-change: transform; }
+.hero-spec { position: absolute; z-index: 3; left: 3%; bottom: 4%; width: min(310px,42%); padding: 25px; display: grid; gap: 9px; background: var(--papel-claro); border: 1px solid var(--linha); text-decoration: none; box-shadow: 0 10px 35px rgba(16,17,15,.04); }
+.hero-spec strong { font-family: var(--fonte-display); font-size: clamp(20px,2vw,30px); line-height: 1; font-weight: 500; }
+.hero-spec-row { display: flex; gap: 15px; font-family: var(--fonte-mono); font-size: 9px; text-transform: uppercase; color: var(--asfalto); }
+.hero-price { padding-top: 12px; border-top: 1px solid var(--linha-fraca); font-family: var(--fonte-mono); font-size: 14px; }
+.hero-spec-link { display: flex; align-items: center; justify-content: space-between; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+.hero-spec-link svg { width: 13px; }
+.hero-index { position: absolute; right: 12px; bottom: -27px; color: var(--tinta); }
+.hero-tech { grid-column: 1 / -1; align-self: end; display: flex; align-items: center; gap: 14px; transform-origin: left; font-family: var(--fonte-mono); font-size: 8px; letter-spacing: .14em; text-transform: uppercase; }
+.hero-tech i { display: block; width: 34px; height: 1px; background: var(--linha); }
+
+/* seções editoriais */
+.section { padding: clamp(72px,8vw,125px) var(--margem); max-width: var(--largura); margin: auto; }
+.section-heading { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 40px; align-items: end; margin-bottom: clamp(36px,5vw,64px); }
+.section-heading h2,.about h2,.dark-call h2 { font-size: clamp(48px,6.3vw,104px); line-height: .88; }
+.section-heading h2 { grid-column: 2; }
+.section-heading > p:last-child { color: var(--tinta-media); max-width: 32ch; font-size: 14px; }
+.quick-filters { display: flex; gap: 24px; border-bottom: 1px solid var(--linha); margin-bottom: 28px; overflow-x: auto; }
+.quick-filters button { flex: 0 0 auto; padding: 0 0 12px; border: 0; border-bottom: 1px solid transparent; background: none; font-family: var(--fonte-mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.quick-filters button[aria-pressed="true"] { border-color: var(--tinta); }
+.editorial-grid { display: grid; grid-template-columns: repeat(12,1fr); gap: clamp(28px,4vw,64px) clamp(16px,2vw,32px); }
+.vehicle-card { grid-column: span 4; min-width: 0; }
+.vehicle-card-featured { grid-column: span 8; }
+.vehicle-media { position: relative; aspect-ratio: 4/5; overflow: hidden; background: var(--papel-fundo); }
+.vehicle-card-featured .vehicle-media { aspect-ratio: 16/10; }
+.vehicle-media img { width:100%; height:100%; object-fit:cover; transition: transform .75s cubic-bezier(.16,1,.3,1); }
+.vehicle-card:hover .vehicle-media img { transform: scale(1.025); }
+.photo-zone { position:absolute; z-index:2; top:0; bottom:0; width:28%; border:0; background:transparent; cursor:w-resize; opacity:0; }
+.photo-prev { left:0; }.photo-next { right:0; cursor:e-resize; }
+.photo-count { position:absolute; z-index:3; right:10px; bottom:10px; padding:5px 7px; background:rgba(16,17,15,.72); color:white; font-family:var(--fonte-mono); font-size:8px; letter-spacing:.08em; }
+.vehicle-note { position:absolute; left:0; top:0; padding:7px 10px; background:var(--papel-claro); font-family:var(--fonte-mono); font-size:8px; letter-spacing:.08em; text-transform:uppercase; }
+.vehicle-info { position:relative; display:grid; grid-template-columns:1fr auto; gap:4px 15px; padding-top:17px; border-top:1px solid var(--linha); text-decoration:none; }
+.vehicle-info .kicker { grid-column:1/-1; }
+.vehicle-info h3 { font-size:clamp(23px,2.5vw,37px); transition:transform .5s ease; }
+.vehicle-card:hover h3 { transform:translateX(3px); }
+.vehicle-meta { grid-column:1; font-family:var(--fonte-mono); font-size:9px; color:var(--asfalto); text-transform:uppercase; }
+.vehicle-info strong { grid-column:2; grid-row:2; font-family:var(--fonte-mono); font-size:11px; font-weight:500; }
+.vehicle-open { grid-column:2; grid-row:3; display:flex; align-items:center; gap:8px; opacity:0; font-family:var(--fonte-mono); font-size:8px; letter-spacing:.08em; text-transform:uppercase; transition:opacity .35s ease; }
+.vehicle-open svg { width:11px; }.vehicle-card:hover .vehicle-open { opacity:1; }
+.collection-link { margin-top:55px; float:right; }
+.collection::after { content:""; display:block; clear:both; }
+
+.about { display:grid; grid-template-columns:repeat(12,1fr); gap:30px; border-top:1px solid var(--linha); }
+.about-label { grid-column:1/3; }
+.about-copy { grid-column:4/11; }
+.about-copy p { margin:40px 0 0 42%; max-width:40ch; color:var(--tinta-media); }
+.about-photo { grid-column:2/6; margin:55px 0 0; }
+.about-photo img { width:100%; aspect-ratio:3/4; object-fit:cover; }
+.about-photo figcaption { padding-top:12px; }
+.about-services { grid-column:7/13; align-self:end; }
+.about-services a { display:grid; grid-template-columns:40px 1fr 20px; align-items:center; gap:15px; padding:22px 0; border-bottom:1px solid var(--linha); text-decoration:none; }
+.about-services a:first-child { border-top:1px solid var(--linha); }
+.about-services span { font-family:var(--fonte-mono); font-size:9px; color:var(--asfalto); }
+.about-services strong { font-family:var(--fonte-display); font-size:clamp(23px,2.4vw,34px); font-weight:400; }
+.about-services svg { width:14px; transition:transform .35s ease; }.about-services a:hover svg { transform:translateX(5px); }
+.dark-call { min-height:68vh; display:grid; grid-template-columns:1fr 3fr; gap:40px; align-items:start; padding:clamp(78px,9vw,130px) var(--margem); background:#10110f; color:var(--papel); }
+.dark-call > div { max-width:1000px; }
+.dark-call h2 { color:var(--papel-claro); }
+.dark-call > div > p { margin:45px 0 35px 50%; max-width:42ch; color:rgba(241,239,233,.62); }
+.dark-call .button { margin-left:50%; }
+
+/* estoque */
+.page-hero { max-width:var(--largura); margin:auto; padding:clamp(72px,9vw,135px) var(--margem) clamp(55px,8vw,110px); }
+.page-hero h1 { margin:24px 0 55px 12%; font-size:clamp(60px,8.5vw,136px); line-height:.82; }
+.page-hero > div { display:flex; justify-content:flex-end; align-items:end; gap:80px; }
+.page-hero > div p { max-width:42ch; color:var(--tinta-media); }
+.filters-shell { position:sticky; top:68px; z-index:30; padding:18px var(--margem); border-block:1px solid var(--linha); background:color-mix(in srgb,var(--papel) 94%,transparent); backdrop-filter:blur(12px); }
+.filtros-linha { gap:18px; }
+.busca { max-width:440px; }
+.busca input,.ordenar select { border:0; border-bottom:1px solid var(--linha); background:transparent; border-radius:0; padding:11px 30px 11px 0; }
+.pilulas { gap:16px; }
+.pilula { border:0; border-bottom:1px solid transparent; background:transparent; border-radius:0; padding:9px 0; font-family:var(--fonte-mono); font-size:9px; letter-spacing:.08em; text-transform:uppercase; }
+.pilula[aria-pressed="true"] { background:transparent; color:var(--tinta); border-color:var(--tinta); }
+.faixa { padding:50px var(--margem) 130px; }
+.catalog-grid .vehicle-card:nth-child(5n+1) { grid-column:span 8; }
+.catalog-grid .vehicle-card:nth-child(5n+1) .vehicle-media { aspect-ratio:16/10; }
+/* A foto larga para no limite da origem, 1600px, e o resto da faixa vira
+   respiro de propósito. Passar disso entrega foto borrada em tela retina. */
+.vehicle-card-featured .vehicle-media,
+.catalog-grid .vehicle-card:nth-child(5n+1) .vehicle-media { max-width:800px; }
+
+/* ficha e galeria contínua */
+.vehicle-page { max-width:var(--largura); padding:55px var(--margem) 120px; }
+.vehicle-page .ficha-grade { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(340px,.72fr); gap:clamp(35px,5vw,90px); align-items:start; }
+.vehicle-page .ficha-dados { position:sticky; top:105px; width:auto; margin:0; }
+.vehicle-page .ficha-dados h1 { font-size:clamp(55px,7vw,108px); line-height:.88; }
+.ficha-preco { font-family:var(--fonte-mono); font-size:clamp(22px,3vw,38px); }
+.tabela { margin-top:42px; }
+.tabela dt,.tabela dd { padding:16px 0; }
+.vehicle-gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(12px,2vw,26px); align-items:start; }
+.gallery-item { position:relative; border:0; padding:0; background:var(--papel-fundo); cursor:zoom-in; overflow:hidden; }
+.gallery-item-0,.gallery-item-4 { grid-column:1/-1; max-width:800px; }
+.gallery-item-1 { margin-top:8vw; }
+.gallery-item img { width:100%; height:auto; aspect-ratio:3/4; object-fit:cover; transition:transform .8s ease; }
+.gallery-item-0 img,.gallery-item-4 img { aspect-ratio:16/10; }
+.gallery-item:hover img { transform:scale(1.018); }
+.gallery-item > span { position:absolute; right:10px; bottom:10px; padding:5px 7px; background:var(--papel-claro); font-family:var(--fonte-mono); font-size:8px; }
+.lightbox { position:fixed; inset:0; z-index:500; display:grid; place-items:center; background:rgba(8,9,8,.96); color:white; }
+.lightbox img { max-width:88vw; max-height:88vh; width:auto; height:auto; object-fit:contain; }
+.lightbox button { position:absolute; z-index:2; border:0; background:none; color:white; font-size:27px; cursor:pointer; padding:20px; }
+.lightbox-close { right:18px; top:10px; }.lightbox-prev { left:15px; top:50%; }.lightbox-next { right:15px; top:50%; }
+.lightbox > span { position:absolute; bottom:18px; font-family:var(--fonte-mono); font-size:10px; }
+
+/* páginas de contato */
+.topo-pagina { padding:clamp(72px,9vw,130px) var(--margem) 65px; }
+.topo-pagina h1 { font-size:clamp(56px,7vw,108px); line-height:.9; max-width:12ch; }
+.form-grade { border-top:1px solid var(--linha); padding-top:50px; }
+.campo input,.campo select,.campo textarea { border:0; border-bottom:1px solid var(--linha); border-radius:0; background:transparent; padding-inline:0; }
+.previa { background:var(--cerca); }
+
+/* rodapé */
+.rodape { background:var(--papel); padding:75px var(--margem) 32px; }
+.rodape h2 { font-family:var(--fonte-display); font-size:clamp(32px,4vw,60px); font-weight:400; }
+.rodape-grade { grid-template-columns:1.5fr .8fr .6fr; }
+.rodape-fim { font-family:var(--fonte-mono); font-size:9px; letter-spacing:.08em; text-transform:uppercase; }
+
+/* A revelação agora é controlada pelo GSAP; neutraliza a máscara da versão
+   anterior para que o conteúdo não desapareça depois da animação. */
+html[data-js="1"] [data-revelar] {
+  -webkit-mask-image:none !important; mask-image:none !important;
+  transition:none; opacity:1;
+}
+
+@media (max-width: 1050px) {
+  .hero { min-height:auto; padding-bottom:90px; }
+  .hero-copy { grid-column:1/9; }
+  .hero-title { font-size:clamp(62px,10vw,102px); }
+  .hero-visual { position:relative; grid-column:5/13; grid-row:1; width:auto; height:650px; right:auto; top:120px; }
+  .hero-copy { padding-bottom:520px; }
+  .hero-tech { position:absolute; left:var(--margem); bottom:30px; }
+  .section-heading { grid-template-columns:1fr 3fr; }.section-heading h2 { grid-column:2; }.section-heading > p:last-child { grid-column:2; }
+  .vehicle-card { grid-column:span 6; }.vehicle-card-featured,.catalog-grid .vehicle-card:nth-child(5n+1) { grid-column:span 12; }
+  .about-copy { grid-column:3/12; }.about-photo { grid-column:1/6; }.about-services { grid-column:7/13; }
+}
+
+@media (max-width: 760px) {
+  body { padding-bottom:52px; }
+  .cabecalho { height:58px; }.menu { display:none; }.cabecalho-acao { display:inline-flex; }
+  .hero { display:block; padding:38px 20px 70px; overflow:visible; }
+  .hero-copy { padding-bottom:0; }
+  .hero-kicker { margin-bottom:30px; }
+  .hero-title { white-space:normal; font-size:clamp(54px,17vw,78px); line-height:.83; }
+  .hero-line-em { margin-left:12vw; }
+  .hero-line { width:auto; }
+  .hero-bottom { margin:30px 0 38px 12vw; display:block; }
+  .hero-actions { margin-top:24px; gap:15px; }.hero-actions .button,.hero-actions .text-link { width:100%; }
+  .hero-visual { position:relative; width:calc(100% + 40px); height:auto; aspect-ratio:4/5; top:auto; right:auto; margin-left:-20px; }
+  .hero-frame { display:none; }.hero-photo { inset:0; }.hero-photo::after { display:none; }
+  .hero-spec { left:20px; bottom:-30px; width:calc(100% - 40px); padding:20px; }
+  .hero-index { display:none; }.hero-tech { position:static; margin-top:58px; overflow:hidden; }
+  .section { padding:72px 20px; }
+  .section-heading { display:block; margin-bottom:45px; }.section-heading h2 { margin:16px 0 25px; font-size:clamp(48px,15vw,70px); }.section-heading > p:last-child { font-size:13px; }
+  .quick-filters { gap:18px; }
+  .editorial-grid { display:block; }.vehicle-card { margin-bottom:58px; }.vehicle-card-featured .vehicle-media,.catalog-grid .vehicle-card:nth-child(5n+1) .vehicle-media { aspect-ratio:4/5; }
+  .vehicle-info h3 { font-size:29px; }.vehicle-open { opacity:1; }
+  .collection-link { float:none; margin-top:10px; }
+  .about { display:block; }.about-copy { margin-top:30px; }.about-copy h2 { font-size:clamp(48px,14vw,68px); }.about-copy p { margin:30px 0 0 12vw; }.about-photo { margin:60px 0 50px 12vw; }.about-services { margin-top:25px; }
+  .dark-call { min-height:0; display:block; padding:100px 20px; }.dark-call > div { margin-top:55px; }.dark-call h2 { font-size:clamp(48px,14vw,68px); }.dark-call > div > p,.dark-call .button { margin-left:12vw; }.dark-call > div > p { margin-top:35px; }
+  .page-hero { padding:70px 20px 55px; }.page-hero h1 { margin:22px 0 40px 0; font-size:clamp(58px,17vw,78px); }.page-hero > div { display:block; }.page-hero > div span { display:block; margin-top:24px; }
+  .filters-shell { top:58px; padding:13px 20px; }.filtros-linha { gap:10px; }.busca { flex-basis:100%; max-width:none; }.pilulas { flex-wrap:nowrap; overflow-x:auto; width:100%; }.ordenar { width:100%; }
+  .faixa { padding:36px 20px 90px; }
+  .vehicle-page { padding:40px 20px 90px; }.vehicle-page .ficha-grade { display:flex; flex-direction:column-reverse; }.vehicle-page .ficha-dados { position:static; width:100%; margin:35px 0 45px; }.vehicle-page .ficha-dados h1 { font-size:clamp(52px,15vw,72px); }.itens { columns:1; }
+  .vehicle-gallery { display:block; }.gallery-item { width:100%; margin:0 0 14px; }.gallery-item img,.gallery-item-0 img,.gallery-item-4 img { aspect-ratio:3/4; }
+  .form-grade { padding:35px 20px 95px; }.campos { grid-template-columns:1fr; }.previa { position:static; }
+  .rodape-grade { grid-template-columns:1fr; gap:45px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-abrir="1"] .preloader { display:none !important; }
+  .hero-photo { clip-path:none !important; }
+  .hero-line > span,.hero-kicker,.hero-bottom,.hero-spec { transform:none !important; opacity:1 !important; filter:none !important; }
 }

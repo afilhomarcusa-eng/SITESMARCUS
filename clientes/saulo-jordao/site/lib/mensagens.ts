@@ -8,7 +8,7 @@
  */
 
 import { whatsapp } from "./contato";
-import type { Carro } from "./estoque";
+import type { Carro } from "./tipos";
 import { reais } from "./fmt";
 
 export function mensagemDoCarro(carro: Carro): string {

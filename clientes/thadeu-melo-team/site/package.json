@@ -1,0 +1,30 @@
+{
+  "name": "thadeu-melo-team-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1 --port 3012",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1 --port 3012",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "assets": "node scripts/prepare-assets.mjs && node scripts/prepare-fonts.mjs",
+    "qa": "node scripts/qa.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.1",
+    "sharp": "^0.34.0",
+    "typescript": "^5",
+    "wawoff2": "^2.0.1"
+  }
+}

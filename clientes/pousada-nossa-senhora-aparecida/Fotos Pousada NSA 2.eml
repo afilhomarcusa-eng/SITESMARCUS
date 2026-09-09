@@ -1,0 +1,616 @@
+Delivered-To: afilhomarcusa@gmail.com
+Received: by 2002:ac0:e243:0:b0:3ff:4783:57ff with SMTP id m3csp3791881imo;
+        Mon, 31 Aug 2026 19:33:31 -0700 (PDT)
+X-Received: by 2002:a05:6820:906:b0:6ab:bde:6099 with SMTP id 006d021491bc7-6b37852db67mr2228733eaf.9.1788230011162;
+        Mon, 31 Aug 2026 19:33:31 -0700 (PDT)
+ARC-Seal: i=2; a=rsa-sha256; t=1788230011; cv=pass;
+        d=google.com; s=arc-20260327;
+        b=qEBvzTFEj1mwLzKhu/+9RUgHWAFHnvYIYVU5uVREbljfp3QMlaj554vdj/FJ5XlmQH
+         PB2QVJaqKt6u8M0e74E74nAx9xZpqXYjS3fEtrF+MXIAAYrSohfHY4iyAdp9rBfcuR/3
+         hyc/qCPDuzKh11otTpYLnGy6OXMrdXE/xftXGBIu/D031i5umNlmitO6fv5EsezRZt8J
+         sson62cyl/lWCpVWW4ALkf2xPGohnpdApYtOsCH3e1syQl/OA6ZfWNKtrN1vnK3QQGJj
+         WVF65x+UU74vJ12Gw93g3rgIfw0y1jwPLRmKSNLBLaB7K+0IuS0YsiD/DTRwVN2PR5LR
+         JxVQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=ImKgB3EXdF18n7qIhPfyn3SXovbLhVFwRWCj8E1+Vo0=;
+        fh=eJoG4tm0MyP0cI8j2AKg6IDGwNXaxWDasnHAtW21FRI=;
+        b=dvdu93t24HOvYwPbXPvP3ICOGTknYyOKyJ7oGbf98f757pPxLfqqbOJCqJnxB6dkCm
+         Uw9EIm2izEgUo59kfR3C79PsLVHbJ2C9uZ4dLJbcawfx1e/hCaljuvgxMf1J5EwWQU/j
+         jRo/3v10DIWWg6qD6S3nWN9/vjOAtYET3jIgJAivK24ykcWYD5SBZrVMmdtJvgdy6rMG
+         2aMbusvWzsSU/+t3Dkwu6IdcPwVmSr5Pf/JYFHbXGCtSnp/KNniaLOqXb8jYyTNyEZOh
+         Y1PdNLqhfsK1dK2dl7/0Og0UisrlMmhhonJRuAVl9lzIonW7CuKyycejAQunPFmiBDtG
+         J0pQ==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20251104 header.b=gNwF8HTC;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of victorhugolimapassos@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=victorhugolimapassos@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+Return-Path: <victorhugolimapassos@gmail.com>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id 586e51a60fabf-46afb8b8f6csor745571fac.4.2026.08.31.19.33.31
+        for <afilhomarcusa@gmail.com>
+        (Google Transport Security);
+        Mon, 31 Aug 2026 19:33:31 -0700 (PDT)
+Received-SPF: pass (google.com: domain of victorhugolimapassos@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@gmail.com header.s=20251104 header.b=gNwF8HTC;
+       arc=pass (i=1);
+       spf=pass (google.com: domain of victorhugolimapassos@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=victorhugolimapassos@gmail.com;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;
+       dara=pass header.i=@gmail.com
+ARC-Seal: i=1; a=rsa-sha256; t=1788230011; cv=none;
+        d=google.com; s=arc-20260327;
+        b=NoaWKWIHdIISo321KL3MKfph65PvVL34Fr+nbZkShy3Vp4MP5QUN4XgQq5omEUROaf
+         2ZXb2GukrbXcFwxop8MreZAVQ3md21pDvlmC/g7Dk+1msRJy4SewBOICvn1oDxzuenQj
+         TQP0ITjZx/mofbL52zkXw8NBy14z18UvpT0tj3HjKX1k2L6JBjpDtnB+eCWjz9rre3EF
+         xF1UvxIFJIgDN2I0PX2ZlI7YzYM/b70gRvyruiPfoNbJw8vKmApA4lIn+ESiJdcKlZME
+         SC2NACnXOrFSFguutVNoaVSCw324T2OJRJC2dlIisclT0Ycr4sUf0TCG9bPoSnMGvtWf
+         FOJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :dkim-signature;
+        bh=ImKgB3EXdF18n7qIhPfyn3SXovbLhVFwRWCj8E1+Vo0=;
+        fh=eJoG4tm0MyP0cI8j2AKg6IDGwNXaxWDasnHAtW21FRI=;
+        b=l36XpgUEkdssNVjhn7pmV8YFx80AB5rOBtDxQyTACn+jm6kbDyR0vzyFdSG6UOSMQ/
+         Gm+fmNnusNdn3IzLTAaolfTxdV5zZkUGcGvinK5Kt5c7hUSVLjLsLRA1KlxnnoGeQHRZ
+         Ky7hNZeKGjemNq+vrxBJC+4NdN9ze6ceA0t+LL42pmC+hT9NwuzEqQvYO7MvtZG2Ufcr
+         KdL59X7ewNSO8Eg3VMlhQn/IhCKFI8DeBcqSFLvIjTv4mizMbQSktqZUihMtInBWiwcB
+         NSxwoWgKYXje2heAcEBfQPcTcGlooIdgTjLPgRdSOwhjdqXHA3ZElXtFtV1qnMVsnPWE
+         dzTA==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788230011; x=1788834811; dara=google.com;
+        h=content-type:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ImKgB3EXdF18n7qIhPfyn3SXovbLhVFwRWCj8E1+Vo0=;
+        b=gNwF8HTCLo+vlUpdVBtXXAL4fqgTIkIE4l7TPDvgzMdX6fPUFHw0qbI91Kt/uzi+Jo
+         mb0iFJH3nsWGHDO92z0y+Ybg7xsH9cP/LjVqYNEhffi6NRlwDb0ZhU5gIDID8mM56TSF
+         mPPZ1Zpt5YsgY4SsoEpKyQcs4q4sQVJyEAJJdTIFxmZsCnw3DnTny/eUcGvH140uS1xe
+         Hr+CmBm84gvFe7jIsRKl9+qrOM4iupr3LCG0Ltm5Z7Gpqu2ABMtxe7LuGe9ao7fPnELN
+         nZ0CrfZt0ycDOY+Ue4NsOo5+qi9b8cWJ+zAZyYISTGj4dODusNgZnUi0P0eVDz8cLTvF
+         674g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788230011; x=1788834811;
+        h=content-type:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ImKgB3EXdF18n7qIhPfyn3SXovbLhVFwRWCj8E1+Vo0=;
+        b=jEef1wLFBVb+plFvP+xtypxrobsKl+v6C1iUnaBnJcaziF6x3a9UejhDEWippV36qx
+         szJpMLk9X0qEQSGS6FXPz0FXd8dsLSwdEOeMMJnzd67Eurv2Wxa47tdk9KfqrmsT5jIZ
+         Ogi300oBwc71Dc30do18lUbeJMgGEaXtUIoN1mi6FS8AZyS/gL9jrs8wW0OPc7yYKwXk
+         jpu8WFyLIrc9hF66yUT7Ij0gTfl1Ss5gb6IkKHD619x+rSxiTptMC7FNa+Zm3bQkQ0ic
+         fagWPYh8NFEUZF1PWJ40JqfV7h1z+HjOBv26jOqZB0nmz19OaI0LfyBuEHwRiAmyPBlz
+         jn/Q==
+X-Gm-Message-State: AFuF++nvkwMBHYx6XHsJ91zAX8gMuYSps9AaXTCq1WEyGQMw61XIVBDT
+	6jsNoZAxKIGUm83lOZYaMSs2w2ISbmYDrDfAkqFktP1Cpo9BaO3jEpJ620JNLskS2QBloD/uDi5
+	qTrg/U51RT0m0lKfu6fB+lRckfsxigBloyg==
+X-Gm-Gg: AR+sD11diChl7a7C6DjejUrgjf78Y0r0i/zq9hQ8N0MbaP7vZGcYx2Q+EAOJc8EGWKI
+	U/ClSr8avvTXWPw/vokYSnpas2Fp0g+DXDz/ToGEBMin/Lhxt+Ub3YKYFOzj3aQz52wKPgs7jEd
+	qR3XZgv7GyxRwfbSaseZfKaBIA66nNjEeQt7XphGRJ2Qdr/qo94wCOMsALwCyEwvfb66IlpVOIw
+	T9oaIcyWnS2HNrLgavDISRCZnZiC8hDmtfqsA0mYjBuWNGIPK5DyRB9DUdcE03PIiKymXEtm2xy
+	+/H/tU7PsX/eurW6A+ZnGqTlwUBjgrWH+qK8+kKEjMTL2EqcNcejz7ixubF7h6n645QSPXKa6OU
+	sI7A=
+X-Received: by 2002:a05:6820:4b12:b0:6a3:6f5d:4d6c with SMTP id
+ 006d021491bc7-6b3784d42f7mr2198735eaf.6.1788230010544; Mon, 31 Aug 2026
+ 19:33:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAC3n=zQsZO-XmXi1xkQQT=XWGVKqFeW0MQiy0k=16EWSjVLs1A@mail.gmail.com>
+In-Reply-To: <CAC3n=zQsZO-XmXi1xkQQT=XWGVKqFeW0MQiy0k=16EWSjVLs1A@mail.gmail.com>
+From: Victor Hugo Lima Passos <victorhugolimapassos@gmail.com>
+Date: Mon, 31 Aug 2026 23:33:19 -0300
+X-Gm-Features: AcwNN1XhaJyd8trlbMVXSDxI2kL8R4mz_MsJg9h-HSos3rssnsnpqTPuAz59Er0
+Message-ID: <CAC3n=zQrNcA_a1ZR-Gi9+77EKqH4KSiLpSw5pCRi0vGezzNXSw@mail.gmail.com>
+Subject: Fwd: Fotos Pousada NSA 2
+To: "afilhomarcusa@gmail.com" <afilhomarcusa@gmail.com>
+Content-Type: multipart/alternative; boundary="0000000000008e274d065a62bea5"
+
+--0000000000008e274d065a62bea5
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+---------- Forwarded message ---------
+De: Victor Hugo Lima Passos <victorhugolimapassos@gmail.com>
+Date: sex., 14 de ago. de 2026 =C3=A0s 09:53
+Subject: Fotos Pousada NSA 2
+To: <Matheuskarri1999@gmail.com>
+
+
+ IMG_5861.jpg
+<https://drive.google.com/file/d/1g1O8MOOj03L7vPZjD4_ltpnPFl_rZvzj/view?usp=
+=3Ddrive_web>
+ IMG_5862.jpg
+<https://drive.google.com/file/d/10Uy4twrCOurBqwiQwd3itqU-0Y_AN5cX/view?usp=
+=3Ddrive_web>
+ IMG_5863.jpg
+<https://drive.google.com/file/d/1eowB_Uj0OUNUyVyTpcbLo-7Bh-HI4p_X/view?usp=
+=3Ddrive_web>
+ IMG_5865.jpg
+<https://drive.google.com/file/d/1TiH7bBeQ2DNpofgB6HstVsobpMLcOiGp/view?usp=
+=3Ddrive_web>
+ IMG_5866.jpg
+<https://drive.google.com/file/d/1FZ0FNtJetvN_oQ7jiRwLjaef1E52VASe/view?usp=
+=3Ddrive_web>
+ IMG_5882.jpg
+<https://drive.google.com/file/d/1iTE1VBZPb6kH9j1yWdFmojW2MT6Rm2j5/view?usp=
+=3Ddrive_web>
+ IMG_5884.jpg
+<https://drive.google.com/file/d/1NtYa8e4HTlbjYsKf9l9Yg0_nRDakrGlW/view?usp=
+=3Ddrive_web>
+ IMG_5890.jpg
+<https://drive.google.com/file/d/1VdE1QSk6uDK7Vz4kOKjIUg2aaCJelDqF/view?usp=
+=3Ddrive_web>
+ IMG_5891.jpg
+<https://drive.google.com/file/d/1iGVbdtG5PsAXFniMUgKuXi94c6ii5SIF/view?usp=
+=3Ddrive_web>
+ IMG_5895.jpg
+<https://drive.google.com/file/d/1riFS1ToB-TAMk92MlNAsbcg0eHQxdvxs/view?usp=
+=3Ddrive_web>
+ IMG_5897.jpg
+<https://drive.google.com/file/d/1JDWiOaIL2GNW-w6XjcdRbVGcHAwvdBlm/view?usp=
+=3Ddrive_web>
+ IMG_5898.jpg
+<https://drive.google.com/file/d/1g2iYv9MHdlc36O2LYCSe3TxTT08KWmbt/view?usp=
+=3Ddrive_web>
+ IMG_5939.jpg
+<https://drive.google.com/file/d/1CQaBSNjMDMKGdvsdTtkp9rxnKFBtx_vd/view?usp=
+=3Ddrive_web>
+ IMG_5940.jpg
+<https://drive.google.com/file/d/12EsAku1X1OvHZdMsjIOQ0Jo5nDpfrjbK/view?usp=
+=3Ddrive_web>
+ IMG_5946.jpg
+<https://drive.google.com/file/d/1DGOGurhDXyInpJuBVakuwVbzMtWoFCN1/view?usp=
+=3Ddrive_web>
+ IMG_5949.jpg
+<https://drive.google.com/file/d/1vBHFpTge1jTz_AFszfmyKG6_PZ7bIOJ4/view?usp=
+=3Ddrive_web>
+ IMG_5952.jpg
+<https://drive.google.com/file/d/1hFVBhnjTGM7bxao56HlgZEbj0eko1YJE/view?usp=
+=3Ddrive_web>
+ IMG_5956.jpg
+<https://drive.google.com/file/d/1Fcqztiklx3k9slGgIiFC9t9m81wTZIO5/view?usp=
+=3Ddrive_web>
+ IMG_5958.jpg
+<https://drive.google.com/file/d/1Ock_Fk7VQXmeVRhpQG7u-BuAZhdzS1dz/view?usp=
+=3Ddrive_web>
+ IMG_5967.jpg
+<https://drive.google.com/file/d/1zlqZPP86UTZ-_QzU1eGJUEar-MDpveSX/view?usp=
+=3Ddrive_web>
+ IMG_5969.jpg
+<https://drive.google.com/file/d/16ayam7lYHNTLjLdT0mAYouLubx4LHp2G/view?usp=
+=3Ddrive_web>
+ IMG_5985.jpg
+<https://drive.google.com/file/d/1-5KKU7k0txCB3_ab9MrbsztEU7x5bvK4/view?usp=
+=3Ddrive_web>
+ IMG_5987.jpg
+<https://drive.google.com/file/d/1M24uw_84TZlM19iSsSllulsxNoIt4C3k/view?usp=
+=3Ddrive_web>
+ IMG_5989.jpg
+<https://drive.google.com/file/d/1uBAyE25pMLWUkAcuqNuwX7qdF6ykrfwo/view?usp=
+=3Ddrive_web>
+ IMG_5995.jpg
+<https://drive.google.com/file/d/169wgYWthl51gbo4mVg2dLqgeuN80Gjit/view?usp=
+=3Ddrive_web>
+ IMG_6002.jpg
+<https://drive.google.com/file/d/1f1vXUqxG4E0Xc1zxvp9jxeb9alv9Qadb/view?usp=
+=3Ddrive_web>
+ IMG_6008.jpg
+<https://drive.google.com/file/d/1xTUZcg6rbOpnq_d0f1PRassW13E8tFOa/view?usp=
+=3Ddrive_web>
+ IMG_6009.jpg
+<https://drive.google.com/file/d/1NbZAdOk63PazeF-Ds2vMCIP2sUogGodA/view?usp=
+=3Ddrive_web>
+ IMG_6012.jpg
+<https://drive.google.com/file/d/1kIT4JtnDs8rZBEUkBnrGC4hzKlIw8YMk/view?usp=
+=3Ddrive_web>
+ IMG_6016.jpg
+<https://drive.google.com/file/d/1PyLLpIQyl708fO3sqPtcQqYsXf8RdgZ-/view?usp=
+=3Ddrive_web>
+ IMG_6017.jpg
+<https://drive.google.com/file/d/1xfGa4anE4aoVQHYq_dQzaBVPEIr0Ubqm/view?usp=
+=3Ddrive_web>
+ IMG_6023.jpg
+<https://drive.google.com/file/d/1S58twBbNfPpKx2DvJdOD4vmdyw1xVpBR/view?usp=
+=3Ddrive_web>
+ WhatsApp Image 2020-11-12 at 15.25.26 (1).jpeg
+<https://drive.google.com/file/d/1h1lZFg98_uOMKU0c42gPGBtfuGZiTNMR/view?usp=
+=3Ddrive_web>
+
+--0000000000008e274d065a62bea5
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><br><br><div class=3D"gmail_quote gmail_quote_container"><=
+div dir=3D"ltr" class=3D"gmail_attr">---------- Forwarded message ---------=
+<br>De: <strong class=3D"gmail_sendername" dir=3D"auto">Victor Hugo Lima Pa=
+ssos</strong> <span dir=3D"auto">&lt;<a href=3D"mailto:victorhugolimapassos=
+@gmail.com">victorhugolimapassos@gmail.com</a>&gt;</span><br>Date: sex., 14=
+ de ago. de 2026 =C3=A0s 09:53<br>Subject: Fotos Pousada NSA 2<br>To:  &lt;=
+<a href=3D"mailto:Matheuskarri1999@gmail.com">Matheuskarri1999@gmail.com</a=
+>&gt;<br></div><br><br><div dir=3D"ltr"><div class=3D"gmail_chip gmail_driv=
+e_chip" style=3D"width:386px;height:20px;max-height:20px;background-color:r=
+gb(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google=
+ Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a href=3D"https:=
+//drive.google.com/file/d/1g1O8MOOj03L7vPZjD4_ltpnPFl_rZvzj/view?usp=3Ddriv=
+e_web" style=3D"color:rgb(32,33,36);display:inline-block;max-width:356px;ov=
+erflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:non=
+e;border-width:medium;border-style:none;border-color:currentcolor" aria-lab=
+el=3D"IMG_5861.jpg" target=3D"_blank"><img style=3D"vertical-align:text-bot=
+tom;border:none;padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl=
+.gstatic.com/docs/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=
+=3D"ltr" style=3D"vertical-align:bottom">IMG_5861.jpg</span></a></div><div =
+class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;height:20px;max-=
+height:20px;background-color:rgb(245,245,245);margin:6px 0px;padding:10px;f=
+ont:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(2=
+21,221,221)"><a href=3D"https://drive.google.com/file/d/10Uy4twrCOurBqwiQwd=
+3itqU-0Y_AN5cX/view?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:i=
+nline-block;max-width:356px;overflow:hidden;text-overflow:ellipsis;white-sp=
+ace:nowrap;text-decoration:none;border-width:medium;border-style:none;borde=
+r-color:currentcolor" aria-label=3D"IMG_5862.jpg" target=3D"_blank"><img st=
+yle=3D"vertical-align:text-bottom;border:none;padding-right:10px;height:20p=
+x" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_gene=
+ric_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_5=
+862.jpg</span></a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D=
+"width:386px;height:20px;max-height:20px;background-color:rgb(245,245,245);=
+margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans=
+-serif;border:1px solid rgb(221,221,221)"><a href=3D"https://drive.google.c=
+om/file/d/1eowB_Uj0OUNUyVyTpcbLo-7Bh-HI4p_X/view?usp=3Ddrive_web" style=3D"=
+color:rgb(32,33,36);display:inline-block;max-width:356px;overflow:hidden;te=
+xt-overflow:ellipsis;white-space:nowrap;text-decoration:none;border-width:m=
+edium;border-style:none;border-color:currentcolor" aria-label=3D"IMG_5863.j=
+pg" target=3D"_blank"><img style=3D"vertical-align:text-bottom;border:none;=
+padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/doc=
+s/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D=
+"vertical-align:bottom">IMG_5863.jpg</span></a></div><div class=3D"gmail_ch=
+ip gmail_drive_chip" style=3D"width:386px;height:20px;max-height:20px;backg=
+round-color:rgb(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px=
+ &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a h=
+ref=3D"https://drive.google.com/file/d/1TiH7bBeQ2DNpofgB6HstVsobpMLcOiGp/vi=
+ew?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:inline-block;max-w=
+idth:356px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-d=
+ecoration:none;border-width:medium;border-style:none;border-color:currentco=
+lor" aria-label=3D"IMG_5865.jpg" target=3D"_blank"><img style=3D"vertical-a=
+lign:text-bottom;border:none;padding-right:10px;height:20px" alt=3D"" src=
+=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_generic_list.png">=
+=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_5865.jpg</span>=
+</a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;h=
+eight:20px;max-height:20px;background-color:rgb(245,245,245);margin:6px 0px=
+;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:=
+1px solid rgb(221,221,221)"><a href=3D"https://drive.google.com/file/d/1FZ0=
+FNtJetvN_oQ7jiRwLjaef1E52VASe/view?usp=3Ddrive_web" style=3D"color:rgb(32,3=
+3,36);display:inline-block;max-width:356px;overflow:hidden;text-overflow:el=
+lipsis;white-space:nowrap;text-decoration:none;border-width:medium;border-s=
+tyle:none;border-color:currentcolor" aria-label=3D"IMG_5866.jpg" target=3D"=
+_blank"><img style=3D"vertical-align:text-bottom;border:none;padding-right:=
+10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/imag=
+es/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-alig=
+n:bottom">IMG_5866.jpg</span></a></div><div class=3D"gmail_chip gmail_drive=
+_chip" style=3D"width:386px;height:20px;max-height:20px;background-color:rg=
+b(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google =
+Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a href=3D"https:/=
+/drive.google.com/file/d/1iTE1VBZPb6kH9j1yWdFmojW2MT6Rm2j5/view?usp=3Ddrive=
+_web" style=3D"color:rgb(32,33,36);display:inline-block;max-width:356px;ove=
+rflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none=
+;border-width:medium;border-style:none;border-color:currentcolor" aria-labe=
+l=3D"IMG_5882.jpg" target=3D"_blank"><img style=3D"vertical-align:text-bott=
+om;border:none;padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.=
+gstatic.com/docs/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=
+=3D"ltr" style=3D"vertical-align:bottom">IMG_5882.jpg</span></a></div><div =
+class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;height:20px;max-=
+height:20px;background-color:rgb(245,245,245);margin:6px 0px;padding:10px;f=
+ont:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(2=
+21,221,221)"><a href=3D"https://drive.google.com/file/d/1NtYa8e4HTlbjYsKf9l=
+9Yg0_nRDakrGlW/view?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:i=
+nline-block;max-width:356px;overflow:hidden;text-overflow:ellipsis;white-sp=
+ace:nowrap;text-decoration:none;border-width:medium;border-style:none;borde=
+r-color:currentcolor" aria-label=3D"IMG_5884.jpg" target=3D"_blank"><img st=
+yle=3D"vertical-align:text-bottom;border:none;padding-right:10px;height:20p=
+x" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_gene=
+ric_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_5=
+884.jpg</span></a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D=
+"width:386px;height:20px;max-height:20px;background-color:rgb(245,245,245);=
+margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans=
+-serif;border:1px solid rgb(221,221,221)"><a href=3D"https://drive.google.c=
+om/file/d/1VdE1QSk6uDK7Vz4kOKjIUg2aaCJelDqF/view?usp=3Ddrive_web" style=3D"=
+color:rgb(32,33,36);display:inline-block;max-width:356px;overflow:hidden;te=
+xt-overflow:ellipsis;white-space:nowrap;text-decoration:none;border-width:m=
+edium;border-style:none;border-color:currentcolor" aria-label=3D"IMG_5890.j=
+pg" target=3D"_blank"><img style=3D"vertical-align:text-bottom;border:none;=
+padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/doc=
+s/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D=
+"vertical-align:bottom">IMG_5890.jpg</span></a></div><div class=3D"gmail_ch=
+ip gmail_drive_chip" style=3D"width:386px;height:20px;max-height:20px;backg=
+round-color:rgb(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px=
+ &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a h=
+ref=3D"https://drive.google.com/file/d/1iGVbdtG5PsAXFniMUgKuXi94c6ii5SIF/vi=
+ew?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:inline-block;max-w=
+idth:356px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-d=
+ecoration:none;border-width:medium;border-style:none;border-color:currentco=
+lor" aria-label=3D"IMG_5891.jpg" target=3D"_blank"><img style=3D"vertical-a=
+lign:text-bottom;border:none;padding-right:10px;height:20px" alt=3D"" src=
+=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_generic_list.png">=
+=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_5891.jpg</span>=
+</a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;h=
+eight:20px;max-height:20px;background-color:rgb(245,245,245);margin:6px 0px=
+;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:=
+1px solid rgb(221,221,221)"><a href=3D"https://drive.google.com/file/d/1riF=
+S1ToB-TAMk92MlNAsbcg0eHQxdvxs/view?usp=3Ddrive_web" style=3D"color:rgb(32,3=
+3,36);display:inline-block;max-width:356px;overflow:hidden;text-overflow:el=
+lipsis;white-space:nowrap;text-decoration:none;border-width:medium;border-s=
+tyle:none;border-color:currentcolor" aria-label=3D"IMG_5895.jpg" target=3D"=
+_blank"><img style=3D"vertical-align:text-bottom;border:none;padding-right:=
+10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/imag=
+es/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-alig=
+n:bottom">IMG_5895.jpg</span></a></div><div class=3D"gmail_chip gmail_drive=
+_chip" style=3D"width:386px;height:20px;max-height:20px;background-color:rg=
+b(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google =
+Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a href=3D"https:/=
+/drive.google.com/file/d/1JDWiOaIL2GNW-w6XjcdRbVGcHAwvdBlm/view?usp=3Ddrive=
+_web" style=3D"color:rgb(32,33,36);display:inline-block;max-width:356px;ove=
+rflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none=
+;border-width:medium;border-style:none;border-color:currentcolor" aria-labe=
+l=3D"IMG_5897.jpg" target=3D"_blank"><img style=3D"vertical-align:text-bott=
+om;border:none;padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.=
+gstatic.com/docs/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=
+=3D"ltr" style=3D"vertical-align:bottom">IMG_5897.jpg</span></a></div><div =
+class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;height:20px;max-=
+height:20px;background-color:rgb(245,245,245);margin:6px 0px;padding:10px;f=
+ont:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(2=
+21,221,221)"><a href=3D"https://drive.google.com/file/d/1g2iYv9MHdlc36O2LYC=
+Se3TxTT08KWmbt/view?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:i=
+nline-block;max-width:356px;overflow:hidden;text-overflow:ellipsis;white-sp=
+ace:nowrap;text-decoration:none;border-width:medium;border-style:none;borde=
+r-color:currentcolor" aria-label=3D"IMG_5898.jpg" target=3D"_blank"><img st=
+yle=3D"vertical-align:text-bottom;border:none;padding-right:10px;height:20p=
+x" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_gene=
+ric_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_5=
+898.jpg</span></a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D=
+"width:386px;height:20px;max-height:20px;background-color:rgb(245,245,245);=
+margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans=
+-serif;border:1px solid rgb(221,221,221)"><a href=3D"https://drive.google.c=
+om/file/d/1CQaBSNjMDMKGdvsdTtkp9rxnKFBtx_vd/view?usp=3Ddrive_web" style=3D"=
+color:rgb(32,33,36);display:inline-block;max-width:356px;overflow:hidden;te=
+xt-overflow:ellipsis;white-space:nowrap;text-decoration:none;border-width:m=
+edium;border-style:none;border-color:currentcolor" aria-label=3D"IMG_5939.j=
+pg" target=3D"_blank"><img style=3D"vertical-align:text-bottom;border:none;=
+padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/doc=
+s/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D=
+"vertical-align:bottom">IMG_5939.jpg</span></a></div><div class=3D"gmail_ch=
+ip gmail_drive_chip" style=3D"width:386px;height:20px;max-height:20px;backg=
+round-color:rgb(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px=
+ &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a h=
+ref=3D"https://drive.google.com/file/d/12EsAku1X1OvHZdMsjIOQ0Jo5nDpfrjbK/vi=
+ew?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:inline-block;max-w=
+idth:356px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-d=
+ecoration:none;border-width:medium;border-style:none;border-color:currentco=
+lor" aria-label=3D"IMG_5940.jpg" target=3D"_blank"><img style=3D"vertical-a=
+lign:text-bottom;border:none;padding-right:10px;height:20px" alt=3D"" src=
+=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_generic_list.png">=
+=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_5940.jpg</span>=
+</a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;h=
+eight:20px;max-height:20px;background-color:rgb(245,245,245);margin:6px 0px=
+;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:=
+1px solid rgb(221,221,221)"><a href=3D"https://drive.google.com/file/d/1DGO=
+GurhDXyInpJuBVakuwVbzMtWoFCN1/view?usp=3Ddrive_web" style=3D"color:rgb(32,3=
+3,36);display:inline-block;max-width:356px;overflow:hidden;text-overflow:el=
+lipsis;white-space:nowrap;text-decoration:none;border-width:medium;border-s=
+tyle:none;border-color:currentcolor" aria-label=3D"IMG_5946.jpg" target=3D"=
+_blank"><img style=3D"vertical-align:text-bottom;border:none;padding-right:=
+10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/imag=
+es/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-alig=
+n:bottom">IMG_5946.jpg</span></a></div><div class=3D"gmail_chip gmail_drive=
+_chip" style=3D"width:386px;height:20px;max-height:20px;background-color:rg=
+b(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google =
+Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a href=3D"https:/=
+/drive.google.com/file/d/1vBHFpTge1jTz_AFszfmyKG6_PZ7bIOJ4/view?usp=3Ddrive=
+_web" style=3D"color:rgb(32,33,36);display:inline-block;max-width:356px;ove=
+rflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none=
+;border-width:medium;border-style:none;border-color:currentcolor" aria-labe=
+l=3D"IMG_5949.jpg" target=3D"_blank"><img style=3D"vertical-align:text-bott=
+om;border:none;padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.=
+gstatic.com/docs/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=
+=3D"ltr" style=3D"vertical-align:bottom">IMG_5949.jpg</span></a></div><div =
+class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;height:20px;max-=
+height:20px;background-color:rgb(245,245,245);margin:6px 0px;padding:10px;f=
+ont:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(2=
+21,221,221)"><a href=3D"https://drive.google.com/file/d/1hFVBhnjTGM7bxao56H=
+lgZEbj0eko1YJE/view?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:i=
+nline-block;max-width:356px;overflow:hidden;text-overflow:ellipsis;white-sp=
+ace:nowrap;text-decoration:none;border-width:medium;border-style:none;borde=
+r-color:currentcolor" aria-label=3D"IMG_5952.jpg" target=3D"_blank"><img st=
+yle=3D"vertical-align:text-bottom;border:none;padding-right:10px;height:20p=
+x" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_gene=
+ric_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_5=
+952.jpg</span></a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D=
+"width:386px;height:20px;max-height:20px;background-color:rgb(245,245,245);=
+margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans=
+-serif;border:1px solid rgb(221,221,221)"><a href=3D"https://drive.google.c=
+om/file/d/1Fcqztiklx3k9slGgIiFC9t9m81wTZIO5/view?usp=3Ddrive_web" style=3D"=
+color:rgb(32,33,36);display:inline-block;max-width:356px;overflow:hidden;te=
+xt-overflow:ellipsis;white-space:nowrap;text-decoration:none;border-width:m=
+edium;border-style:none;border-color:currentcolor" aria-label=3D"IMG_5956.j=
+pg" target=3D"_blank"><img style=3D"vertical-align:text-bottom;border:none;=
+padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/doc=
+s/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D=
+"vertical-align:bottom">IMG_5956.jpg</span></a></div><div class=3D"gmail_ch=
+ip gmail_drive_chip" style=3D"width:386px;height:20px;max-height:20px;backg=
+round-color:rgb(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px=
+ &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a h=
+ref=3D"https://drive.google.com/file/d/1Ock_Fk7VQXmeVRhpQG7u-BuAZhdzS1dz/vi=
+ew?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:inline-block;max-w=
+idth:356px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-d=
+ecoration:none;border-width:medium;border-style:none;border-color:currentco=
+lor" aria-label=3D"IMG_5958.jpg" target=3D"_blank"><img style=3D"vertical-a=
+lign:text-bottom;border:none;padding-right:10px;height:20px" alt=3D"" src=
+=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_generic_list.png">=
+=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_5958.jpg</span>=
+</a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;h=
+eight:20px;max-height:20px;background-color:rgb(245,245,245);margin:6px 0px=
+;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:=
+1px solid rgb(221,221,221)"><a href=3D"https://drive.google.com/file/d/1zlq=
+ZPP86UTZ-_QzU1eGJUEar-MDpveSX/view?usp=3Ddrive_web" style=3D"color:rgb(32,3=
+3,36);display:inline-block;max-width:356px;overflow:hidden;text-overflow:el=
+lipsis;white-space:nowrap;text-decoration:none;border-width:medium;border-s=
+tyle:none;border-color:currentcolor" aria-label=3D"IMG_5967.jpg" target=3D"=
+_blank"><img style=3D"vertical-align:text-bottom;border:none;padding-right:=
+10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/imag=
+es/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-alig=
+n:bottom">IMG_5967.jpg</span></a></div><div class=3D"gmail_chip gmail_drive=
+_chip" style=3D"width:386px;height:20px;max-height:20px;background-color:rg=
+b(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google =
+Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a href=3D"https:/=
+/drive.google.com/file/d/16ayam7lYHNTLjLdT0mAYouLubx4LHp2G/view?usp=3Ddrive=
+_web" style=3D"color:rgb(32,33,36);display:inline-block;max-width:356px;ove=
+rflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none=
+;border-width:medium;border-style:none;border-color:currentcolor" aria-labe=
+l=3D"IMG_5969.jpg" target=3D"_blank"><img style=3D"vertical-align:text-bott=
+om;border:none;padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.=
+gstatic.com/docs/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=
+=3D"ltr" style=3D"vertical-align:bottom">IMG_5969.jpg</span></a></div><div =
+class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;height:20px;max-=
+height:20px;background-color:rgb(245,245,245);margin:6px 0px;padding:10px;f=
+ont:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(2=
+21,221,221)"><a href=3D"https://drive.google.com/file/d/1-5KKU7k0txCB3_ab9M=
+rbsztEU7x5bvK4/view?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:i=
+nline-block;max-width:356px;overflow:hidden;text-overflow:ellipsis;white-sp=
+ace:nowrap;text-decoration:none;border-width:medium;border-style:none;borde=
+r-color:currentcolor" aria-label=3D"IMG_5985.jpg" target=3D"_blank"><img st=
+yle=3D"vertical-align:text-bottom;border:none;padding-right:10px;height:20p=
+x" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_gene=
+ric_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_5=
+985.jpg</span></a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D=
+"width:386px;height:20px;max-height:20px;background-color:rgb(245,245,245);=
+margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans=
+-serif;border:1px solid rgb(221,221,221)"><a href=3D"https://drive.google.c=
+om/file/d/1M24uw_84TZlM19iSsSllulsxNoIt4C3k/view?usp=3Ddrive_web" style=3D"=
+color:rgb(32,33,36);display:inline-block;max-width:356px;overflow:hidden;te=
+xt-overflow:ellipsis;white-space:nowrap;text-decoration:none;border-width:m=
+edium;border-style:none;border-color:currentcolor" aria-label=3D"IMG_5987.j=
+pg" target=3D"_blank"><img style=3D"vertical-align:text-bottom;border:none;=
+padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/doc=
+s/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D=
+"vertical-align:bottom">IMG_5987.jpg</span></a></div><div class=3D"gmail_ch=
+ip gmail_drive_chip" style=3D"width:386px;height:20px;max-height:20px;backg=
+round-color:rgb(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px=
+ &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a h=
+ref=3D"https://drive.google.com/file/d/1uBAyE25pMLWUkAcuqNuwX7qdF6ykrfwo/vi=
+ew?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:inline-block;max-w=
+idth:356px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-d=
+ecoration:none;border-width:medium;border-style:none;border-color:currentco=
+lor" aria-label=3D"IMG_5989.jpg" target=3D"_blank"><img style=3D"vertical-a=
+lign:text-bottom;border:none;padding-right:10px;height:20px" alt=3D"" src=
+=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_generic_list.png">=
+=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_5989.jpg</span>=
+</a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;h=
+eight:20px;max-height:20px;background-color:rgb(245,245,245);margin:6px 0px=
+;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:=
+1px solid rgb(221,221,221)"><a href=3D"https://drive.google.com/file/d/169w=
+gYWthl51gbo4mVg2dLqgeuN80Gjit/view?usp=3Ddrive_web" style=3D"color:rgb(32,3=
+3,36);display:inline-block;max-width:356px;overflow:hidden;text-overflow:el=
+lipsis;white-space:nowrap;text-decoration:none;border-width:medium;border-s=
+tyle:none;border-color:currentcolor" aria-label=3D"IMG_5995.jpg" target=3D"=
+_blank"><img style=3D"vertical-align:text-bottom;border:none;padding-right:=
+10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/imag=
+es/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-alig=
+n:bottom">IMG_5995.jpg</span></a></div><div class=3D"gmail_chip gmail_drive=
+_chip" style=3D"width:386px;height:20px;max-height:20px;background-color:rg=
+b(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google =
+Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a href=3D"https:/=
+/drive.google.com/file/d/1f1vXUqxG4E0Xc1zxvp9jxeb9alv9Qadb/view?usp=3Ddrive=
+_web" style=3D"color:rgb(32,33,36);display:inline-block;max-width:356px;ove=
+rflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none=
+;border-width:medium;border-style:none;border-color:currentcolor" aria-labe=
+l=3D"IMG_6002.jpg" target=3D"_blank"><img style=3D"vertical-align:text-bott=
+om;border:none;padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.=
+gstatic.com/docs/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=
+=3D"ltr" style=3D"vertical-align:bottom">IMG_6002.jpg</span></a></div><div =
+class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;height:20px;max-=
+height:20px;background-color:rgb(245,245,245);margin:6px 0px;padding:10px;f=
+ont:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(2=
+21,221,221)"><a href=3D"https://drive.google.com/file/d/1xTUZcg6rbOpnq_d0f1=
+PRassW13E8tFOa/view?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:i=
+nline-block;max-width:356px;overflow:hidden;text-overflow:ellipsis;white-sp=
+ace:nowrap;text-decoration:none;border-width:medium;border-style:none;borde=
+r-color:currentcolor" aria-label=3D"IMG_6008.jpg" target=3D"_blank"><img st=
+yle=3D"vertical-align:text-bottom;border:none;padding-right:10px;height:20p=
+x" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_gene=
+ric_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_6=
+008.jpg</span></a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D=
+"width:386px;height:20px;max-height:20px;background-color:rgb(245,245,245);=
+margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans=
+-serif;border:1px solid rgb(221,221,221)"><a href=3D"https://drive.google.c=
+om/file/d/1NbZAdOk63PazeF-Ds2vMCIP2sUogGodA/view?usp=3Ddrive_web" style=3D"=
+color:rgb(32,33,36);display:inline-block;max-width:356px;overflow:hidden;te=
+xt-overflow:ellipsis;white-space:nowrap;text-decoration:none;border-width:m=
+edium;border-style:none;border-color:currentcolor" aria-label=3D"IMG_6009.j=
+pg" target=3D"_blank"><img style=3D"vertical-align:text-bottom;border:none;=
+padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/doc=
+s/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D=
+"vertical-align:bottom">IMG_6009.jpg</span></a></div><div class=3D"gmail_ch=
+ip gmail_drive_chip" style=3D"width:386px;height:20px;max-height:20px;backg=
+round-color:rgb(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px=
+ &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a h=
+ref=3D"https://drive.google.com/file/d/1kIT4JtnDs8rZBEUkBnrGC4hzKlIw8YMk/vi=
+ew?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:inline-block;max-w=
+idth:356px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-d=
+ecoration:none;border-width:medium;border-style:none;border-color:currentco=
+lor" aria-label=3D"IMG_6012.jpg" target=3D"_blank"><img style=3D"vertical-a=
+lign:text-bottom;border:none;padding-right:10px;height:20px" alt=3D"" src=
+=3D"https://ssl.gstatic.com/docs/doclist/images/icon_10_generic_list.png">=
+=C2=A0<span dir=3D"ltr" style=3D"vertical-align:bottom">IMG_6012.jpg</span>=
+</a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;h=
+eight:20px;max-height:20px;background-color:rgb(245,245,245);margin:6px 0px=
+;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans-serif;border:=
+1px solid rgb(221,221,221)"><a href=3D"https://drive.google.com/file/d/1PyL=
+LpIQyl708fO3sqPtcQqYsXf8RdgZ-/view?usp=3Ddrive_web" style=3D"color:rgb(32,3=
+3,36);display:inline-block;max-width:356px;overflow:hidden;text-overflow:el=
+lipsis;white-space:nowrap;text-decoration:none;border-width:medium;border-s=
+tyle:none;border-color:currentcolor" aria-label=3D"IMG_6016.jpg" target=3D"=
+_blank"><img style=3D"vertical-align:text-bottom;border:none;padding-right:=
+10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclist/imag=
+es/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertical-alig=
+n:bottom">IMG_6016.jpg</span></a></div><div class=3D"gmail_chip gmail_drive=
+_chip" style=3D"width:386px;height:20px;max-height:20px;background-color:rg=
+b(245,245,245);margin:6px 0px;padding:10px;font:400 14px/20px &quot;Google =
+Sans&quot;,sans-serif;border:1px solid rgb(221,221,221)"><a href=3D"https:/=
+/drive.google.com/file/d/1xfGa4anE4aoVQHYq_dQzaBVPEIr0Ubqm/view?usp=3Ddrive=
+_web" style=3D"color:rgb(32,33,36);display:inline-block;max-width:356px;ove=
+rflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none=
+;border-width:medium;border-style:none;border-color:currentcolor" aria-labe=
+l=3D"IMG_6017.jpg" target=3D"_blank"><img style=3D"vertical-align:text-bott=
+om;border:none;padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.=
+gstatic.com/docs/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=
+=3D"ltr" style=3D"vertical-align:bottom;text-decoration:none">IMG_6017.jpg<=
+/span></a></div><div class=3D"gmail_chip gmail_drive_chip" style=3D"width:3=
+86px;height:20px;max-height:20px;background-color:rgb(245,245,245);margin:6=
+px 0px;padding:10px;font:400 14px/20px &quot;Google Sans&quot;,sans-serif;b=
+order:1px solid rgb(221,221,221)"><a href=3D"https://drive.google.com/file/=
+d/1S58twBbNfPpKx2DvJdOD4vmdyw1xVpBR/view?usp=3Ddrive_web" style=3D"color:rg=
+b(32,33,36);display:inline-block;max-width:356px;overflow:hidden;text-overf=
+low:ellipsis;white-space:nowrap;text-decoration:none;border-width:medium;bo=
+rder-style:none;border-color:currentcolor" aria-label=3D"IMG_6023.jpg" targ=
+et=3D"_blank"><img style=3D"vertical-align:text-bottom;border:none;padding-=
+right:10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/docs/doclis=
+t/images/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=3D"vertica=
+l-align:bottom;text-decoration:none">IMG_6023.jpg</span></a></div><div clas=
+s=3D"gmail_chip gmail_drive_chip" style=3D"width:386px;height:20px;max-heig=
+ht:20px;background-color:rgb(245,245,245);margin:6px 0px;padding:10px;font:=
+400 14px/20px &quot;Google Sans&quot;,sans-serif;border:1px solid rgb(221,2=
+21,221)"><a href=3D"https://drive.google.com/file/d/1h1lZFg98_uOMKU0c42gPGB=
+tfuGZiTNMR/view?usp=3Ddrive_web" style=3D"color:rgb(32,33,36);display:inlin=
+e-block;max-width:356px;overflow:hidden;text-overflow:ellipsis;white-space:=
+nowrap;text-decoration:none;border-width:medium;border-style:none;border-co=
+lor:currentcolor" aria-label=3D"WhatsApp Image 2020-11-12 at 15.25.26 (1).j=
+peg" target=3D"_blank"><img style=3D"vertical-align:text-bottom;border:none=
+;padding-right:10px;height:20px" alt=3D"" src=3D"https://ssl.gstatic.com/do=
+cs/doclist/images/icon_10_generic_list.png">=C2=A0<span dir=3D"ltr" style=
+=3D"vertical-align:bottom;text-decoration:none">WhatsApp Image 2020-11-12 a=
+t 15.25.26 (1).jpeg</span></a></div></div>
+</div></div>
+
+--0000000000008e274d065a62bea5--

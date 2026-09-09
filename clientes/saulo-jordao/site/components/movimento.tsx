@@ -2,100 +2,76 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-/**
- * O movimento do site inteiro, num componente só.
- *
- * Duas coisas: revelar o que entra na tela, e dar profundidade ao herói quando
- * o ponteiro anda por cima dele.
- *
- * A revelação é máscara vertical, não opacidade com translateY em tudo, que é
- * a assinatura de site gerado. Quem esconde é o CSS, e o CSS só esconde quando
- * `html[data-js="1"]`, marcado pelo script bloqueante do head. Sem JavaScript
- * nada fica escondido esperando um observador que nunca vai rodar.
- *
- * A profundidade do ponteiro é interpolada, nunca ligada direto na posição do
- * mouse, e não existe em tela de toque.
- */
 export default function Movimento() {
   const rota = usePathname();
 
   useEffect(() => {
-    const suave = matchMedia("(prefers-reduced-motion: reduce)");
-    if (suave.matches) {
-      document
-        .querySelectorAll<HTMLElement>("[data-revelar], [data-entrada-foto]")
-        .forEach((el) => {
-          el.dataset.revelar = "visivel";
-          if ("entradaFoto" in el.dataset) el.dataset.entradaFoto = "visivel";
-        });
+    const reduz = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduz) {
+      document.querySelectorAll<HTMLElement>("[data-revelar], [data-entrada-foto]").forEach((el) => {
+        el.dataset.revelar = "visivel";
+        if ("entradaFoto" in el.dataset) el.dataset.entradaFoto = "visivel";
+      });
       return;
     }
 
-    const observador = new IntersectionObserver(
-      (entradas) => {
-        for (const e of entradas) {
-          if (!e.isIntersecting) continue;
-          const el = e.target as HTMLElement;
-          if ("revelar" in el.dataset) el.dataset.revelar = "visivel";
-          if ("entradaFoto" in el.dataset) el.dataset.entradaFoto = "visivel";
-          observador.unobserve(el);
-        }
-      },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.08 },
-    );
+    gsap.registerPlugin(ScrollTrigger);
+    const contexto = gsap.context(() => {
+      document.querySelectorAll<HTMLElement>("[data-revelar]").forEach((el) => {
+        gsap.fromTo(el, { y: 26, opacity: 0 }, {
+          y: 0, opacity: 1, duration: .72, ease: "power3.out", immediateRender: false,
+          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        });
+      });
 
-    document
-      .querySelectorAll<HTMLElement>("[data-revelar], [data-entrada-foto]")
-      .forEach((el) => observador.observe(el));
+      document.querySelectorAll<HTMLElement>("[data-entrada-foto]").forEach((el) => {
+        gsap.fromTo(el, { clipPath: "inset(100% 0 0 0)" }, {
+          clipPath: "inset(0% 0 0 0)", duration: .9, ease: "power4.out", immediateRender: false,
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        });
+      });
 
-    return () => observador.disconnect();
-  }, [rota]);
+      const hero = document.querySelector<HTMLElement>("[data-hero]");
+      if (hero) {
+        const espera = document.documentElement.dataset.abrir === "1" ? .92 : 0.04;
+        const timeline = gsap.timeline({ delay: espera });
+        timeline
+          .fromTo(".hero-kicker", { opacity: 0, letterSpacing: ".22em" }, { opacity: 1, letterSpacing: ".12em", duration: .65, ease: "power3.out" })
+          .fromTo(".hero-line > span", { yPercent: 112, filter: "blur(5px)" }, { yPercent: 0, filter: "blur(0px)", duration: .9, stagger: .12, ease: "power4.out" }, "-=.35")
+          .fromTo(".hero-photo", { clipPath: "inset(100% 0 0 0)" }, { clipPath: "inset(0% 0 0 0)", duration: 1.35, ease: "power4.out" }, "-=.72")
+          .fromTo(".hero-photo img", { scale: 1.07, filter: "blur(4px)" }, { scale: 1, filter: "blur(0px)", duration: 1.4, ease: "power3.out" }, "<")
+          .fromTo(".hero-bottom", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .7, ease: "power3.out" }, "-=.85")
+          .fromTo(".hero-spec", { opacity: 0, x: 35 }, { opacity: 1, x: 0, duration: .75, ease: "power3.out" }, "-=.72")
+          .fromTo(".hero-tech", { scaleX: 0 }, { scaleX: 1, duration: .8, ease: "expo.out" }, "-=.5");
 
-  useEffect(() => {
-    if (matchMedia("(pointer: coarse)").matches) return;
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const planos = [...document.querySelectorAll<HTMLElement>("[data-plano]")];
-    if (!planos.length) return;
-
-    // Fundo anda pouco, frente anda mais. Os números são os do briefing, em
-    // pixels de deslocamento máximo.
-    const forca: Record<string, number> = { fundo: 4, meio: 8, frente: 16 };
-    let alvoX = 0;
-    let alvoY = 0;
-    let x = 0;
-    let y = 0;
-    let quadro = 0;
-
-    const mover = (ev: PointerEvent) => {
-      alvoX = (ev.clientX / innerWidth - 0.5) * 2;
-      alvoY = (ev.clientY / innerHeight - 0.5) * 2;
-      if (!quadro) quadro = requestAnimationFrame(passo);
-    };
-
-    const passo = () => {
-      // Amortecimento. Ligar a transformação direto na posição do ponteiro
-      // deixa o movimento nervoso e denuncia o truque.
-      x += (alvoX - x) * 0.07;
-      y += (alvoY - y) * 0.07;
-
-      for (const el of planos) {
-        const f = forca[el.dataset.plano ?? "meio"] ?? 8;
-        el.style.transform = `translate3d(${(-x * f).toFixed(2)}px, ${(-y * f).toFixed(2)}px, 0)`;
+        const foto = hero.querySelector<HTMLElement>(".hero-photo");
+        if (foto) gsap.to(foto, { yPercent: -7, ease: "none", scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: true } });
       }
+    });
 
-      quadro =
-        Math.abs(alvoX - x) > 0.001 || Math.abs(alvoY - y) > 0.001
-          ? requestAnimationFrame(passo)
-          : 0;
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    const planos = hero ? [...hero.querySelectorAll<HTMLElement>("[data-depth]")] : [];
+    let frame = 0;
+    const mover = (event: PointerEvent) => {
+      if (!hero || matchMedia("(pointer: coarse)").matches) return;
+      const rect = hero.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - .5;
+      const y = (event.clientY - rect.top) / rect.height - .5;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => planos.forEach((el) => {
+        const f = el.dataset.depth === "back" ? 5 : el.dataset.depth === "photo" ? 10 : 16;
+        gsap.to(el, { x: x * f, y: y * f, duration: 1.2, ease: "power3.out", overwrite: true });
+      }));
     };
+    hero?.addEventListener("pointermove", mover, { passive: true });
 
-    addEventListener("pointermove", mover, { passive: true });
     return () => {
-      removeEventListener("pointermove", mover);
-      if (quadro) cancelAnimationFrame(quadro);
-      for (const el of planos) el.style.transform = "";
+      hero?.removeEventListener("pointermove", mover);
+      cancelAnimationFrame(frame);
+      contexto.revert();
     };
   }, [rota]);
 

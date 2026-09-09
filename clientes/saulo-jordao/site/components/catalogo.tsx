@@ -4,7 +4,8 @@ import { useMemo, useRef, useSyncExternalStore } from "react";
 import Link from "next/link";
 import CartaoCarro from "./cartao-carro";
 import { Fechar, SetaDiagonal } from "./icones";
-import { CARROS, MARCAS } from "@/lib/estoque";
+import { marcasDe } from "@/lib/estoque";
+import type { Carro } from "@/lib/tipos";
 import {
   ORDENS,
   aplicar,
@@ -40,8 +41,15 @@ function assinar(avisar: () => void) {
   };
 }
 
-export default function Catalogo({ consultaInicial }: { consultaInicial: string }) {
+export default function Catalogo({
+  carros,
+  consultaInicial,
+}: {
+  carros: Carro[];
+  consultaInicial: string;
+}) {
   const inicial = useRef(consultaInicial);
+  const MARCAS = useMemo(() => marcasDe(carros), [carros]);
 
   const consulta = useSyncExternalStore(
     assinar,
@@ -50,8 +58,8 @@ export default function Catalogo({ consultaInicial }: { consultaInicial: string 
   );
 
   const selecao = useMemo(() => lerSelecao(new URLSearchParams(consulta)), [consulta]);
-  const lista = useMemo(() => aplicar(selecao), [selecao]);
-  const tetos = useMemo(() => tetosDePreco(), []);
+  const lista = useMemo(() => aplicar(selecao, carros), [selecao, carros]);
+  const tetos = useMemo(() => tetosDePreco(carros), [carros]);
   const ativos = quantosFiltros(selecao);
 
   function mudar(parcial: Partial<Selecao>) {
@@ -62,7 +70,7 @@ export default function Catalogo({ consultaInicial }: { consultaInicial: string 
 
   return (
     <>
-      <div className="filtros">
+      <div className="filters-shell">
         <div className="filtros-linha">
           <div className="busca">
             <label className="so-leitor" htmlFor="busca">
@@ -142,9 +150,9 @@ export default function Catalogo({ consultaInicial }: { consultaInicial: string 
       <div className="faixa">
         <div className="contagem">
           <p className="fino fino-tinta" data-contagem>
-            {lista.length === CARROS.length
-              ? `${CARROS.length} carros no estoque`
-              : `${lista.length} de ${CARROS.length} carros`}
+            {lista.length === carros.length
+              ? `${carros.length} carros no estoque`
+              : `${lista.length} de ${carros.length} carros`}
           </p>
           {ativos > 0 ? (
             <button
@@ -161,14 +169,19 @@ export default function Catalogo({ consultaInicial }: { consultaInicial: string 
         </div>
 
         {lista.length ? (
-          <div className="grade medida" data-grade>
+          <div className="editorial-grid catalog-grid medida" data-grade>
             {lista.map((carro, i) => (
-              <CartaoCarro key={carro.slug} carro={carro} prioridade={i < 4} />
+              <CartaoCarro
+                key={carro.slug}
+                carro={carro}
+                prioridade={i < 4}
+                destaque={i % 5 === 0}
+              />
             ))}
           </div>
         ) : (
           <div className="vazio medida">
-            <h2>Nenhum carro com esse filtro.</h2>
+            <h2>{carros.length ? "Nenhum carro com esse filtro." : "O próximo carro pode ser o que você procura."}</h2>
             {/* Nada de "o estoque muda toda semana": nenhuma fonte diz isso.
                 O que dá para afirmar é o que ele mesmo escreve, que procura o
                 carro em qualquer lugar do Brasil. */}
@@ -176,9 +189,9 @@ export default function Catalogo({ consultaInicial }: { consultaInicial: string 
               O que não está aqui, Saulo procura no Brasil inteiro.
             </p>
             <div className="heroi-acoes" style={{ marginTop: 0 }}>
-              <button type="button" className="acao" onClick={() => mudar({ busca: "", marca: "", ate: null })}>
-                Ver os {CARROS.length} carros
-              </button>
+              {carros.length > 0 && <button type="button" className="acao" onClick={() => mudar({ busca: "", marca: "", ate: null })}>
+                Ver os {carros.length} carros
+              </button>}
               <Link className="acao acao-vazada" href="/procuro">
                 Procuro um carro
                 <SetaDiagonal />

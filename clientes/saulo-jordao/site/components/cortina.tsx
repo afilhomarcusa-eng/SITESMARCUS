@@ -1,41 +1,24 @@
-import { EMPRESA } from "@/lib/contato";
 import { SCRIPT_PULAR } from "@/lib/abertura";
 
-/**
- * A abertura, em diafragma.
- *
- * Está aqui, no HTML que o servidor manda, e quem anima é o CSS. Não é criada
- * por React nem por efeito nenhum: o navegador pinta o HTML do servidor bem
- * antes de a hidratação acontecer, e se a cortina nascesse depois, existiria um
- * intervalo em que a página apareceria inteira, aberta, antes de ela cair por
- * cima. Em aparelho lento esse intervalo é enorme.
- *
- * Como não depende de script para sair, ela sai mesmo se o pacote da página
- * falhar. E como o padrão do CSS é `display: none`, sem JavaScript nenhum ela
- * simplesmente não existe: quem está sem script vê o site direto, nunca uma
- * tela branca parada.
- *
- * É aria-hidden porque é decoração. Quem usa leitor de tela recebe a página
- * inteira desde o começo, sem esperar animação.
- */
 export default function Cortina() {
   return (
     <>
-      <div className="cortina" aria-hidden="true">
-        <div className="cortina-chapa">
-          <span className="cortina-nome">{EMPRESA.nome}</span>
-          <span className="cortina-linha">
-            {EMPRESA.atividade} · {EMPRESA.cidade}
-          </span>
+      <div className="cortina preloader" aria-hidden="true">
+        <div className="preloader-sketch">
+          <svg viewBox="0 0 720 220" fill="none">
+            <path className="sketch-main" pathLength="1" d="M64 153c49-7 78-26 111-52 33-26 68-44 128-48 77-5 137 17 196 70 46 3 92 12 151 33" />
+            <path className="sketch-detail" pathLength="1" d="M178 102c46 10 83 13 126 13h202M92 155l-23 19m581-18 17 17" />
+            <path className="sketch-detail sketch-wheels" pathLength="1" d="M153 161a43 43 0 0 1 84 0m250 0a43 43 0 0 1 84 0" />
+            <circle className="sketch-light" cx="628" cy="146" r="2.5" />
+            <circle className="sketch-light" cx="638" cy="148" r="1.5" />
+          </svg>
+          <div className="preloader-brand">
+            <strong>Saulo Jordão</strong>
+            <span>Curadoria automotiva · Aracaju, SE</span>
+          </div>
         </div>
-        <i className="folha folha-cima" />
-        <i className="folha folha-baixo" />
-        <i className="folha folha-esq" />
-        <i className="folha folha-dir" />
+        <i className="preloader-rule" />
       </div>
-
-      {/* O primeiro gesto encerra. Fica depois da cortina de propósito: se este
-          script não rodar, a animação do CSS termina sozinha do mesmo jeito. */}
       <script dangerouslySetInnerHTML={{ __html: SCRIPT_PULAR }} />
     </>
   );

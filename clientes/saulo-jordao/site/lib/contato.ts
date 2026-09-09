@@ -55,3 +55,7 @@ export function whatsapp(mensagem: string): string {
 export const MENSAGEM_DIRETA = "Olá, Saulo. Vim pelo site.";
 
 export const ONDE_ATENDE = `${EMPRESA.cidade}, ${EMPRESA.uf}. Atendimento em todo o Brasil.`;
+
+/** A mesma coisa, curta, para as etiquetas em caixa alta, que quebram em duas
+    linhas quando a frase inteira entra nelas. */
+export const ONDE_ATENDE_CURTO = `${EMPRESA.cidade}, ${EMPRESA.uf} · Brasil inteiro`;

@@ -1,0 +1,10 @@
+"use client";
+import {useEffect,useRef,useState} from "react";
+import {Arrow} from "./ui";
+export default function Header(){
+ const [open,setOpen]=useState(false),dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement>(null);
+ useEffect(()=>{const d=dialog.current;if(open){d?.showModal();document.body.style.overflow="hidden"}else{d?.close();document.body.style.overflow=""}return()=>{document.body.style.overflow=""}},[open]);
+ const close=()=>{setOpen(false);trigger.current?.focus()};
+ const nav=[["A Deli","#deli"],["Produtos","#produtos"],["Nossa história","#historia"],["Unidades","#unidades"]];
+ return <><a className="skip-link" href="#conteudo">Pular para o conteúdo</a><header className="header"><a className="brand" href="#deli" aria-label="Deli & Cia, início"><img src="/images/logo-255.webp" width="60" height="60" alt="Deli & Cia"/><span>DELICATESSEN</span></a><nav className="desktop-nav" aria-label="Navegação principal">{nav.map(([label,href])=><a key={href} href={href}>{label}</a>)}</nav><a className="header-order" href="#pedir">Pedir na Deli <Arrow diagonal/></a><button className="menu-trigger" ref={trigger} aria-label="Abrir menu" aria-expanded={open} aria-controls="menu-mobile" onClick={()=>setOpen(true)}><span/><span/></button></header><dialog ref={dialog} id="menu-mobile" className="mobile-menu" onCancel={e=>{e.preventDefault();close()}}><div className="menu-top"><span>Deli & Cia</span><button onClick={close} aria-label="Fechar menu">Fechar ×</button></div><nav aria-label="Menu para celular">{nav.map(([label,href],i)=><a key={href} href={href} onClick={close}><small>0{i+1}</small>{label}<Arrow diagonal/></a>)}<a href="#pedir" onClick={close}><small>05</small>Fazer um pedido<Arrow diagonal/></a></nav><p>Uma pausa boa no seu dia.<br/>Salvador, Bahia.</p></dialog></>
+}

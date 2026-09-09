@@ -1,0 +1,100 @@
+{
+  "/images/hero-640.webp": {
+    "source": "hero-original.png",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
+    "width": 640,
+    "height": 427
+  },
+  "/images/hero-1024.webp": {
+    "source": "hero-original.png",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
+    "width": 1024,
+    "height": 683
+  },
+  "/images/hero-1536.webp": {
+    "source": "hero-original.png",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
+    "width": 1536,
+    "height": 1024
+  },
+  "/images/bread-640.webp": {
+    "source": "bread-original.png",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
+    "width": 640,
+    "height": 427
+  },
+  "/images/bread-1024.webp": {
+    "source": "bread-original.png",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
+    "width": 1024,
+    "height": 683
+  },
+  "/images/bread-1536.webp": {
+    "source": "bread-original.png",
+    "nativeWidth": 1536,
+    "nativeHeight": 1024,
+    "width": 1536,
+    "height": 1024
+  },
+  "/images/coffee-480.webp": {
+    "source": "coffee-original.png",
+    "nativeWidth": 1122,
+    "nativeHeight": 1402,
+    "width": 480,
+    "height": 600
+  },
+  "/images/coffee-800.webp": {
+    "source": "coffee-original.png",
+    "nativeWidth": 1122,
+    "nativeHeight": 1402,
+    "width": 800,
+    "height": 1000
+  },
+  "/images/coffee-1120.webp": {
+    "source": "coffee-original.png",
+    "nativeWidth": 1122,
+    "nativeHeight": 1402,
+    "width": 1120,
+    "height": 1400
+  },
+  "/images/grocery-480.webp": {
+    "source": "grocery-original.png",
+    "nativeWidth": 1122,
+    "nativeHeight": 1402,
+    "width": 480,
+    "height": 600
+  },
+  "/images/grocery-800.webp": {
+    "source": "grocery-original.png",
+    "nativeWidth": 1122,
+    "nativeHeight": 1402,
+    "width": 800,
+    "height": 1000
+  },
+  "/images/grocery-1120.webp": {
+    "source": "grocery-original.png",
+    "nativeWidth": 1122,
+    "nativeHeight": 1402,
+    "width": 1120,
+    "height": 1400
+  },
+  "/images/logo-255.webp": {
+    "source": "logo-original.jpg",
+    "nativeWidth": 255,
+    "nativeHeight": 255,
+    "width": 255,
+    "height": 255
+  },
+  "/images/store-255.webp": {
+    "source": "salvador-shopping-original.jpg",
+    "nativeWidth": 255,
+    "nativeHeight": 255,
+    "width": 255,
+    "height": 255
+  }
+}

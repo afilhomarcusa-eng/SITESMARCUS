@@ -1,0 +1,79 @@
+[
+  {
+    "name": "orla-corrida",
+    "file": "/images/orla-corrida.webp",
+    "source": "corrida-atlet-original.jpeg",
+    "native": "852x1280",
+    "width": 852,
+    "height": 1065,
+    "css": 800,
+    "cover": 1.06,
+    "kB": 133
+  },
+  {
+    "name": "pista-vertical",
+    "file": "/images/pista-vertical.webp",
+    "source": "unit-IMG-9-1.png",
+    "native": "1174x767",
+    "width": 575,
+    "height": 767,
+    "css": 330,
+    "cover": 1.74,
+    "kB": 46
+  },
+  {
+    "name": "pista-dupla",
+    "file": "/images/pista-dupla.webp",
+    "source": "unit-IMG-2-1.png",
+    "native": "1399x879",
+    "width": 700,
+    "height": 572,
+    "css": 350,
+    "cover": 2,
+    "kB": 72
+  },
+  {
+    "name": "pista-grupo",
+    "file": "/images/pista-grupo.webp",
+    "source": "unit-IMG-3-1.png",
+    "native": "1377x893",
+    "width": 1220,
+    "height": 893,
+    "css": 820,
+    "cover": 1.49,
+    "kB": 116
+  },
+  {
+    "name": "equipe-2018",
+    "file": "/images/equipe-2018.webp",
+    "source": "equipe-corrida-2018.jpg",
+    "native": "850x566",
+    "width": 420,
+    "height": 300,
+    "css": 210,
+    "cover": 2,
+    "kB": 49
+  },
+  {
+    "name": "pista-solo",
+    "file": "/images/pista-solo.webp",
+    "source": "unit-IMG-7-1.png",
+    "native": "1368x897",
+    "width": 504,
+    "height": 324,
+    "css": 252,
+    "cover": 2,
+    "kB": 30
+  },
+  {
+    "name": "pista-largada",
+    "file": "/images/pista-largada.webp",
+    "source": "unit-desafio-2024.png",
+    "native": "1380x891",
+    "width": 640,
+    "height": 460,
+    "css": 320,
+    "cover": 2,
+    "kB": 60
+  }
+]

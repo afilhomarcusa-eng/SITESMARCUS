@@ -12,8 +12,9 @@
  * Campo em branco simplesmente não vira linha, e a mensagem continua fazendo
  * sentido com uma linha só.
  *
- * As listas de opção saem de lib/estoque.ts, então o formulário nunca oferece
- * uma marca que o site não conhece.
+ * A lista de marcas vem do estoque de hoje, passada de fora por quem já leu o
+ * banco: assim o formulário nunca oferece uma marca que o site não tem, nem
+ * esquece uma que o Saulo acabou de cadastrar.
  *
  * Para ligar isto a um destino de verdade depois, um CRM ou um e-mail: a função
  * `montarMensagem` já devolve o texto pronto, e é só mandar ele para onde for,
@@ -21,7 +22,7 @@
  * função que trata o envio.
  */
 
-import { MARCAS } from "./estoque";
+
 
 export type Campo = {
   id: string;
@@ -61,7 +62,7 @@ export const PROCURO: Formulario = {
   botao: "Mandar no WhatsApp",
   campos: [
     { id: "modelo", rotulo: "Que carro você procura", tipo: "texto", dica: "Marca, modelo e versão, se já souber", largo: true },
-    { id: "marca", rotulo: "Marca, se já tiver uma em mente", tipo: "lista", opcoes: MARCAS },
+    { id: "marca", rotulo: "Marca, se já tiver uma em mente", tipo: "lista", opcoes: [] },
     { id: "ano", rotulo: "Ano", tipo: "texto", dica: "Do ano tal em diante" },
     { id: "faixa", rotulo: "Faixa de preço", tipo: "lista", opcoes: FAIXAS },
     { id: "cor", rotulo: "Cor", tipo: "texto" },
@@ -98,6 +99,20 @@ export const VENDER: Formulario = {
 };
 
 export const FORMULARIOS = { procuro: PROCURO, vender: VENDER } as const;
+
+/**
+ * Devolve o formulário com as opções que dependem do estoque de hoje já
+ * preenchidas. Campo de lista sem opção nenhuma não vai para a tela: seletor
+ * vazio é promessa que a página não cumpre.
+ */
+export function comEstoque(f: Formulario, marcas: string[]): Formulario {
+  return {
+    ...f,
+    campos: f.campos
+      .map((c) => (c.id === "marca" ? { ...c, opcoes: marcas } : c))
+      .filter((c) => c.tipo !== "lista" || (c.opcoes?.length ?? 0) > 0),
+  };
+}
 
 /**
  * Monta a mensagem com o que foi preenchido.

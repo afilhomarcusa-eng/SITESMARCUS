@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Archivo } from "next/font/google";
+import "@fontsource-variable/manrope/wght.css";
 import Cabecalho from "@/components/cabecalho";
 import Rodape from "@/components/rodape";
 import Movimento from "@/components/movimento";
@@ -10,28 +10,17 @@ import "./globals.css";
 /**
  * Duas famílias, nenhuma delas neutra por acidente.
  *
- * Instrument Serif tem contraste alto e desenho editorial: é o que tira o site
- * do lugar-comum de revenda de carro e coloca ele perto de uma página de
- * revista. Archivo cuida do texto e principalmente dos números, com algarismo
- * tabular ligado no corpo, porque preço e quilometragem alinhados em coluna são
- * metade da leitura deste site.
+ * Host Grotesk tem eixo óptico e desenho próprio: em corpo grande fica seco e
+ * caro, e em corpo de texto continua legível, sem a cara de modelo pronto que
+ * Inter e Poppins carregam. É ela que assina o nome do Saulo na abertura, no
+ * herói e no fim do texto dele.
+ *
+ * Geist Mono cuida de preço, quilometragem, potência e das etiquetas miúdas.
+ * Número de carro se lê em coluna, comparando um com o outro, e monoespaçada
+ * alinha a coluna sozinha. É também o que dá ao site o ar de painel de
+ * instrumento sem precisar desenhar nenhum.
  */
-const serif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  variable: "--fonte-serif",
-  display: "swap",
-  preload: true,
-});
-
-const grotesk = Archivo({
-  subsets: ["latin"],
-  variable: "--fonte-grotesk",
-  display: "swap",
-});
-
-export const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://saulojordao.vercel.app";
+export const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://saulo-jordao.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
@@ -100,7 +89,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="pt-BR"
-      className={`${serif.variable} ${grotesk.variable}`}
+      suppressHydrationWarning
       /* A duração da abertura tem uma fonte só, em lib/abertura.ts. O CSS lê
          daqui e o QA mede contra a mesma constante. */
       style={{ "--d-abertura": `${DURACAO_ABERTURA}ms` } as React.CSSProperties}

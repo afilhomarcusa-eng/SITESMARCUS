@@ -270,6 +270,7 @@ O agente responde item por item antes de dizer que terminou.
 [ ] Raio de borda varia por tipo de elemento
 [ ] Espaçamento vertical irregular
 [ ] Nenhum emoji como ícone
+[ ] Nenhum caractere decorativo fazendo papel de ícone. `✳ ★ ✦ ✱` viram emoji no celular. Ícone é SVG
 [ ] Diferença de 4x entre maior e menor texto
 ```
 
@@ -303,9 +304,16 @@ O agente responde item por item antes de dizer que terminou.
 **Técnico**
 ```
 [ ] Funciona a 375px
+[ ] Conferido em captura de 390px, seção por seção, não só a home inteira
 [ ] Sem rolagem horizontal
+[ ] Nenhuma âncora aponta para seção que não existe
+[ ] Numeração de seção confere depois de qualquer remoção
+[ ] Contagem e rótulo saem do dado, nada de "as duas" escrito à mão
+[ ] Overlay que depende de JS tem saída no `<noscript>`
+[ ] `npm run typecheck` e `npm run build` passam
 [ ] Contraste mínimo 4.5:1
 [ ] Imagens em WebP com width e height
+[ ] `height:auto` no CSS de toda imagem cuja largura for relativa, senão o atributo estica
 [ ] Title e meta description escritos à mão
 ```
 

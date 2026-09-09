@@ -85,7 +85,17 @@ async function semAbertura(pagina) {
   });
 }
 
+const local = ["127.0.0.1","localhost","[::1]"].includes(new URL(BASE).hostname);
+if (!local || process.env.QA_ISOLADO !== "1" || !process.env.ESTOQUE_TESTE_DIR) throw new Error("Rode npm run qa: o teste exige banco local isolado.");
+const AUTH = "Basic " + Buffer.from("saulo:" + process.env.ADMIN_SENHA).toString("base64");
+const baseDados = await fetch(BASE + "/api/gerencia/estoque", {headers:{authorization:AUTH}});
+if (!baseDados.ok) throw new Error("Não foi possível ler a referência do estoque para o QA.");
+const ESTOQUE = (await baseDados.json()).carros;
+const TOTAL = ESTOQUE.length;
+const BMW = ESTOQUE.filter(c=>c.marca==="BMW").length;
+const PORSCHE = ESTOQUE.filter(c=>c.marca==="Porsche").length;
 const navegador = await chromium.launch();
+if (path.dirname(QA) !== process.cwd() || path.basename(QA) !== "qa") throw new Error("Pasta de QA inválida.");
 await rm(QA, { recursive: true, force: true });
 await mkdir(QA, { recursive: true });
 
@@ -161,21 +171,46 @@ for (const rota of PAGINAS) {
     const fotos = await pagina.evaluate(() =>
       [...document.querySelectorAll("img")].map((i) => ({
         arquivo: (i.currentSrc || i.src).split("/").pop(),
+        local: (i.currentSrc || i.src).includes("/images/"),
+        nativa: Number((i.dataset.nativa ?? "0x0").split("x")[0]),
         caixa: Math.round(i.getBoundingClientRect().width),
       })),
     );
 
     for (const f of fotos) {
-      const registro = MANIFESTO[f.arquivo];
-      ok(!!registro, `${f.arquivo} está no manifesto (${rota})`);
-      if (!registro || f.caixa === 0) continue;
-      // A comparação é contra a NATIVA, não contra o arquivo exportado: um
-      // pipeline que amplia geraria arquivo grande e passaria feliz aqui.
+      if (f.caixa === 0) continue;
+
+      /* A comparação é contra a dimensão da ORIGEM, que viaja no data-nativa, e
+         não contra o arquivo entregue: um pipeline que amplia geraria arquivo
+         grande e passaria feliz aqui, com a foto borrada na tela. O atributo
+         vale igual para foto do repositório e para foto que o Saulo subiu na
+         gerência, que nenhum manifesto local conhece. */
       ok(
-        f.caixa * 2 <= registro.nativa.w + 2,
-        `${f.arquivo} não é desenhada além da origem em ${rota} a ${largura}px`,
-        `caixa ${f.caixa}px em tela retina pede ${f.caixa * 2}px, a origem tem ${registro.nativa.w}px`,
+        f.nativa > 0,
+        `${f.arquivo} declara a dimensão da origem em ${rota}`,
+        "sem data-nativa",
       );
+      if (f.nativa > 0) {
+        ok(
+          f.caixa * 2 <= f.nativa + 2,
+          `${f.arquivo} não é desenhada além da origem em ${rota} a ${largura}px`,
+          `caixa ${f.caixa}px em tela retina pede ${f.caixa * 2}px, a origem tem ${f.nativa}px`,
+        );
+      }
+
+      // Para as fotos que vieram do pipeline, o manifesto ainda é conferido: é
+      // ele que prova que o arquivo entregue não foi ampliado na geração.
+      if (f.local) {
+        const registro = MANIFESTO[f.arquivo];
+        ok(!!registro, `${f.arquivo} está no manifesto (${rota})`);
+        if (registro) {
+          ok(
+            registro.exportada.w <= registro.nativa.w,
+            `${f.arquivo} não foi ampliada na geração`,
+            `${registro.exportada.w}px de uma origem de ${registro.nativa.w}px`,
+          );
+        }
+      }
     }
 
     const nomes = fotos.map((f) => f.arquivo).filter(Boolean);
@@ -441,26 +476,26 @@ console.log("  filtros");
       ps.map((p) => Number((p.textContent ?? "").replace(/[^\d]/g, ""))),
     );
 
-  igual(await quantos(), 13, "o estoque inteiro aparece sem filtro");
+  igual(await quantos(), TOTAL, "o estoque inteiro aparece sem filtro");
 
   await pagina.click('[data-marca="BMW"]');
   await pagina.waitForTimeout(150);
   const soBmw = await marcas();
-  ok(soBmw.length === 5, "filtrar BMW deixa os cinco BMW", `vieram ${soBmw.length}`);
+  ok(soBmw.length === BMW, "filtrar BMW acompanha o estoque", `vieram ${soBmw.length}`);
   ok(
     soBmw.every((s) => s.startsWith("bmw")),
     "filtrar BMW não deixa passar outra marca",
     soBmw.join(", "),
   );
   ok(
-    (await pagina.textContent("[data-contagem]"))?.includes("de 13"),
+    (await pagina.textContent("[data-contagem]"))?.includes("de " + TOTAL),
     "a contagem acompanha o filtro",
   );
   ok(page_url(pagina).includes("marca=BMW"), "o filtro vive na barra de endereço");
 
   await pagina.click("[data-limpar]");
   await pagina.waitForTimeout(150);
-  igual(await quantos(), 13, "limpar devolve os treze");
+  igual(await quantos(), TOTAL, "limpar devolve todo o estoque");
 
   await pagina.click('[data-ate="500000"]');
   await pagina.waitForTimeout(150);
@@ -485,8 +520,8 @@ console.log("  filtros");
   await pagina.waitForTimeout(200);
   const busca = await marcas();
   ok(
-    busca.length === 2 && busca.every((s) => s.includes("porsche")),
-    "buscar porsche deixa os dois Porsche",
+    busca.length === PORSCHE && busca.every((s) => s.includes("porsche")),
+    "buscar Porsche acompanha o estoque",
     busca.join(", "),
   );
 
@@ -509,7 +544,7 @@ function page_url(pagina) {
   await semAbertura(pagina);
   await pagina.goto(BASE + "/estoque?marca=Porsche", { waitUntil: "domcontentloaded" });
   const daPrimeira = await pagina.$$eval("[data-carro]", (as) => as.length);
-  igual(daPrimeira, 2, "link filtrado chega filtrado no primeiro quadro");
+  igual(daPrimeira, PORSCHE, "link filtrado chega filtrado no primeiro quadro");
   await ctx.close();
 }
 
@@ -744,7 +779,226 @@ for (const rota of PAGINAS) {
 }
 
 /* =========================================================================
-   9. CAPTURAS: olhar, não só contar
+   9. A PORTA DA GERÊNCIA
+   Conferida pelos dois lados, porque cadeado só se testa tentando abrir.
+   ========================================================================= */
+
+console.log("  gerência");
+const SENHA = process.env.ADMIN_SENHA ?? "";
+
+{
+  const semSenha = await fetch(BASE + "/admin");
+  igual(semSenha.status, 401, "sem credencial, /admin recusa");
+  ok(
+    (semSenha.headers.get("www-authenticate") ?? "").startsWith("Basic"),
+    "a recusa pede credencial",
+  );
+
+  const errada = await fetch(BASE + "/admin", {
+    headers: { authorization: "Basic " + Buffer.from("saulo:errada").toString("base64") },
+  });
+  igual(errada.status, 401, "com senha errada, /admin recusa");
+
+  const escrita = await fetch(BASE + "/api/gerencia/estoque", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ carros: [] }),
+  });
+  igual(escrita.status, 401, "sem credencial, a gravação recusa");
+
+  if (SENHA) {
+    const cabecalho = "Basic " + Buffer.from("saulo:" + SENHA).toString("base64");
+
+    const certa = await fetch(BASE + "/admin", { headers: { authorization: cabecalho } });
+    igual(certa.status, 200, "com a senha certa, /admin abre");
+
+    const corpo = await certa.text();
+    ok(!corpo.includes(SENHA), "a senha não aparece na resposta do servidor");
+
+    // O site continua aberto: o cadeado é da gerência, não do estoque.
+    igual((await fetch(BASE + "/estoque")).status, 200, "o estoque continua público");
+
+    /* O fluxo inteiro: semear, conferir que o site mudou, e conferir que a home
+       continua respondendo. A home já devolveu 500 em toda visita depois do
+       primeiro salvamento, porque a leitura do banco tornava dinâmica uma
+       página que nasceu estática, e o defeito só aparecia depois que o banco
+       existia. Este bloco é o que impede isso de voltar. */
+    const semeou = await fetch(BASE + "/api/gerencia/estoque", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: cabecalho },
+      body: JSON.stringify({ semear: true }),
+    });
+    igual(semeou.status, 200, "a gerência restaura a lista original");
+    const { carros: quantos } = await semeou.json();
+
+    for (const rota of ["/", "/estoque"]) {
+      const r = await fetch(BASE + rota);
+      igual(r.status, 200, `${rota} responde depois de salvar na gerência`);
+      const html = await r.text();
+      ok(
+        html.includes(String(quantos)),
+        `${rota} mostra a contagem do banco (${quantos})`,
+      );
+    }
+
+    // Carro sem preço não entra: cartão sem preço é defeito visível.
+    const recusa = await fetch(BASE + "/api/gerencia/estoque", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: cabecalho },
+      body: JSON.stringify({ carros: [{ slug: "x", marca: "X", modelo: "X", nome: "X", ano: 2020, preco: 0, conferido: [], itens: [], fotos: [] }] }),
+    });
+    igual(recusa.status, 400, "carro sem preço é recusado");
+  } else {
+    ok(false, "ADMIN_SENHA não veio para o QA: o fluxo da gerência não foi testado");
+  }
+}
+
+/* =========================================================================
+   10. O SELETOR DE MARCHAS
+   ========================================================================= */
+
+console.log("  seletor");
+{
+  const { ctx, pagina } = await novaPagina(navegador);
+  await semAbertura(pagina);
+  await pagina.goto(BASE + "/", { waitUntil: "networkidle" });
+
+  const caminhos = [
+    ["comprar", "/estoque"],
+    ["procurar", "/procuro"],
+    ["vender", "/vender"],
+  ];
+
+  for (const [id, destino] of caminhos) {
+    await pagina.click(`[data-encaixe="${id}"]`);
+    await pagina.waitForTimeout(200);
+
+    const visivel = await pagina.$$eval("[data-painel]", (paineis) =>
+      paineis.filter((p) => p.dataset.oculto === "0").map((p) => p.dataset.painel),
+    );
+    igual(visivel.join(","), id, `engatar ${id} mostra o painel dele`);
+
+    const href = await pagina.getAttribute(`[data-painel="${id}"] [data-porta]`, "href");
+    igual(href, destino, `o botão de ${id} leva a ${destino}`);
+
+    const marcado = await pagina.getAttribute(`[data-encaixe="${id}"]`, "aria-selected");
+    igual(marcado, "true", `o encaixe de ${id} fica marcado`);
+  }
+
+  // Seta do teclado engata a marcha seguinte: é aba de verdade, não desenho.
+  await pagina.click('[data-encaixe="comprar"]');
+  await pagina.keyboard.press("ArrowDown");
+  await pagina.waitForTimeout(200);
+  const depoisDaSeta = await pagina.$$eval("[data-painel]", (paineis) =>
+    paineis.filter((p) => p.dataset.oculto === "0").map((p) => p.dataset.painel),
+  );
+  igual(depoisDaSeta.join(","), "procurar", "a seta do teclado engata a marcha seguinte");
+
+  await ctx.close();
+}
+
+// Sem JavaScript, os três caminhos aparecem inteiros, com os três botões.
+{
+  const ctx = await navegador.newContext({
+    viewport: { width: 1440, height: 900 },
+    javaScriptEnabled: false,
+  });
+  const pagina = await ctx.newPage();
+  await pagina.goto(BASE + "/", { waitUntil: "load" });
+  const paineis = await pagina.$$eval("[data-painel]", (ps) =>
+    ps.filter((p) => p.getBoundingClientRect().height > 0).length,
+  );
+  igual(paineis, 3, "sem JavaScript os três caminhos aparecem");
+  await ctx.close();
+}
+
+
+/* Regression: CRUD, upload, empty inventory, and failed saves use the isolated store. */
+console.log("  fluxo completo da gerência");
+{
+ const headers={authorization:AUTH,"content-type":"application/json"};
+ const ler=async()=>{const r=await fetch(BASE+"/api/gerencia/estoque",{headers});return (await r.json()).carros;};
+ const gravar=async carros=>fetch(BASE+"/api/gerencia/estoque",{method:"POST",headers,body:JSON.stringify({carros})});
+ const original=await ler();
+ const {ctx,pagina}=await novaPagina(navegador,{httpCredentials:{username:"saulo",password:process.env.ADMIN_SENHA}});
+ try {
+  const novo={...original[0],slug:"qa-veiculo",marca:"Teste",modelo:"Veículo de teste",nome:"Veículo de teste",preco:123456};
+  igual((await gravar([...original,novo])).status,200,"adicionar carro salva");
+  const ficha=await fetch(BASE+"/estoque/qa-veiculo");
+  igual(ficha.status,200,"carro novo tem ficha sem rebuild");
+  ok((await ficha.text()).includes("123.456"),"a ficha nova tem o preço salvo");
+
+  await semAbertura(pagina);
+  await pagina.goto(BASE+"/admin",{waitUntil:"networkidle"});
+  await pagina.locator('[data-linha="qa-veiculo"] .gerencia-linha').click();
+  await pagina.getByLabel("Preço, em reais",{exact:true}).fill("234567");
+  const equipamentos=pagina.getByLabel("Equipamentos, um por linha",{exact:true});
+  await equipamentos.fill("Primeiro");
+  await equipamentos.press("End");
+  await equipamentos.press("Enter");
+  await equipamentos.pressSequentially("Segundo");
+  igual(await equipamentos.inputValue(),"Primeiro\nSegundo","o editor aceita equipamentos em linhas separadas");
+  await pagina.locator("[data-salvar]").click();
+  await pagina.waitForFunction(()=>document.querySelector("[data-recado]")?.textContent?.startsWith("Salvo."));
+  const salvo=(await ler()).find(c=>c.slug==="qa-veiculo");
+  igual(salvo.preco,234567,"editar preço pelo painel persiste");
+  igual(salvo.itens.join("|"),"Primeiro|Segundo","equipamentos persistem sem perder quebras");
+
+  await pagina.getByLabel("Preço, em reais",{exact:true}).fill("345678");
+  await pagina.route("**/api/gerencia/estoque",r=>r.abort());
+  await pagina.locator("[data-salvar]").click();
+  await pagina.waitForFunction(()=>document.querySelector("[data-recado]")?.textContent?.includes("conexão"));
+  ok(await pagina.locator("[data-salvar]").isEnabled(),"falha de rede libera o botão para tentar de novo");
+  igual(await pagina.getByLabel("Preço, em reais",{exact:true}).inputValue(),"345678","falha de rede preserva a edição");
+  await pagina.unroute("**/api/gerencia/estoque");
+  await pagina.locator("[data-salvar]").click();
+  await pagina.waitForFunction(()=>document.querySelector("[data-recado]")?.textContent?.startsWith("Salvo."));
+
+  const sharp=(await import("sharp")).default;
+  const pequena=await sharp({create:{width:300,height:180,channels:3,background:"#555555"}}).jpeg().toBuffer();
+  const form=new FormData();form.append("foto",new Blob([pequena],{type:"image/jpeg"}),"teste.jpg");form.append("slug","qa-veiculo");form.append("indice","0");
+  const upload=await fetch(BASE+"/api/gerencia/foto",{method:"POST",headers:{authorization:AUTH},body:form});
+  igual(upload.status,200,"upload de foto funciona com armazenamento isolado");
+  const {foto}=await upload.json();
+  for(const fonte of foto.fontes){
+   const info=await sharp(Buffer.from(fonte.url.split(",")[1],"base64")).metadata();
+   igual(info.width,fonte.w,"srcset declara a largura real do upload");
+   ok(info.width<=135&&info.height<=180,"foto horizontal não amplia o recorte para retrato");
+  }
+  const grande=Buffer.concat([pequena,Buffer.alloc(5*1024*1024)]);
+  let bytesEnviados=0;
+  pagina.on("request",r=>{if(r.url().endsWith("/api/gerencia/foto"))bytesEnviados=r.postDataBuffer()?.length??0;});
+  await pagina.locator('input[type="file"]').first().setInputFiles({name:"celular.jpg",mimeType:"image/jpeg",buffer:grande});
+  await pagina.waitForFunction(()=>document.querySelector("[data-recado]")?.textContent==="Foto pronta.");
+  ok(bytesEnviados>0&&bytesEnviados<3_600_000,"foto grande é reduzida antes do envio da gerência");
+  await pagina.locator("[data-salvar]").click();
+  await pagina.waitForFunction(()=>document.querySelector("[data-recado]")?.textContent?.startsWith("Salvo."));
+  ok((await ler()).find(c=>c.slug==="qa-veiculo").fotos[0].fontes[0].url.startsWith("data:image/webp;base64,"),"a foto enviada pelo painel fica no banco isolado");
+  const semFoto={...novo,slug:"qa-sem-foto",fotos:[]};
+  igual((await gravar([semFoto])).status,400,"publicação sem foto não pode quebrar o herói");
+  igual((await gravar([null])).status,400,"carro nulo recebe erro de validação");
+  igual((await gravar([])).status,200,"é possível remover o último carro");
+  igual((await ler()).length,0,"banco vazio continua vazio");
+  for(const rota of ["/","/estoque"]){
+   const r=await fetch(BASE+rota);const html=await r.text();
+   igual(r.status,200,"estoque vazio não quebra "+rota);
+   ok(!/R\$(?:&nbsp;|\s)*0[,<]/.test(html)&&!html.includes("marca: undefined"),"estoque vazio não inventa faixa de preço em "+rota);
+  }
+  igual((await fetch(BASE+"/estoque/qa-veiculo")).status,404,"carro removido deixa de ter ficha");
+  await pagina.goto(BASE+"/admin",{waitUntil:"networkidle"});
+  pagina.once("dialog",d=>d.accept());
+  await pagina.locator("[data-restaurar]").click();
+  await pagina.waitForFunction(()=>document.querySelector("[data-recado]")?.textContent?.includes("restaurada"));
+  igual(await pagina.locator("[data-linha]").count(),original.length,"restaurar atualiza o editor sem recarregar");
+  ok(await pagina.locator("[data-salvar]").isDisabled(),"restauração não deixa cópia antiga pronta para salvar");
+ } finally {
+  await gravar(original);
+  await ctx.close();
+ }
+}
+
+/* =========================================================================
+   11. CAPTURAS: olhar, não só contar
    ========================================================================= */
 
 console.log("  capturas");

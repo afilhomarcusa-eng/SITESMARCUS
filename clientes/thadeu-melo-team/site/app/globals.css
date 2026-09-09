@@ -1,0 +1,672 @@
+/* ==========================================================================
+   THADEU MELO TEAM / A VOLTA
+   As raias de uma pista são o único elemento gráfico. Elas abrem a cortina em
+   close, param exatamente onde as do herói estão, atravessam o site como chão
+   e voltam a se fechar no fim. A profundidade vem de planos com Z real dentro
+   de uma perspectiva, nunca de translateY genérico.
+   ========================================================================== */
+
+:root {
+  --petrol: #153f43; --petrol-deep: #103337; --petrol-light: #2c5a5d;
+  --acid: #e8f05b; --paper: #f3f1e8; --ink: #173c3f; --muted: #5d7070;
+  --sage: #87a19b; --moss: #738a7d;
+  --line: rgba(21,63,67,.22); --line-light: rgba(243,241,232,.22);
+  --space: clamp(24px, 4.4vw, 84px); --section-space: clamp(80px, 9vw, 150px);
+  /* Personalidade do movimento: arranca rápido e assenta devagar, como passada. */
+  --ease: cubic-bezier(.16,1,.3,1);
+  --ease-cam: cubic-bezier(.58,.02,.16,1);
+  --micro: 240ms; --ui: 480ms; --reveal: 900ms; --cinema: 1350ms;
+  /* Ladrilho rasterizado em scripts/prepare-assets.mjs. Era um SVG com filtro,
+     que o navegador refazia a cada quadro do herói. */
+  --grain: url("/images/grain.webp"); --grain-size: 128px 128px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 120px; background: var(--petrol); }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-body), Arial, sans-serif; font-size: 15px; line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+::selection { background: var(--acid); color: var(--petrol); }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; }
+button, a, summary { -webkit-tap-highlight-color: transparent; }
+button, summary { cursor: pointer; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid currentColor; outline-offset: 6px; }
+h1,h2,h3,p,figure { margin: 0; }
+h1,h2,h3 { font-family: var(--font-display), "Arial Narrow", sans-serif; font-weight: 800; line-height: .94; letter-spacing: -.025em; }
+h2 { font-size: clamp(64px, 7vw, 112px); }
+img { display: block; max-width: 100%; }
+svg { flex-shrink: 0; }
+.section-shell { padding-left: var(--space); padding-right: var(--space); }
+.eyebrow { display: inline-flex; align-items: center; gap: 11px; font-size: 11px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.skip-link { position: fixed; left: 20px; top: -100px; z-index: 120; padding: 14px 20px; background: var(--acid); color: var(--petrol); }
+.skip-link:focus { top: 12px; }
+
+/* --------------------------------------------------------------- cabeçalho */
+.site-header { height: 104px; background: var(--petrol); color: var(--paper); display: flex; align-items: center; gap: 34px; padding: 0 var(--space); border-bottom: 1px solid var(--line-light); position: relative; z-index: 30; }
+.brand { display: inline-flex; flex-shrink: 0; }
+.wordmark { display: flex; flex-direction: column; width: 132px; font-family: var(--font-display); font-style: italic; font-size: 38px; line-height: .72; letter-spacing: -.05em; transform: skew(-6deg); }
+.wordmark > span { display: flex; align-items: flex-end; }
+.wordmark > span + span { margin-left: 19px; }
+.brand-slash { color: var(--acid); font-size: 48px; line-height: .45; padding-left: 5px; }
+.wordmark-team { font-family: var(--font-body); font-size: 9px; letter-spacing: .13em; font-style: normal; margin: 0 0 1px 9px; }
+.header-location { font-size: 10px; line-height: 1.6; color: #c2d0c9; border-left: 1px solid var(--line-light); padding-left: 25px; }
+.main-nav { margin-left: auto; display: flex; align-items: center; gap: 29px; font-size: 12px; }
+.main-nav a { position: relative; padding: 10px 0; }
+.main-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 4px; height: 1px; background: var(--acid); transform: scaleX(0); transform-origin: right; transition: transform var(--micro) var(--ease); }
+.main-nav a:hover::after { transform: scaleX(1); transform-origin: left; }
+.header-cta { display: flex; gap: 24px; align-items: center; padding: 13px 19px; color: var(--acid); border: 1px solid #698176; font-size: 12px; font-weight: 700; transition: background var(--micro), color var(--micro); }
+.header-cta:hover { background: var(--acid); color: var(--petrol); }
+.header-cta svg { width: 18px; height: 18px; }
+.menu-toggle { display: none; }
+
+/* O ponto verde da linha de contexto, no topo da primeira dobra. */
+.status-dot { width: 6px; height: 6px; background: var(--acid); border-radius: 100%; }
+
+/* fundo: raias e a cidade em contorno, longe da câmera */
+
+/* o título vive em dois planos: "Bora" atrás da foto, "correr." na frente dela */
+
+/* meio-campo: a foto de arquivo, sangrando pela direita. O teto de 620px nao
+   e estetico: e o maior espaco que o negativo de 850px cobre sem esticar. */
+
+
+/* primeiro plano: a linha ácida cruza por cima de tudo */
+
+
+/* ------------------------------------------------------------ primeira dobra
+   Duas colunas e uma faixa. A esquerda carrega a mensagem e as duas acoes; a
+   direita e a foto em altura cheia, sangrando ate a borda; a faixa de baixo
+   entrega os tres pontos de treino antes de qualquer rolagem. Sem plano com Z
+   e sem tipografia em camadas: a profundidade aqui e a propria foto. */
+.hero { position: relative; isolation: isolate; background: var(--petrol); color: var(--paper); display: grid; grid-template-columns: minmax(0, 1fr) min(42vw, 800px); grid-template-rows: minmax(0, 1fr) auto; min-height: min(880px, calc(100svh - 104px)); overflow: hidden; --cam: 0; --px: 0; --py: 0; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: 4; opacity: .05; pointer-events: none; background-image: var(--grain); background-size: var(--grain-size); }
+
+.hero-panel { position: relative; grid-area: 1 / 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: clamp(15px, 1.6vw, 24px); padding: clamp(34px, 3.6vw, 62px) clamp(30px, 4vw, 84px) clamp(26px, 2.8vw, 44px); }
+/* As raias ficam atras da coluna de texto, cortadas pela propria coluna. */
+.hero-lanes { position: absolute; z-index: -1; width: 1000px; height: 1000px; left: -340px; top: -120px; color: var(--sage); opacity: .18; transform: rotate(-27deg) translate3d(calc(var(--px) * 5px), calc(var(--py) * 5px), 0); }
+.hero h1 { font-size: clamp(44px, 4.9vw, 98px); line-height: .95; letter-spacing: -.03em; text-transform: none; }
+.hero h1 em { color: var(--acid); font-style: normal; }
+.hero-lead { font-size: clamp(14px, 1.05vw, 17px); line-height: 1.72; color: #cbd9d2; max-width: 46ch; }
+.hero-actions { display: flex; align-items: center; gap: clamp(18px, 2.2vw, 34px); flex-wrap: wrap; margin-top: clamp(8px, 1.2vw, 20px); }
+.hero-actions .button { min-height: 62px; padding: 18px 26px; gap: 40px; }
+.hero-alt { display: inline-flex; align-items: center; gap: 16px; font-size: 12px; padding: 10px 0; border-bottom: 1px solid var(--line-light); color: #d5e2da; transition: color var(--micro), border-color var(--micro); }
+.hero-alt:hover { color: var(--acid); border-color: var(--acid); }
+.hero-alt svg { width: 16px; height: 16px; transition: transform 400ms var(--ease); }
+.hero-alt:hover svg { transform: translate(3px, -3px); }
+
+/* A foto ocupa a coluna inteira, do topo ao rodape da dobra. O leve zoom com o
+   scroll usa a mesma variavel do resto do site e nao passa de 6%: a origem tem
+   852px e a caixa chega a 800px, entao nao sobra folga para mais do que isso. */
+.hero-media { position: relative; grid-area: 1 / 2 / span 2; min-height: 0; overflow: hidden; background: var(--petrol-deep); }
+.hero-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 52% 42%; transform: scale(calc(1.06 - var(--cam) * .06)) translate3d(calc(var(--px) * -8px), calc(var(--py) * -6px), 0); will-change: transform; }
+.hero-media figcaption { position: absolute; left: 0; bottom: 0; z-index: 2; padding: 9px 14px; background: var(--petrol); color: #cbd9d2; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+
+.hero-facts { grid-area: 2 / 1; list-style: none; margin: 0; padding: 0 clamp(30px, 4vw, 84px) clamp(24px, 2.6vw, 40px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line-light); border-top: 1px solid var(--line-light); }
+.hero-facts li { background: var(--petrol); }
+.hero-facts a { display: flex; align-items: center; gap: 14px; padding: clamp(15px, 1.7vw, 24px) clamp(14px, 1.6vw, 24px); min-height: 44px; transition: background var(--micro); }
+.hero-facts a > div { display: grid; gap: 3px; min-width: 0; }
+.hero-facts a:hover { background: var(--petrol-light); }
+.hero-facts strong { font-family: var(--font-display); font-weight: 800; font-size: clamp(19px, 1.7vw, 26px); letter-spacing: -.02em; }
+.hero-facts span { font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: #9db1a9; }
+.hero-facts svg { width: 15px; height: 15px; margin-left: auto; flex-shrink: 0; color: var(--acid); transition: transform 400ms var(--ease); }
+.hero-facts a:hover svg { transform: translate(3px, -3px); }
+
+/* Entrada depois da cortina. Tudo termina antes de 2100ms, que e quando a
+   cortina comeca a subir: nenhum quadro com o CTA de cadastro apagado. */
+html[data-intro="play"] .hero-panel > *:not(.hero-lanes) { animation: intro-rise 700ms var(--ease) both; }
+html[data-intro="play"] .hero-panel > .eyebrow { animation-delay: 1320ms; }
+html[data-intro="play"] .hero-panel > h1 { animation-delay: 1400ms; }
+html[data-intro="play"] .hero-panel > .hero-lead { animation-delay: 1440ms; }
+html[data-intro="play"] .hero-panel > .hero-actions { animation-delay: 1400ms; }
+html[data-intro="play"] .hero-facts { animation: intro-rise 700ms 1480ms var(--ease) both; }
+html[data-intro="play"] .hero-media img { animation: enter-photo 1500ms 1300ms var(--ease-cam) both; }
+@keyframes intro-rise { from { opacity: 0; transform: translate3d(0, 22px, 0); } to { opacity: 1; transform: none; } }
+@keyframes enter-photo { from { transform: scale(1.16); } to { transform: scale(calc(1.06 - var(--cam) * .06)) translate3d(calc(var(--px) * -8px), calc(var(--py) * -6px), 0); } }
+
+/* ----------------------------------------------------------------- botões */
+.button { display: inline-flex; justify-content: space-between; align-items: center; gap: 32px; min-height: 57px; padding: 16px 24px; font-size: 12px; font-weight: 700; transition: background var(--micro), color var(--micro); }
+.button svg, .text-link svg, .final-arrow svg, .social-invite svg { transition: transform 400ms var(--ease); }
+.button-number { display: none; font-family: var(--font-display); font-size: 20px; letter-spacing: -.01em; }
+.button:hover svg, .text-link:hover svg, .social-invite a:hover svg { transform: translate(3px,-3px); }
+.button-yellow { background: var(--acid); color: var(--petrol); }
+.button-yellow:hover { background: var(--paper); }
+.button-dark { background: var(--petrol); color: var(--paper); }
+.button-dark:hover { background: var(--petrol-deep); }
+.text-link { display: inline-flex; align-items: center; gap: 28px; border-bottom: 1px solid var(--line); padding: 10px 0; font-size: 11px; font-weight: 700; }
+.text-link svg { width: 18px; height: 18px; }
+
+/* ------------------------------------------------------------------ retratos
+   Toda foto do site nasce no mesmo porta-retrato de papel. O que muda por seção
+   e posicao, escala e rotacao, nunca o tratamento. Sem legenda o papel fecha
+   por baixo; com legenda, ela ocupa a margem inferior. */
+.frame { position: relative; background: var(--paper); padding: 6px; box-shadow: 0 22px 48px rgba(21,63,67,.2); }
+.frame:has(figcaption) { padding-bottom: 0; }
+.frame::after { content: ""; position: absolute; inset: 6px; background-image: var(--grain); background-size: var(--grain-size); opacity: .1; pointer-events: none; }
+.frame:has(figcaption)::after { bottom: 24px; }
+.frame img { width: 100%; object-fit: cover; }
+.frame figcaption { font-size: 8px; letter-spacing: .13em; text-transform: uppercase; padding: 6px 2px 7px; color: var(--muted); }
+
+/* ----------------------------------------------------------------- marquise */
+.running-strip { background: var(--acid); border-top: 1px solid var(--petrol); color: var(--petrol); padding: 17px 0 19px; overflow: hidden; }
+.strip-track { display: flex; width: max-content; animation: strip 34s linear infinite; will-change: transform; }
+/* A marquise girava para sempre, inclusive com a faixa fora da tela. */
+.running-strip[data-idle] .strip-track { animation-play-state: paused; }
+.strip-run { display: flex; align-items: center; }
+.strip-run span { display: inline-flex; align-items: center; gap: 40px; padding-right: 40px; font-family: var(--font-display); font-size: 31px; text-transform: uppercase; line-height: 1; letter-spacing: -.01em; white-space: nowrap; }
+.strip-arrow { font-family: Arial, sans-serif; font-style: normal; font-weight: 400; font-size: 33px; }
+@keyframes strip { to { transform: translate3d(-50%,0,0); } }
+
+/* ------------------------------------------------------------- 01 / o clube */
+.club-section { display: grid; grid-template-columns: 26% 1fr; gap: clamp(24px, 3vw, 56px); padding-top: var(--section-space); padding-bottom: calc(var(--section-space) - 18px); }
+/* A coluna era numeração, um recorte pequeno e uma legenda, com meia tela de
+   vazio entre eles. Agora a foto vertical ocupa o meio inteiro da coluna. */
+.section-side { display: flex; flex-direction: column; gap: clamp(22px, 2.4vw, 38px); }
+.side-caption { font-size: 12px; line-height: 1.8; color: var(--muted); }
+.club-content { position: relative; }
+.club-content h2 { position: relative; z-index: 1; font-size: clamp(70px, 8.5vw, 137px); line-height: .98; }
+.club-content h2 span { color: var(--moss); }
+.club-aside { width: 100%; max-width: 330px; transform: rotate(-2.2deg); }
+.club-aside img { height: clamp(280px, 30vw, 440px); }
+.side-caption { margin-top: auto; }
+.club-copy { display: grid; grid-template-columns: 11% minmax(0, 1fr) minmax(190px, .5fr); align-items: start; margin-top: clamp(34px, 3.4vw, 52px); column-gap: clamp(24px, 3vw, 56px); }
+.club-lead { max-width: 520px; }
+.club-copy > .text-link { justify-self: end; align-self: end; }
+.small-cross { font-size: 68px; line-height: .7; font-weight: 400; }
+.club-copy p { font-size: 15px; margin-bottom: 18px; }
+.club-copy p + p { color: var(--muted); font-size: 13px; }
+
+/* -------------------------------------------------------- 02 / onde treinamos */
+.training-section { background: #e4e8dd; padding-top: clamp(64px, 6vw, 96px); padding-bottom: clamp(48px, 4.6vw, 76px); }
+/* O titulo ocupava pouco mais da metade da linha e o resto da faixa era vazio.
+   A foto virou coluna propria e atravessa as duas fileiras, entao o bloco fecha
+   pela direita em vez de escorrer ate a margem. */
+.training-heading { display: grid; grid-template-columns: minmax(0, 1fr) clamp(240px, 24vw, 350px); column-gap: clamp(28px, 3.6vw, 64px); align-items: start; margin-bottom: clamp(40px, 4.2vw, 64px); }
+.training-head { grid-area: 1 / 1; }
+.training-heading h2 { margin-top: 26px; font-size: clamp(78px, 8.2vw, 132px); }
+.training-heading h2 span { color: #688373; }
+.training-shot { grid-area: 1 / 2 / span 2; align-self: end; width: 100%; margin-bottom: 6px; transform: rotate(2.4deg); }
+.training-shot img { height: clamp(200px, 19vw, 286px); }
+.training-note { grid-area: 2 / 1; display: grid; gap: 12px; max-width: 470px; margin-top: clamp(26px, 3vw, 46px); font-size: 13px; }
+.training-note span:last-child { font-size: 11px; color: var(--muted); }
+.location-select { display: grid; grid-template-columns: repeat(3,1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.location-select button { display: flex; gap: 22px; align-items: center; padding: 23px 22px; background: transparent; text-align: left; font-size: 16px; border-right: 1px solid var(--line); transition: background var(--micro); }
+.location-select button:first-child { border-left: 1px solid var(--line); }
+.location-select button[aria-pressed="true"] { background: var(--petrol); color: var(--paper); }
+.location-select button:hover:not([aria-pressed="true"]) { background: #d6ddce; }
+.location-index { font-size: 10px; opacity: .7; }
+.location-select svg { margin-left: auto; height: 17px; width: 17px; }
+.schedule-body { display: grid; grid-template-columns: 42% 1fr; min-height: 400px; border-bottom: 1px solid var(--line); }
+/* O painel carregava uma foto por local, e as tres eram recorte da mesma foto.
+   No lugar delas entra a semana do local, que muda de verdade a cada escolha. */
+.location-art { position: relative; isolation: isolate; overflow: hidden; background: var(--petrol-deep); color: var(--paper); padding: 30px; }
+.location-art::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(102deg, rgba(16,51,55,.78) 8%, rgba(16,51,55,.34) 55%, rgba(16,51,55,.66)); }
+.location-art > :not(.location-track) { z-index: 2; }
+.location-art-label { position: absolute; top: 27px; left: 29px; font-size: 9px; letter-spacing: .13em; font-weight: 700; }
+/* a raia gira um pouco a cada local escolhido: a câmera muda de ponto */
+.location-track { position: absolute; width: 590px; height: 590px; left: -70px; top: -70px; color: #cfe0d4; opacity: .2; will-change: transform; transform: rotate(calc(-31deg + var(--lane) * 7deg)) scale(calc(1 + var(--lane) * .06)); transition: transform var(--cinema) var(--ease-cam); }
+.location-art-number { position: absolute; top: 40px; right: 40px; font-family: var(--font-display); font-size: clamp(150px, 16vw, 235px); line-height: 1; color: var(--acid); letter-spacing: -.04em; }
+/* A semana inteira aparece, e os dias do local escolhido acendem. Quem chega
+   sabendo só que corre de manhã encontra o dia antes de ler o horário. */
+.week-strip { position: absolute; left: 30px; right: 30px; bottom: 84px; display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.week-strip span { display: flex; align-items: center; justify-content: center; padding: 11px 0; font-size: 10px; font-weight: 700; letter-spacing: .04em; border: 1px solid var(--line-light); color: #a7bcb4; transition: background var(--ui) var(--ease), color var(--ui) var(--ease), border-color var(--ui) var(--ease); }
+.week-strip span.is-on { background: var(--acid); border-color: var(--acid); color: var(--petrol); }
+.location-art-bottom { position: absolute; bottom: 30px; left: 30px; right: 30px; display: flex; align-items: center; gap: 12px; font-size: 11px; }
+.location-dot { width: 13px; height: 13px; border-radius: 50%; background: var(--acid); box-shadow: 0 0 0 6px rgba(232,240,91,.18); }
+.schedule-info { padding: 39px 43px; }
+.schedule-info h3 { font-size: clamp(42px, 4.3vw, 64px); margin: 13px 0 12px; }
+.schedule-info > p { font-size: 12px; color: var(--muted); }
+.sessions { margin-top: 27px; margin-bottom: 10px; }
+.session { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 13px 0; border-top: 1px solid var(--line); }
+.session div > span { font-size: 12px; font-weight: 700; }
+.session small { display: block; font-size: 10px; color: var(--muted); }
+.session strong { font-family: var(--font-display); font-size: 33px; font-weight: 800; white-space: nowrap; line-height: 1; }
+.schedule-note { display: flex; justify-content: space-between; gap: 30px; align-items: center; padding-top: 24px; font-size: 10px; }
+.schedule-note p { max-width: 440px; }
+.schedule-note a { display: inline-flex; gap: 20px; align-items: center; padding: 9px 0; font-weight: 700; }
+.schedule-note svg { width: 16px; height: 16px; }
+/* troca de painel: as linhas entram uma atrás da outra, sem fade genérico */
+.js .schedule-info > * { animation: panel-line var(--ui) var(--ease) both; }
+.js .schedule-info > :nth-child(2) { animation-delay: 40ms; }
+.js .schedule-info > :nth-child(3) { animation-delay: 80ms; }
+.js .schedule-info > :nth-child(4) { animation-delay: 120ms; }
+.js .schedule-info > :nth-child(5) { animation-delay: 170ms; }
+@keyframes panel-line { from { opacity: 0; transform: translate3d(-14px,0,0); } to { opacity: 1; transform: none; } }
+.nojs-schedule { display: grid; gap: 30px; padding: 30px 0; }
+.nojs-schedule h3 { font-size: 30px; }
+
+/* ------------------------------------------------- 03 / cena com câmera
+   O retrato começa como porta-retrato e cresce até sangrar o quadro inteiro.
+   No fim a própria superfície escurece e entrega o chão à seção seguinte. */
+/* O título fica legível primeiro e sai de cena enquanto o retrato cresce. O fade
+   estava preso em --pOut, que só acontece no fim: o resultado era um título pela
+   metade embaixo da foto durante toda a subida. Agora ele acompanha --pIn. */
+/* A escala para antes de esticar o arquivo além do que ele aguenta: a foto tem
+   1220px de origem, então o quadro cresce até um bloco largo, não até tela cheia. */
+/* O porta-retrato de papel era sombra animada em spread e cor, repintada a cada
+   quadro do scroll. Virou uma camada so, com sombra fixa, que apenas some. */
+/* Segundo quadro: entra por baixo, dá volume à cena e se dissolve exatamente
+   onde a tipografia do canto aparece. */
+/* A tira de arquivo repetia quatro recortes do mesmo negativo com legendas
+   diferentes. Saiu, e no lugar dela fica de onde vem cada foto da página. */
+.social-invite { margin-top: clamp(34px, 3.6vw, 58px); padding-top: 30px; padding-bottom: 30px; border-top: 1px solid var(--line-light); display: flex; justify-content: space-between; align-items: center; gap: 30px; }
+.social-invite > span { font-size: 12px; }
+.social-invite a { display: inline-flex; align-items: center; gap: 30px; padding: 6px 0; color: var(--acid); font-size: 14px; }
+
+/* ------------------------------------------------- 03 / feito de gente
+   A cena com camera saiu. Ela ocupava 168vh de rolagem para mostrar uma foto
+   crescendo, e em tela larga o que sobrava era petroleo vazio. No lugar dela,
+   a secao mais densa da pagina: numero que sai da agenda, linha do tempo com
+   fonte publica, os tres passos de entrada e as duas fotos num bloco so. */
+.team-section { background: var(--petrol); color: var(--paper); padding-top: clamp(66px, 6.4vw, 118px); padding-bottom: clamp(30px, 3vw, 52px); }
+.team-head { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); column-gap: clamp(28px, 4vw, 80px); align-items: end; }
+.team-head .eyebrow { grid-column: 1 / -1; margin-bottom: clamp(20px, 2.2vw, 38px); }
+.team-head h2 { font-size: clamp(50px, 5.6vw, 104px); line-height: .96; }
+.team-head em { color: var(--acid); font-style: normal; }
+.team-lead { font-size: clamp(14px, 1vw, 17px); line-height: 1.75; color: #cbd9d2; max-width: 48ch; padding-bottom: 9px; }
+
+/* O painel de numeros: cada um sai de `locations`, entao ele nao mente se a
+   agenda mudar. A borda de 1px entre as celulas e o proprio grid. */
+.team-numbers { list-style: none; margin: clamp(38px, 4vw, 68px) var(--space) 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line-light); border: 1px solid var(--line-light); }
+.team-numbers li { background: var(--petrol); padding: clamp(19px, 2.1vw, 32px); display: flex; flex-direction: column; }
+.team-numbers strong { font-family: var(--font-display); font-weight: 800; font-size: clamp(46px, 4.8vw, 84px); line-height: .88; color: var(--acid); letter-spacing: -.035em; }
+.team-numbers span { font-size: 12px; font-weight: 700; margin-top: 9px; }
+.team-numbers small { font-size: 10px; color: #9db1a9; line-height: 1.65; margin-top: 5px; }
+
+.team-body { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: clamp(34px, 4vw, 78px); margin-top: clamp(44px, 4.6vw, 82px); align-items: start; }
+.team-line { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(22px, 2.4vw, 38px); }
+.team-line li { display: grid; grid-template-columns: clamp(62px, 6vw, 92px) minmax(0, 1fr); gap: clamp(14px, 1.6vw, 26px); padding-top: clamp(18px, 1.8vw, 26px); border-top: 1px solid var(--line-light); }
+.team-when { font-family: var(--font-display); font-weight: 800; font-size: clamp(24px, 2.2vw, 34px); line-height: 1; color: var(--acid); letter-spacing: -.02em; }
+.team-line h3 { font-size: clamp(19px, 1.6vw, 25px); margin-bottom: 9px; }
+.team-line p { font-size: 13px; line-height: 1.8; color: #c2d1c9; }
+.team-line .text-link { border-color: var(--line-light); font-size: 10px; margin-top: 4px; }
+
+.team-art { display: grid; gap: clamp(16px, 1.8vw, 28px); }
+.team-shot img { height: clamp(280px, 32vw, 540px); }
+.team-aside { display: grid; grid-template-columns: minmax(140px, 210px) minmax(0, 1fr); gap: clamp(18px, 2vw, 34px); align-items: end; }
+.team-small img { height: clamp(112px, 10.5vw, 150px); }
+.team-credit p { font-size: 12px; line-height: 1.7; }
+.team-credit span { display: block; font-size: 10px; line-height: 1.7; color: #a4b8b0; margin: 7px 0 8px; }
+.team-credit .text-link { border-color: var(--line-light); font-size: 10px; }
+
+/* Os tres passos fecham a secao e levam para o formulario. */
+.team-steps { margin-top: clamp(52px, 5.2vw, 94px); padding-top: clamp(28px, 3vw, 46px); border-top: 1px solid var(--line-light); display: grid; grid-template-columns: minmax(0, .62fr) minmax(0, 1.38fr); gap: clamp(26px, 3.4vw, 62px); align-items: start; }
+.steps-head h3 { font-size: clamp(28px, 2.7vw, 44px); line-height: 1.02; margin-top: 15px; }
+.steps-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 2.4vw, 40px); }
+.steps-list li { border-top: 2px solid var(--acid); padding-top: 15px; }
+.step-number { font-size: 10px; letter-spacing: .13em; font-weight: 700; color: var(--acid); }
+.steps-list h4 { font-family: var(--font-display); font-weight: 800; font-size: clamp(21px, 1.8vw, 27px); letter-spacing: -.02em; line-height: 1.02; margin: 11px 0 9px; }
+.steps-list p { font-size: 12px; line-height: 1.8; color: #c2d1c9; }
+.steps-cta { grid-column: 1 / -1; display: flex; align-items: center; gap: clamp(18px, 2.2vw, 38px); flex-wrap: wrap; margin-top: clamp(6px, 1vw, 16px); }
+.steps-cta .text-link { border-color: var(--line-light); }
+
+/* --------------------------------------------------------------- 04 / dúvidas */
+.faq-section { display: grid; grid-template-columns: 43% 1fr; gap: 7%; padding-top: var(--section-space); padding-bottom: var(--section-space); }
+.faq-side { display: flex; flex-direction: column; align-items: flex-start; }
+.faq-section h2 { font-size: clamp(63px, 6vw, 96px); margin-top: 30px; }
+/* A coluna da esquerda ficava bem mais alta que a lista e sobrava um vazio de
+   quase 400px a direita. A lista respira mais (o alvo de toque melhora junto) e
+   a foto encosta no rodape da coluna: as duas fecham na mesma altura. */
+.faq-shot { width: min(100%, 252px); margin-top: auto; padding-top: clamp(30px, 3.4vw, 52px); transform: rotate(-3deg); }
+.faq-shot img { height: clamp(124px, 11vw, 162px); }
+.faq-section h2 span { color: var(--moss); }
+.faq-list { padding-top: 34px; }
+.faq-list details { border-bottom: 1px solid var(--line); }
+.faq-list details:first-child { border-top: 1px solid var(--line); }
+.faq-list summary { list-style: none; display: grid; grid-template-columns: 25px 1fr 20px; gap: 16px; align-items: center; padding: clamp(25px, 2.6vw, 38px) 0; font-size: 12px; font-weight: 700; line-height: 1.6; }
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-number { font-size: 9px; color: var(--muted); font-weight: 400; }
+.faq-plus { font-size: 25px; font-weight: 400; text-align: right; transition: transform var(--micro); }
+details[open] .faq-plus { transform: rotate(45deg); }
+.faq-list details p { margin: 0 35px 27px 41px; font-size: 12px; color: var(--muted); line-height: 1.9; }
+
+/* --------------------------------------------------- fim da volta / rodapé */
+.final-section { position: relative; isolation: isolate; overflow: hidden; background: var(--acid); padding-top: clamp(52px, 5vw, 78px); padding-bottom: clamp(44px, 4.2vw, 64px); }
+.final-track { position: absolute; z-index: -1; width: 1100px; height: 1100px; right: -300px; bottom: -420px; color: var(--petrol); opacity: .14; transform: rotate(158deg) scale(1.3); transition: transform var(--cinema) 120ms var(--ease-cam); }
+.final-section.is-in .final-track { transform: rotate(152deg) scale(1); }
+.final-layout { display: flex; align-items: center; justify-content: space-between; margin-top: 36px; gap: 25px; }
+.final-layout h2 { font-size: clamp(80px, 11.4vw, 200px); line-height: .95; max-width: 70%; }
+/* A seta ficava sozinha na margem, com meia tela de amarelo entre ela e o
+   titulo. Agora ela vem acompanhada do numero, que e a informacao que faltava. */
+.final-call { display: flex; align-items: center; gap: clamp(16px, 1.8vw, 32px); margin-right: 2%; }
+.final-number { font-size: 11px; font-weight: 700; letter-spacing: .05em; line-height: 1.7; text-align: right; }
+.final-layout h2 > span { color: #526742; }
+.final-arrow { width: clamp(112px, 9vw, 150px); height: clamp(112px, 9vw, 150px); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border: 1px solid var(--petrol); border-radius: 50%; transition: background var(--ui) var(--ease); }
+.final-arrow svg { width: 52%; height: 52%; }
+.final-arrow:hover { background: var(--petrol); color: var(--acid); }
+.final-arrow:hover svg { transform: translate(5px,-5px); }
+.final-bottom { display: flex; justify-content: space-between; align-items: end; margin-top: 48px; gap: 30px; }
+.final-bottom p { font-size: 12px; }
+.site-footer { display: flex; align-items: center; justify-content: space-between; gap: 35px; padding-top: 38px; padding-bottom: 40px; background: var(--petrol-deep); color: var(--paper); }
+.site-footer > span { font-size: 10px; color: #bdccc4; }
+.site-footer > a:not(.brand) { font-size: 10px; display: inline-flex; gap: 14px; align-items: center; padding: 8px 0; }
+.site-footer svg { width: 15px; height: 15px; }
+
+/* ------------------------------------------------------------- revelações
+   Quatro gestos diferentes, escolhidos pela seção. Sem JavaScript nada disso
+   existe: o conteúdo já nasce visível. */
+.js [data-reveal] { transition: clip-path var(--reveal) var(--ease), opacity var(--reveal) var(--ease), transform var(--reveal) var(--ease); }
+.js [data-reveal="mask"] { clip-path: inset(0 0 102% 0); }
+.js [data-reveal="frame"] { clip-path: inset(0 0 100% 0); }
+.js [data-reveal="frame"] img { transform: scale(1.16); transition: transform var(--cinema) var(--ease-cam); }
+.js [data-reveal="stagger"] > * { opacity: 0; transform: translate3d(0,16px,0); transition: opacity var(--ui) var(--ease), transform var(--ui) var(--ease); }
+.js [data-reveal="stagger"] > :nth-child(2) { transition-delay: 90ms; }
+.js [data-reveal="stagger"] > :nth-child(3) { transition-delay: 150ms; }
+.js [data-reveal="stagger"] > :nth-child(4) { transition-delay: 210ms; }
+.js [data-reveal].is-in { clip-path: inset(0 0 0 0); }
+.js [data-reveal="frame"].is-in img { transform: scale(1); }
+.js [data-reveal="stagger"].is-in > * { opacity: 1; transform: none; }
+
+/* -------------------------------------------------------- cortina de abertura
+   A câmera nasce dentro de uma raia, recua até a pista inteira aparecer e para
+   exatamente na geometria do herói. O corte não existe: o que sai é a cortina,
+   não a cena. */
+.intro { display: none; pointer-events: none; position: fixed; inset: 0; z-index: 90; background: var(--petrol); color: var(--paper); overflow: hidden; perspective: 900px; }
+html[data-intro] .intro { display: block; }
+html[data-intro="play"] .intro { animation: intro-exit 700ms 2180ms var(--ease-cam) both; }
+html[data-intro="skip"] .intro { animation: intro-skip 320ms var(--ease) both; }
+.intro-track { position: absolute; width: 1020px; height: 1020px; left: -350px; top: -190px; color: var(--acid); opacity: .2; animation: intro-track 2100ms var(--ease-cam) both; }
+.intro-lane { position: absolute; left: 36%; top: -60%; width: 30vw; height: 210vh; border: 20px solid var(--acid); border-bottom: 0; border-radius: 50% 50% 0 0 / 34% 34% 0 0; opacity: .9; animation: intro-lane 1250ms var(--ease-cam) both; }
+.intro-mark { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-size: 2.1em; overflow: hidden; }
+.intro-mark .wordmark { width: 300px; font-size: 84px; animation: intro-mark 1100ms 640ms var(--ease) both; }
+.intro-line { position: absolute; left: 50%; top: calc(50% + 82px); transform: translateX(-50%); white-space: nowrap; font-size: 13px; letter-spacing: .02em; animation: intro-fade 700ms 1180ms var(--ease) both; }
+.intro-place { position: absolute; left: 50%; bottom: 9%; transform: translateX(-50%); font-size: 10px; letter-spacing: .22em; color: #b9c9c1; animation: intro-fade 700ms 1320ms var(--ease) both; }
+.intro-sweep { position: absolute; left: 0; top: 63%; width: 100%; height: 2px; background: var(--acid); transform-origin: left; animation: intro-sweep 900ms 1560ms var(--ease-cam) both; }
+@keyframes intro-lane { from { transform: translate3d(-14vw,0,760px) rotate(-4deg); opacity: 1; } to { transform: translate3d(-58vw,0,340px) rotate(-13deg); opacity: 0; } }
+@keyframes intro-track { from { transform: translateZ(620px) rotate(-28deg) scale(1.28); } to { transform: translateZ(0) rotate(-28deg) scale(1); } }
+@keyframes intro-mark { from { opacity: 0; transform: translate3d(0,84px,0) skew(-6deg); } to { opacity: 1; transform: translate3d(0,0,0) skew(-6deg); } }
+@keyframes intro-fade { from { opacity: 0; transform: translate3d(-50%,14px,0); } to { opacity: 1; transform: translate3d(-50%,0,0); } }
+@keyframes intro-sweep { 0% { transform: scaleX(0) translateZ(420px); } 62% { transform: scaleX(1) translateZ(420px); } 100% { transform: scaleX(1) translateZ(420px); opacity: .35; } }
+@keyframes intro-exit { from { clip-path: inset(0 0 0 0); transform: scale(1); } to { clip-path: inset(0 0 100% 0); transform: scale(1.06); } }
+@keyframes intro-skip { to { opacity: 0; transform: scale(1.03); } }
+
+/* entrada do herói, encadeada com a saída da cortina */
+/* A cortina sai clipando de baixo para cima: a primeira coisa que aparece e a
+   faixa do rodape do heroi, justamente onde mora o CTA de cadastro. Com a
+   entrada em 2400ms o botao era revelado ainda invisivel e so acendia quase um
+   segundo depois. A entrada agora termina antes de a cortina comecar a subir. */
+@keyframes intro-fade-flat { from { opacity: 0; } to { opacity: 1; } }
+
+/* ============================================================== /cadastro
+   O clube nao tem servidor. O formulario monta a mensagem e abre a conversa no
+   WhatsApp com tudo escrito, entao ele e uma tela de composicao, nao de envio:
+   campo grande, alvo de toque de 44px e a resposta escolhida sempre visivel. */
+.signup-main { background: var(--paper); }
+.signup-hero { position: relative; isolation: isolate; overflow: hidden; background: var(--petrol); color: var(--paper); display: grid; grid-template-columns: minmax(0, 1fr) clamp(210px, 25vw, 320px); gap: clamp(28px, 4vw, 70px); align-items: center; padding-top: clamp(42px, 4.4vw, 78px); padding-bottom: clamp(42px, 4.4vw, 78px); }
+.signup-track { position: absolute; z-index: -1; width: 900px; height: 900px; right: -260px; top: -290px; color: var(--sage); opacity: .15; }
+.signup-intro h1 { font-size: clamp(36px, 4.3vw, 74px); line-height: .98; margin: 17px 0 18px; }
+.signup-intro em { color: var(--acid); font-style: normal; }
+.signup-intro p { font-size: clamp(13px, 1vw, 16px); line-height: 1.75; color: #cbd9d2; max-width: 54ch; }
+.signup-shot { width: 100%; transform: rotate(2.6deg); }
+.signup-shot img { height: clamp(160px, 16vw, 220px); }
+.signup-back { margin-left: auto; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; padding: 10px 0; }
+.signup-back + .header-cta { margin-left: clamp(14px, 2vw, 28px); }
+
+.signup-body { display: grid; grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr); gap: clamp(28px, 3.6vw, 70px); padding-top: clamp(38px, 4vw, 70px); padding-bottom: clamp(54px, 6vw, 108px); align-items: start; }
+.signup-aside { display: grid; gap: clamp(26px, 3vw, 44px); position: sticky; top: clamp(24px, 3vw, 48px); }
+.aside-block .eyebrow { color: var(--muted); }
+.aside-steps { list-style: none; margin: 15px 0 0; padding: 0; display: grid; gap: 15px; }
+.aside-steps li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; border-top: 1px solid var(--line); padding-top: 14px; }
+.aside-steps li > span { font-size: 10px; font-weight: 700; color: var(--moss); }
+.aside-steps strong { display: block; font-size: 13px; margin-bottom: 5px; }
+.aside-steps p { font-size: 12px; line-height: 1.75; color: var(--muted); }
+.aside-schedule { list-style: none; margin: 15px 0 0; padding: 0; display: grid; gap: 12px; }
+.aside-schedule li { border-top: 1px solid var(--line); padding-top: 12px; }
+.aside-schedule strong { display: block; font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: -.02em; margin-bottom: 5px; }
+.aside-schedule li > span { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; font-size: 11px; color: var(--muted); padding: 3px 0; }
+.aside-schedule b { font-family: var(--font-display); font-weight: 800; font-size: 17px; color: var(--ink); white-space: nowrap; }
+.aside-note { font-size: 10px; line-height: 1.7; color: var(--muted); margin-top: 13px; }
+
+.signup-panel { background: #fff; border: 1px solid var(--line); padding: clamp(21px, 2.6vw, 44px); }
+.signup-form { display: grid; gap: clamp(19px, 2.2vw, 30px); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(15px, 1.8vw, 24px); }
+.field { display: grid; gap: 9px; }
+.field > span { font-size: 11px; font-weight: 700; letter-spacing: .04em; }
+.field > span i { font-style: normal; font-weight: 400; letter-spacing: 0; color: var(--muted); }
+.field input, .field textarea { font: inherit; font-size: 14px; width: 100%; min-height: 52px; padding: 14px 15px; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 0; }
+.field textarea { line-height: 1.6; resize: vertical; }
+.field input::placeholder, .field textarea::placeholder { color: #9aa8a4; }
+.field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--petrol); outline-offset: 1px; background: #fff; }
+.field-group { border: 0; margin: 0; padding: 0; }
+.field-group legend { font-size: 11px; font-weight: 700; letter-spacing: .04em; padding: 0; margin-bottom: 11px; }
+.chips { display: flex; flex-wrap: wrap; gap: 9px; }
+.chip { position: relative; }
+.chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.chip span { display: flex; align-items: center; min-height: 44px; padding: 11px 15px; font-size: 12px; border: 1px solid var(--line); transition: background var(--micro), color var(--micro), border-color var(--micro); }
+.chip:hover span { border-color: var(--petrol-light); }
+.chip input:checked + span { background: var(--petrol); border-color: var(--petrol); color: var(--paper); }
+.chip input:focus-visible + span { outline: 3px solid var(--petrol); outline-offset: 2px; }
+.form-foot { display: flex; align-items: center; justify-content: space-between; gap: clamp(16px, 2vw, 30px); border-top: 1px solid var(--line); padding-top: clamp(17px, 2vw, 26px); }
+.form-foot p { font-size: 11px; line-height: 1.7; color: var(--muted); max-width: 46ch; }
+.form-foot .button { flex-shrink: 0; }
+.button[disabled] { opacity: .72; cursor: default; }
+.nojs-form { margin-top: 18px; font-size: 12px; line-height: 1.7; color: var(--muted); }
+.nojs-form a { border-bottom: 1px solid var(--line); }
+
+@media(max-width: 1000px) {
+  .signup-hero { grid-template-columns: 1fr; }
+  .signup-shot { width: min(58%, 300px); margin-left: auto; }
+  .signup-body { grid-template-columns: 1fr; }
+  /* No celular o formulario vem primeiro: quem abriu /cadastro veio para isso. */
+  .signup-panel { order: -1; }
+  .signup-aside { position: static; }
+}
+
+/* ================================================================ respostas */
+@media(min-width: 1700px) {
+  .hero { grid-template-columns: minmax(0, 1fr) min(40vw, 800px); }
+}
+
+@media(min-width: 761px) and (max-width: 1100px) {
+  .hero { grid-template-columns: minmax(0, 1fr) min(40vw, 400px); min-height: min(700px, calc(100svh - 90px)); }
+  .hero h1 { font-size: clamp(40px, 5.4vw, 60px); max-width: none; }
+  .hero-facts { grid-template-columns: 1fr; }
+  .hero-facts a { padding: 13px 16px; }
+  .header-location { display: none; }
+  .main-nav { gap: 22px; }
+  .site-header { gap: 25px; height: 90px; }
+  /* O quadro do tablet estava alto demais para o que havia dentro: sobrava um
+     vazio antes do contato e o carimbo sumia atrás da faixa. */
+  /* No tablet a altura do herói e a do título andam em ritmos diferentes, então
+     a faixa deixa de ser porcentagem do quadro e passa a sair da métrica do
+     próprio título: 20.4vw de corpo por 0.76 de entrelinha, corrigido pela
+     ampliação da perspectiva do plano. Assim ela sempre encosta na base de
+     "correr." sem comer a palavra. */
+  .club-section { grid-template-columns: 22% 1fr; }
+  .faq-section { grid-template-columns: 44% 1fr; gap: 5%; }
+  .faq-section h2 { font-size: clamp(52px, 6.6vw, 74px); }
+  .club-copy { grid-template-columns: 10% minmax(0, 1fr) minmax(150px, .45fr); }
+  .club-aside { max-width: 250px; }
+  .club-aside img { height: clamp(240px, 26vw, 330px); }
+  .training-shot img { height: clamp(170px, 17vw, 210px); }
+  .location-select button { padding: 20px 15px; font-size: 13px; gap: 13px; }
+  .schedule-info { padding: 32px 28px; }
+  .session strong { font-size: 28px; }
+  .location-art-number { font-size: 176px; right: 28px; top: 46px; }
+  .week-strip { left: 24px; right: 24px; gap: 4px; }
+  .week-strip span { padding: 9px 0; font-size: 9px; }
+  .final-layout h2 { max-width: 74%; }
+  .team-head { grid-template-columns: 1fr; }
+  .team-lead { margin-top: 22px; max-width: none; }
+  .team-body { grid-template-columns: 1fr; }
+  .team-steps { grid-template-columns: 1fr; }
+  .steps-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media(max-width: 900px) {
+  /* Empilhado: primeiro o que o site e, depois a corrida, depois a agenda. */
+  .hero { grid-template-columns: 1fr; grid-template-rows: auto auto auto; min-height: 0; }
+  .hero-panel { grid-area: auto; padding-bottom: clamp(26px, 4vw, 40px); }
+  .hero-media { grid-area: auto; height: clamp(280px, 52vw, 420px); }
+  .hero-facts { grid-area: auto; grid-template-columns: 1fr; padding-top: 1px; }
+}
+
+@media(max-width: 760px) {
+  html { scroll-padding-top: 92px; }
+  body { font-size: 14px; }
+  .site-header { height: 80px; gap: 14px; padding: 0 21px; position: sticky; top: 0; }
+  .wordmark { width: 104px; font-size: 31px; }
+  .wordmark > span + span { margin-left: 15px; }
+  .wordmark-team { font-size: 7px; margin-left: 7px; }
+  .brand-slash { font-size: 37px; }
+  .header-location { display: none; }
+  .header-cta { font-size: 10px; gap: 11px; min-height: 44px; padding: 10px 12px; margin-left: auto; }
+  .header-cta svg { width: 15px; height: 15px; }
+  .menu-toggle { display: flex; align-items: center; gap: 8px; background: transparent; padding: 12px 0; font-size: 10px; margin-left: auto; min-height: 44px; }
+  .menu-toggle span { font-size: 20px; line-height: 1; }
+  .main-nav { display: none; position: absolute; top: 79px; left: 0; right: 0; background: var(--petrol); padding: 20px 25px 28px; border-bottom: 1px solid var(--line-light); box-shadow: 0 15px 20px #10333722; margin: 0; }
+  .main-nav.is-open { display: flex; flex-direction: column; gap: 0; align-items: stretch; }
+  .main-nav a { padding: 15px 0; font-family: var(--font-display); font-size: 33px; }
+
+  /* No celular a cena continua espacial, mas com menos planos e Z mais curto:
+     o conceito sobrevive, o custo cai. */
+  /* No celular "correr." passa por cima da base da foto, então o crédito sobe
+     para o topo do porta-retrato e continua legível. */
+
+  .hero h1 { font-size: clamp(38px, 10.5vw, 58px); max-width: none; }
+  .hero-lead { font-size: 13px; }
+  .hero-actions { display: grid; grid-template-columns: 1fr; gap: 14px; width: 100%; }
+  .hero-actions .button { width: 100%; min-height: 58px; padding: 16px 20px; gap: 20px; }
+  .hero-alt { font-size: 11px; }
+  .hero-facts strong { font-size: 19px; }
+  .hero-lanes { width: 780px; height: 780px; left: -280px; top: -60px; }
+
+  .running-strip { padding: 15px 0 17px; }
+  .strip-run span { font-size: 23px; gap: 26px; padding-right: 26px; }
+  .strip-arrow { font-size: 25px; }
+  .strip-track { animation-duration: 26s; }
+
+  .club-section { grid-template-columns: 1fr; gap: 32px; padding-top: 75px; padding-bottom: 77px; }
+  .section-side .side-caption { display: none; }
+  .club-content h2 { font-size: clamp(46px, 14vw, 95px); }
+  .club-aside { width: 62%; max-width: none; margin: 4px auto 0 0; }
+  .club-aside img { height: 300px; }
+  .club-copy { grid-template-columns: 38px 1fr; gap: 18px; margin-top: 30px; }
+  .club-lead { max-width: none; }
+  .club-copy > .text-link { grid-column: 2; justify-self: start; margin-top: 4px; }
+  /* Sem a seta grande do desktop, o numero volta para dentro do botao. */
+  .button-number { display: inline; font-size: 17px; }
+  .small-cross { font-size: 42px; }
+  .club-copy p { font-size: 13px; }
+  .club-copy p + p { font-size: 12px; }
+  .text-link { font-size: 10px; gap: 14px; }
+  .eyebrow { font-size: 9px; }
+
+  .training-section { padding-top: 64px; padding-bottom: 42px; }
+  .training-heading { display: block; margin-bottom: 28px; }
+  .training-heading h2 { font-size: clamp(58px, 18.6vw, 84px); margin-top: 24px; }
+  .training-shot { width: 66%; margin: 26px 0 0 auto; }
+  .training-shot img { height: 168px; }
+  .training-note { display: block; font-size: 12px; margin-top: 24px; }
+  .training-note span { display: block; }
+  .training-note span:last-child { margin-top: 10px; }
+  .location-select { grid-template-columns: 1fr; }
+  .location-select button { border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 16px; font-size: 13px; gap: 20px; min-height: 58px; }
+  .location-select button:last-child { border-bottom: 0; }
+  .schedule-body { grid-template-columns: 1fr; }
+  .location-art { height: 248px; border-right: 0; }
+  .location-art-label { top: 21px; left: 20px; font-size: 8px; }
+  .location-art-number { font-size: 116px; top: 2px; right: 23px; }
+  .week-strip { left: 24px; right: 24px; bottom: 58px; gap: 4px; }
+  .week-strip span { padding: 8px 0; font-size: 9px; }
+  .location-art-bottom { bottom: 20px; left: 24px; font-size: 10px; }
+  .location-track { width: 460px; height: 460px; top: -130px; left: -80px; }
+  .schedule-info { padding: 27px 0; }
+  .schedule-info h3 { font-size: 48px; }
+  .schedule-info > p { font-size: 11px; }
+  .sessions { margin-top: 24px; }
+  .session strong { font-size: 30px; }
+  .session div > span { font-size: 11px; }
+  .schedule-note { display: block; font-size: 9px; padding-top: 18px; }
+  /* No polegar todo alvo passa de 44px de altura, sem mexer no corpo do texto. */
+  .schedule-note a { margin-top: 8px; padding: 15px 0; font-size: 10px; }
+
+  /* A cena esticada vira composição fixa: mesma ideia, sem sticky no polegar. */
+  /* Sem sticky, o par de retratos vira empilhamento: o segundo quadro encosta
+     no primeiro pela esquerda em vez de sumir. */
+  .social-invite { margin-top: 36px; display: block; padding-top: 21px; padding-bottom: 27px; }
+  .social-invite > span { font-size: 10px; }
+  .social-invite a { display: flex; justify-content: space-between; margin-top: 4px; padding: 13px 0; font-size: 13px; }
+
+  .team-section { padding-top: 58px; }
+  .team-head { grid-template-columns: 1fr; }
+  .team-head h2 { font-size: clamp(38px, 11.5vw, 72px); }
+  .team-lead { margin-top: 20px; max-width: none; font-size: 13px; }
+  .team-numbers { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 32px; }
+  .team-numbers li { padding: 17px 18px; }
+  .team-numbers strong { font-size: 46px; }
+  .team-body { grid-template-columns: 1fr; gap: 34px; margin-top: 36px; }
+  .team-line li { grid-template-columns: 58px minmax(0, 1fr); gap: 14px; }
+  .team-shot img { height: 240px; }
+  .team-aside { grid-template-columns: 44% minmax(0, 1fr); gap: 16px; }
+  .team-small img { height: 104px; }
+  .team-steps { grid-template-columns: 1fr; margin-top: 44px; }
+  .steps-list { grid-template-columns: 1fr; gap: 22px; }
+  .steps-cta { gap: 16px; }
+  .steps-cta .button { width: 100%; }
+
+  .faq-section { display: block; padding-top: 74px; padding-bottom: 70px; }
+  .faq-section h2 { font-size: clamp(56px, 17.5vw, 78px); margin-top: 27px; }
+  .faq-shot { width: 58%; margin: 28px 0 0; }
+  .faq-shot img { height: 140px; }
+  .faq-list { margin-top: 35px; padding-top: 0; }
+  .faq-list summary { font-size: 11px; grid-template-columns: 17px 1fr 16px; gap: 12px; padding: 22px 0; }
+
+  .signup-back { font-size: 10px; }
+  .signup-intro h1 { font-size: clamp(34px, 10vw, 54px); }
+  .signup-panel { padding: 20px 17px; }
+  .field-row { grid-template-columns: 1fr; }
+  .chips { gap: 7px; }
+  .chip span { padding: 11px 13px; font-size: 11px; }
+  .form-foot { display: block; }
+  .form-foot .button { width: 100%; margin-top: 17px; }
+  .faq-list details p { font-size: 11px; margin-left: 29px; margin-right: 15px; }
+
+  .final-section { padding-top: 42px; padding-bottom: 38px; }
+  .final-track { width: 700px; height: 700px; right: -230px; bottom: -300px; }
+  .final-layout { margin-top: 29px; }
+  .final-layout h2 { font-size: clamp(56px, 14vw, 92px); }
+  .final-call { display: none; }
+  .final-layout h2 { max-width: none; }
+  .final-bottom { display: block; margin-top: 28px; }
+  .final-bottom p { font-size: 11px; }
+  .final-bottom .button { display: flex; margin-top: 25px; font-size: 11px; gap: 16px; padding: 15px 18px; }
+
+  .site-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 30px 20px; padding-top: 32px; padding-bottom: 30px; }
+  .site-footer > span { font-size: 9px; text-align: right; }
+  .site-footer > a:not(.brand) { font-size: 8px; gap: 8px; padding: 15px 0; }
+  .site-footer > a:last-child { justify-self: end; }
+
+  .intro-track { width: 760px; height: 860px; left: -300px; top: -130px; }
+  .intro-lane { left: 26%; width: 56vw; border-width: 16px; }
+  .intro-mark .wordmark { width: 208px; font-size: 58px; }
+  .intro-line { font-size: 11px; top: calc(50% + 62px); }
+  .intro-place { font-size: 8px; }
+}
+
+@media(min-width: 500px) and (max-width: 760px) {
+}
+
+@media(max-width: 374px) {
+  .site-header { padding: 0 17px; gap: 10px; }
+  .header-cta { padding: 10px; gap: 7px; }
+  .session strong { font-size: 27px; }
+  .schedule-info h3 { font-size: 42px; }
+}
+
+/* ------------------------------------------------------- movimento reduzido
+   A composição continua a mesma, em repouso. O que sai é o movimento. */
+@media(prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .intro { display: none !important; }
+  .hero-media img { transform: none !important; }
+  .hero-lanes { transform: rotate(-27deg) !important; }
+  .js [data-reveal] { clip-path: none !important; }
+  .js [data-reveal="stagger"] > * { opacity: 1 !important; transform: none !important; }
+  .js [data-reveal="frame"] img { transform: none !important; }
+  .final-track { transform: rotate(152deg) scale(1) !important; }
+}
+
+@media print {
+  .intro, .site-header, .final-arrow, .running-strip { display: none; }
+  * { print-color-adjust: exact; }
+}

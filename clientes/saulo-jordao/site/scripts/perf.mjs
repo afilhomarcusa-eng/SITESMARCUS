@@ -69,7 +69,7 @@ async function tempoAteVer() {
   const t0 = Date.now();
   await p.goto(BASE, { waitUntil: "domcontentloaded" });
   await p
-    .locator("[data-foto-heroi]")
+    .locator("[data-entrada-foto]")
     .evaluate(
       (e) =>
         new Promise((ok) => {
@@ -84,6 +84,8 @@ async function tempoAteVer() {
               r.width > 0 &&
               r.height > 0 &&
               getComputedStyle(alvo).visibility === "visible" &&
+              getComputedStyle(alvo).display !== "none" &&
+              Number(getComputedStyle(alvo).opacity) > 0.01 &&
               ponto.x >= r.left &&
               ponto.x <= r.right &&
               ponto.y >= r.top &&
@@ -93,7 +95,7 @@ async function tempoAteVer() {
           const ver = () => {
             const r = e.getBoundingClientRect();
             const ponto = { x: r.x + r.width / 2, y: r.y + r.height / 2 };
-            const camadas = [...document.querySelectorAll(".cortina-chapa, .folha")];
+            const camadas = [...document.querySelectorAll(".cortina")];
             return camadas.some((c) => cobre(c, ponto))
               ? requestAnimationFrame(ver)
               : ok(true);

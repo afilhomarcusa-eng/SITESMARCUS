@@ -10,7 +10,7 @@
  * que já está lá, então nada do estoque fica escondido do robô de busca.
  */
 
-import { CARROS, type Carro } from "./estoque";
+import type { Carro } from "./tipos";
 
 export type Ordem = "catalogo" | "menor-preco" | "maior-preco" | "menor-km";
 
@@ -36,7 +36,7 @@ export const VAZIA: Selecao = { busca: "", marca: "", ate: null, ordem: "catalog
  * Saem da própria lista, não de números redondos escolhidos a dedo: um teto que
  * não separa nada é uma promessa que a grade não cumpre.
  */
-export function tetosDePreco(carros: Carro[] = CARROS): number[] {
+export function tetosDePreco(carros: Carro[]): number[] {
   const candidatos = [300_000, 500_000, 700_000, 1_000_000];
   return candidatos.filter((teto) => {
     const dentro = carros.filter((c) => c.preco <= teto).length;
@@ -74,7 +74,7 @@ function texto(c: Carro): string {
     .replace(/\p{Diacritic}/gu, "");
 }
 
-export function aplicar(s: Selecao, carros: Carro[] = CARROS): Carro[] {
+export function aplicar(s: Selecao, carros: Carro[]): Carro[] {
   const busca = s.busca
     .trim()
     .toLowerCase()

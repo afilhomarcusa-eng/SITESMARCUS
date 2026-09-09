@@ -1,62 +1,40 @@
-import Link from "next/link";
-import type { Carro } from "@/lib/estoque";
-import { CARROS } from "@/lib/estoque";
-import { km as fmtKm, reais } from "@/lib/fmt";
-import { SetaDireita } from "./icones";
+"use client";
 
-/**
- * O cartão do carro.
- *
- * O número da série sai da posição do carro no estoque, não da posição dele na
- * lista filtrada: filtrar não pode renumerar o acervo. E a grade é alinhada, com
- * altura igual em todos os cartões, porque cartão deslocado por índice faz a
- * grade pular de altura quando a ordenação muda, e isso é lido como filtro
- * quebrado mesmo quando o filtro está certo.
- */
-export default function CartaoCarro({
-  carro,
-  prioridade = false,
-}: {
-  carro: Carro;
-  prioridade?: boolean;
-}) {
-  const serie = CARROS.findIndex((c) => c.slug === carro.slug) + 1;
+import { useRef, useState } from "react";
+import Link from "next/link";
+import FotoCarro from "./foto";
+import { SetaDireita } from "./icones";
+import { km as fmtKm, reais } from "@/lib/fmt";
+import type { Carro } from "@/lib/tipos";
+
+export default function CartaoCarro({ carro, prioridade = false, destaque = false }: { carro: Carro; prioridade?: boolean; destaque?: boolean }) {
+  const [foto, setFoto] = useState(0);
+  const toque = useRef(0);
   const ano = carro.anoTexto ?? String(carro.ano);
-  const ficha = [ano, carro.km ? fmtKm(carro.km) : "", carro.potencia ? `${carro.potencia} cv` : ""]
-    .filter(Boolean)
-    .join("  ·  ");
+  const ficha = [ano, carro.km ? fmtKm(carro.km) : "", carro.potencia ? `${carro.potencia} cv` : ""].filter(Boolean).join(" · ");
+  const total = carro.fotos.length;
+  const mudar = (direcao: number) => setFoto((atual) => (atual + direcao + total) % total);
 
   return (
-    <Link href={`/estoque/${carro.slug}`} className="cartao" data-carro={carro.slug}>
-      <div className="cartao-moldura">
-        <span className="cartao-serie serie">
-          {String(serie).padStart(2, "0")}/{CARROS.length}
-        </span>
-        <img
-          src={`/images/${carro.slug}-capa-420.webp`}
-          srcSet={`/images/${carro.slug}-capa-420.webp 420w, /images/${carro.slug}-capa-840.webp 840w`}
-          sizes="(max-width: 620px) 46vw, (max-width: 1100px) 32vw, 24vw"
-          width={420}
-          height={560}
-          alt={`${carro.nome}${carro.cor ? `, cor ${carro.cor}` : ""}`}
-          loading={prioridade ? "eager" : "lazy"}
-          fetchPriority={prioridade ? "high" : "auto"}
-          decoding="async"
-        />
-        {carro.nota ? <p className="cartao-nota">{carro.nota}</p> : null}
+    <article className={`vehicle-card${destaque ? " vehicle-card-featured" : ""}`}>
+      <div className="vehicle-media" onTouchStart={(e) => { toque.current = e.touches[0].clientX; }} onTouchEnd={(e) => { const delta = e.changedTouches[0].clientX - toque.current; if (Math.abs(delta) > 42) mudar(delta < 0 ? 1 : -1); }}>
+        {carro.fotos[foto] ? <FotoCarro foto={carro.fotos[foto]} alt={`${carro.nome}, foto ${foto + 1}`} sizes={destaque ? "(max-width:760px) 100vw, (max-width:1520px) 55vw, 800px" : "(max-width:760px) 100vw, 34vw"} prioridade={prioridade} /> : null}
+        {total > 1 ? (
+          <>
+            <button className="photo-zone photo-prev" type="button" onClick={() => mudar(-1)} aria-label="Foto anterior" />
+            <button className="photo-zone photo-next" type="button" onClick={() => mudar(1)} aria-label="Próxima foto" />
+            <span className="photo-count">{foto + 1} / {total}</span>
+          </>
+        ) : null}
+        {carro.nota ? <p className="vehicle-note">{carro.nota}</p> : null}
       </div>
-
-      <div className="cartao-topo">
+      <Link href={`/estoque/${carro.slug}`} className="vehicle-info" data-carro={carro.slug}>
+        <span className="kicker">{carro.marca}</span>
         <h3>{carro.modelo}</h3>
-        <span className="cartao-marca">{carro.marca}</span>
-      </div>
-
-      <p className="cartao-ficha serie">{ficha}</p>
-
-      <p className="cartao-preco serie">
-        {reais(carro.preco)}
-        <SetaDireita />
-      </p>
-    </Link>
+        <span className="vehicle-meta">{ficha}</span>
+        <strong>{reais(carro.preco)}</strong>
+        <span className="vehicle-open">Ver ficha <SetaDireita /></span>
+      </Link>
+    </article>
   );
 }

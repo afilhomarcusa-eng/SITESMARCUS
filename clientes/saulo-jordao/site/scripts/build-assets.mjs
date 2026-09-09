@@ -1,111 +1,99 @@
 /**
- * Pipeline de imagem.
+ * Pipeline de imagem das fotos de semente.
  *
  * A regra que manda: nenhuma imagem sai maior do que entrou. A largura
- * exportada é min(slot * 2, largura nativa do recorte). Quando a origem não
- * cobre 2x, sai em 1x e pronto. Não existe upscale aqui.
+ * exportada é min(largura pedida, largura nativa). Quando a origem não cobre,
+ * sai no tamanho da origem e pronto. Não existe upscale aqui.
  *
  * O manifesto guarda a dimensão NATIVA de cada origem. O QA compara a caixa
  * desenhada na tela contra esse número, e não contra o arquivo exportado: um
  * pipeline que amplia gera arquivo grande e passaria feliz num teste que
  * olhasse só o export, com a foto borrada na tela.
  *
- * As 145 fotos originais são todas verticais, tiradas de celular no mesmo
- * trecho de calçada de Aracaju. É por isso que o site inteiro é feito de
- * molduras 3:4 em pé: o layout foi desenhado em cima do que existe.
+ * Os nomes de saída são iguais aos que a gerência produz quando alguém sobe uma
+ * foto em /admin: `<slug>-<indice>-<largura>.webp`. Um formato só para os dois
+ * caminhos, senão o site precisaria de dois jeitos de desenhar a mesma coisa.
  *
  *   npm run assets
  */
 
 import sharp from "sharp";
-import { mkdir, writeFile, readdir } from "node:fs/promises";
+import { mkdir, writeFile, readdir, rm } from "node:fs/promises";
 import path from "node:path";
 
 const ASSETS = path.resolve("../assets/carros");
 const OUT = path.resolve("public/images");
 
 /**
- * Larguras de slot, medidas no layout que existe.
+ * As larguras que o site usa.
  *
- * capa    = cartão da grade do estoque, quatro colunas em 1920
- * retrato = foto grande da ficha do carro
- * tira    = as fotos da tira horizontal da ficha
- * heroi   = o retrato do herói da home, o maior slot do site
+ * 420 e 840 servem o cartão da grade (420 css) e a tira da ficha (320 css).
+ * 1440 só existe para a primeira foto de cada carro, que é a única desenhada
+ * grande: o retrato da ficha, em 720 css.
  */
-const SLOTS = { capa: 420, retrato: 720, tira: 320, heroi: 760 };
+const LARGURAS = [420, 840];
+const LARGURA_GRANDE = 1440;
 
 /** A moldura do site inteiro. Toda foto é recortada para ela. */
 const PROPORCAO = 4 / 3;
 
-/** Quantas fotos de cada carro entram na tira da ficha, depois da capa. */
-const FOTOS_NA_TIRA = 5;
-
-/** O retrato do herói: a foto de maior resolução do estoque inteiro. */
-const HEROI = { arquivo: "corvette-stingray-00.jpg", nome: "heroi" };
+/** Quantas fotos de cada carro entram no site. A primeira é a capa. */
+const FOTOS_POR_CARRO = 6;
 
 const manifest = { geradoEm: new Date().toISOString(), imagens: {} };
 
-async function emitir({ origem, nome, slot }) {
+async function emitir({ origem, nome, largura }) {
   const meta = await sharp(origem).metadata();
   const nativa = { w: meta.width, h: meta.height };
+  // O nome carrega a largura de verdade, e não a pedida: arquivo chamado 1440
+  // com mil pixels dentro faz o navegador escolher ele para uma caixa grande e
+  // ampliar, e nenhum teste que olhe só o nome percebe.
+  const alvo = Math.min(largura, nativa.w, Math.floor(nativa.h / PROPORCAO));
+  const altura = Math.round(alvo * PROPORCAO);
+  const saida = path.join(OUT, `${nome}-${alvo}.webp`);
 
-  // Duas larguras: a do slot e a retina. Nenhuma delas passa da nativa.
-  const larguras = [...new Set([slot, slot * 2])]
-    .map((l) => Math.min(l, nativa.w))
-    .sort((a, b) => a - b);
+  // Um resize só. Encadear extract com resize faz a biblioteca aplicar apenas
+  // o último e descartar o recorte, em silêncio.
+  await sharp(origem)
+    .resize({ width: alvo, height: altura, fit: "cover", position: "centre" })
+    .webp({ quality: 82 })
+    .toFile(saida);
 
-  for (const largura of larguras) {
-    const altura = Math.round(largura * PROPORCAO);
-    const saida = path.join(OUT, `${nome}-${largura}.webp`);
-
-    // Um resize só. Encadear extract com resize faz a biblioteca aplicar
-    // apenas o último e descartar o recorte, em silêncio.
-    await sharp(origem)
-      .resize({ width: largura, height: altura, fit: "cover", position: "centre" })
-      .webp({ quality: 82 })
-      .toFile(saida);
-
-    // Lê de volta o que de fato saiu, porque pedir não é o mesmo que sair.
-    const real = await sharp(saida).metadata();
-    if (real.width > nativa.w) {
-      throw new Error(
-        `${nome}: saiu com ${real.width}px, maior que a nativa ${nativa.w}px. O pipeline ampliou.`,
-      );
-    }
-
-    manifest.imagens[`${nome}-${largura}.webp`] = {
-      origem: path.basename(origem),
-      nativa,
-      exportada: { w: real.width, h: real.height },
-      slotCss: slot,
-    };
+  // Lê de volta o que de fato saiu, porque pedir não é o mesmo que sair.
+  const real = await sharp(saida).metadata();
+  if (real.width > nativa.w) {
+    throw new Error(
+      `${nome}: saiu com ${real.width}px, maior que a nativa ${nativa.w}px. O pipeline ampliou.`,
+    );
   }
 
-  console.log(
-    `  ${nome.padEnd(24)} nativa ${nativa.w}x${nativa.h} -> ${larguras.join(", ")} (slot ${slot}px)`,
-  );
+  manifest.imagens[`${nome}-${alvo}.webp`] = {
+    origem: path.basename(origem),
+    nativa,
+    exportada: { w: real.width, h: real.height },
+    larguraPedida: largura,
+  };
 }
-
 
 /**
  * A imagem de compartilhamento.
  *
  * Feita da mesma matéria do site: o retrato à esquerda, papel à direita, o nome
- * na serifa e a linha de posicionamento embaixo. Nada de captura de tela.
+ * e a linha de posicionamento. Nada de captura de tela.
  */
-async function ogImagem() {
+async function ogImagem(origem) {
   const LARG = 1200;
   const ALT = 630;
   const fotoLarg = 470;
 
-  const foto = await sharp(path.join(ASSETS, HEROI.arquivo))
+  const foto = await sharp(origem)
     .resize({ width: fotoLarg, height: ALT, fit: "cover", position: "centre" })
     .toBuffer();
 
   const texto = Buffer.from(`<svg width="${LARG}" height="${ALT}" xmlns="http://www.w3.org/2000/svg">
   <rect width="${LARG}" height="${ALT}" fill="#f4f2ed"/>
-  <text x="${fotoLarg + 66}" y="250" font-family="Georgia, 'Times New Roman', serif" font-size="66" fill="#14140f">Saulo Jordão</text>
-  <text x="${fotoLarg + 66}" y="316" font-family="Georgia, 'Times New Roman', serif" font-size="40" fill="#4b5345">Premium Cars</text>
+  <text x="${fotoLarg + 66}" y="250" font-family="Arial, Helvetica, sans-serif" font-weight="600" font-size="62" fill="#14140f">Saulo Jordão</text>
+  <text x="${fotoLarg + 66}" y="316" font-family="Arial, Helvetica, sans-serif" font-size="38" fill="#4b5345">Premium Cars</text>
   <text x="${fotoLarg + 68}" y="392" font-family="Arial, Helvetica, sans-serif" font-size="21" letter-spacing="2" fill="#7c8188">CORRETOR DE VEÍCULOS PREMIUM</text>
   <text x="${fotoLarg + 68}" y="424" font-family="Arial, Helvetica, sans-serif" font-size="21" letter-spacing="2" fill="#7c8188">ARACAJU, SERGIPE</text>
   <rect x="${fotoLarg + 66}" y="452" width="120" height="2" fill="#4b5345"/>
@@ -120,9 +108,10 @@ async function ogImagem() {
 }
 
 async function main() {
+  await rm(OUT, { recursive: true, force: true });
   await mkdir(OUT, { recursive: true });
-  const arquivos = (await readdir(ASSETS)).filter((f) => f.endsWith(".jpg")).sort();
 
+  const arquivos = (await readdir(ASSETS)).filter((f) => f.endsWith(".jpg")).sort();
   const porCarro = new Map();
   for (const arq of arquivos) {
     const slug = arq.replace(/-\d+\.jpg$/, "");
@@ -130,25 +119,30 @@ async function main() {
     porCarro.get(slug).push(arq);
   }
 
-  console.log(`\n${porCarro.size} carros, ${arquivos.length} fotos originais\n`);
+  console.log(`\n${porCarro.size} carros, ${arquivos.length} fotos de origem\n`);
 
   for (const [slug, fotos] of porCarro) {
-    // Foto 0: a capa do cartão e o retrato grande da ficha.
-    await emitir({ origem: path.join(ASSETS, fotos[0]), nome: `${slug}-capa`, slot: SLOTS.capa });
-    await emitir({ origem: path.join(ASSETS, fotos[0]), nome: `${slug}-retrato`, slot: SLOTS.retrato });
-
-    // As seguintes: a tira da ficha. Cada foto aparece uma vez só na página.
-    for (let i = 1; i <= FOTOS_NA_TIRA && i < fotos.length; i++) {
-      await emitir({ origem: path.join(ASSETS, fotos[i]), nome: `${slug}-tira-${i}`, slot: SLOTS.tira });
+    const usadas = fotos.slice(0, FOTOS_POR_CARRO);
+    for (const [i, arq] of usadas.entries()) {
+      const origem = path.join(ASSETS, arq);
+      for (const largura of LARGURAS) {
+        await emitir({ origem, nome: `${slug}-${i}`, largura });
+      }
+      // Só a primeira foto de cada carro é desenhada grande.
+      if (i === 0) await emitir({ origem, nome: `${slug}-${i}`, largura: LARGURA_GRANDE });
     }
+    console.log(`  ${slug.padEnd(22)} ${usadas.length} fotos`);
   }
 
-  console.log("\nHerói:");
-  await emitir({ origem: path.join(ASSETS, HEROI.arquivo), nome: HEROI.nome, slot: SLOTS.heroi });
-
   console.log("\nCompartilhamento:");
-  await ogImagem();
+  await ogImagem(path.join(ASSETS, "corvette-stingray-00.jpg"));
 
+  const retrato = path.resolve("../assets/saulo-original.jpg");
+  for(const largura of [420,840]){
+    const nome = "saulo-" + largura + ".webp";
+    await sharp(retrato).extract({left:0,top:300,width:900,height:1200}).resize({width:largura,withoutEnlargement:true}).webp({quality:86}).toFile(path.join(OUT,nome));
+    manifest.imagens[nome]={origem:"saulo-original.jpg",nativa:{w:900,h:1200},exportada:{w:largura,h:Math.round(largura*4/3)},larguraPedida:largura};
+  }
   await writeFile(path.join(OUT, "manifest.json"), JSON.stringify(manifest, null, 2));
   console.log(`\n${Object.keys(manifest.imagens).length} arquivos gerados, manifesto gravado.\n`);
 }
