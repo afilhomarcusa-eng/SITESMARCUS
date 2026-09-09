@@ -69,11 +69,6 @@ export function Sobre() {
             </li>
           </ul>
 
-          <p className="sobre-nota">
-            Este site não faz avaliação nem triagem. Ele existe para você saber
-            onde fica, que dias abre e como marcar, antes de gastar uma mensagem
-            perguntando.
-          </p>
         </div>
       </div>
     </section>

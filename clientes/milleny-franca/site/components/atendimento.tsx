@@ -11,29 +11,30 @@ import {
   totalDiasAbertos,
 } from "@/lib/dados";
 import { numeroDaSecao } from "@/lib/navegacao";
-import { IconeLocal, IconeRelogio, IconeAcesso } from "@/components/icones";
 
 /**
  * Quatro abas de papel, empilhadas como as guias de um fichario.
  * Cada valor mostrado sai de lib/dados. Nao existe aba com texto solto,
  * e nao existe aba sobre servico que a Milleny nao tenha publicado.
+ *
+ * A coluna da esquerda carrega o dado em tipografia grande, nao um icone
+ * dentro de quadradinho: o fato E o elemento grafico.
  */
 const abas = [
   {
     id: "onde",
     guia: "Onde",
-    titulo: "No consultório, no bairro Jardins",
-    Icone: IconeLocal,
+    destaque: endereco.bairro,
+    apoio: `${endereco.cidade}, ${endereco.estado}`,
     cor: "var(--cobalto)",
     corpo: (
       <>
         <p>
-          O atendimento acontece presencialmente em {endereco.logradouro},{" "}
-          {endereco.bairro}, {endereco.cidade}.
+          O atendimento é presencial, em {endereco.logradouro}. O prédio fica a
+          poucos minutos do Shopping Jardins.
         </p>
         <p className="aba-fraco">
-          O prédio fica a poucos minutos do Shopping Jardins. O mapa com a
-          localização exata está na seção de contato.
+          O mapa com a localização exata está na seção de contato.
         </p>
       </>
     ),
@@ -41,15 +42,14 @@ const abas = [
   {
     id: "quando",
     guia: "Quando",
-    titulo: `${totalDiasAbertos} dias por semana, das ${horaAbre} às ${horaFecha}`,
-    Icone: IconeRelogio,
+    destaque: `${horaAbre} às ${horaFecha}`,
+    apoio: `${diasAbertos[0].dia} a ${diasAbertos[diasAbertos.length - 1].dia}`,
     cor: "var(--verde)",
     corpo: (
       <>
         <p>
-          Atendo de {diasAbertos[0].dia.toLowerCase()} a{" "}
-          {diasAbertos[diasAbertos.length - 1].dia.toLowerCase()}, das {horaAbre}{" "}
-          às {horaFecha}. Sábado e domingo o consultório fica fechado.
+          São {totalDiasAbertos} dias por semana. Sábado e domingo o consultório
+          não abre.
         </p>
         <p className="aba-fraco">
           Dentro dessa faixa, o horário da sessão é combinado com a família.
@@ -60,14 +60,14 @@ const abas = [
   {
     id: "combinar",
     guia: "Como combina",
-    titulo: "Com hora marcada, sempre",
-    Icone: IconeRelogio,
+    destaque: "Hora marcada",
+    apoio: "combinada antes, pelo WhatsApp",
     cor: "var(--coral)",
     corpo: (
       <>
         <p>
-          {agendamentoRecomendado}. A conversa começa no WhatsApp e o horário é
-          acertado antes da primeira ida ao consultório.
+          {agendamentoRecomendado}, então o dia e a hora saem da conversa antes
+          da primeira ida ao consultório.
         </p>
         <p className="aba-fraco">
           Assim ninguém espera com uma criança pequena no colo.
@@ -78,17 +78,15 @@ const abas = [
   {
     id: "acesso",
     guia: "Acessibilidade",
-    titulo: "Entrada, banheiro e estacionamento acessíveis",
-    Icone: IconeAcesso,
+    destaque: "Cadeira de rodas",
+    apoio: "acesso ao prédio",
     cor: "var(--ocre)",
     corpo: (
-      <>
-        <ul className="aba-lista">
-          {estrutura.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </>
+      <ul className="aba-lista">
+        {estrutura.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
     ),
   },
 ];
@@ -150,7 +148,6 @@ export function Atendimento() {
           </div>
 
           {abas.map((a) => {
-            const Icone = a.Icone;
             return (
               <div
                 key={a.id}
@@ -162,10 +159,10 @@ export function Atendimento() {
                 style={{ "--guia-cor": a.cor } as React.CSSProperties}
               >
                 <div className="painel-lado">
-                  <span className="painel-icone" aria-hidden="true">
-                    <Icone />
-                  </span>
-                  <h3 className="painel-titulo">{a.titulo}</h3>
+                  <h3 className="painel-destaque">
+                    {a.destaque}
+                    <span>{a.apoio}</span>
+                  </h3>
                 </div>
                 <div className="painel-corpo">{a.corpo}</div>
               </div>

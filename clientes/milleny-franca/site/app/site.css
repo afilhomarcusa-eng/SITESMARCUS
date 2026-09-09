@@ -372,13 +372,6 @@
 }
 .fato-valor { font-weight: 600; text-align: right; }
 
-.sobre-nota {
-  margin-top: 1.8rem;
-  padding-left: 1.1rem;
-  border-left: 3px solid var(--coral);
-  color: var(--tinta-suave);
-  font-size: 0.98rem;
-}
 
 /* ---------------------------------------------------------------- *
  * Atendimento, o fichario
@@ -425,28 +418,36 @@
   border-radius: 0 18px 18px 18px;
   background: var(--papel-alto);
   padding: clamp(1.6rem, 4vw, 2.6rem);
-  min-height: 15rem;
+  min-height: 11rem;
   animation: painel-abre var(--t-interface) var(--curva-papel);
 }
 @keyframes painel-abre {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: none; }
 }
-.painel-icone {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px; height: 44px;
-  border-radius: 13px;
-  background: color-mix(in srgb, var(--guia-cor) 14%, transparent);
+/* O fato e o elemento grafico. Nada de icone dentro de quadradinho. */
+.painel-destaque {
+  font-family: var(--fonte-display);
+  font-size: clamp(1.9rem, 5vw, 2.9rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+  font-variation-settings: "SOFT" 90, "WONK" 1;
   color: var(--guia-cor);
-  margin-bottom: 1.1rem;
+  margin: 0 0 0.4rem;
+  max-width: 14ch;
 }
-.painel-titulo {
-  font-size: clamp(1.35rem, 3.4vw, 1.85rem);
-  max-width: 20ch;
+.painel-destaque span {
+  display: block;
+  margin-top: 0.6rem;
+  font-family: var(--fonte-texto);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--tinta-fraca);
 }
-.painel-corpo { margin-top: 1rem; max-width: 48ch; }
+.painel-corpo { margin-top: 1.2rem; max-width: 46ch; }
 .painel-lado { min-width: 0; }
 .painel-corpo p + p { margin-top: 0.7rem; }
 .aba-fraco { color: var(--tinta-fraca); font-size: 0.94rem; }
@@ -863,10 +864,11 @@
 
   .fichario-painel {
     display: grid;
-    grid-template-columns: 0.85fr 1fr;
-    gap: clamp(1.5rem, 4vw, 3rem);
+    grid-template-columns: 0.8fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
     align-items: start;
   }
+  .painel-corpo { margin-top: 0.5rem; }
 
   .sobre-grade { grid-template-columns: 0.85fr 1fr; gap: 3rem; }
   .contato-grade { grid-template-columns: 1fr 1fr; }
