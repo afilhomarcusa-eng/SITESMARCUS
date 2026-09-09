@@ -9,6 +9,7 @@ import {
   endereco,
   horarios,
 } from "@/lib/dados";
+import { enderecoDoSite } from "@/lib/site";
 import "./globals.css";
 import "./cortina.css";
 
@@ -25,11 +26,13 @@ const instrument = Instrument_Sans({
   display: "swap",
 });
 
+const base = enderecoDoSite();
+
 const titulo = `${negocio.nomeCompleto} | Psicóloga infantil em ${negocio.cidade}`;
 const descricao = `Milleny França, psicóloga infantil em ${negocio.cidade}, ${negocio.estado}. Intervenção precoce e apoio ao desenvolvimento no bairro Jardins. ${negocio.crp}.`;
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://millenyfranca.com.br"),
+  metadataBase: new URL(base),
   title: titulo,
   description: descricao,
   alternates: { canonical: "/" },
@@ -60,8 +63,8 @@ const dadosEstruturados = {
   name: negocio.nomeCompleto,
   description: descricao,
   telephone: contato.telefoneTel,
-  url: "https://millenyfranca.com.br",
-  image: "https://millenyfranca.com.br/img/milleny-hero-900.webp",
+  url: base,
+  image: `${base}/img/milleny-hero-900.webp`,
   address: {
     "@type": "PostalAddress",
     streetAddress: endereco.logradouro,
