@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Karla } from "next/font/google";
+import { MetaPixel } from "@/components/meta-pixel";
+import { META_PIXEL_ID } from "@/lib/meta-pixel";
 import "./site.css";
 
 /**
@@ -30,5 +32,24 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="pt-BR"><body className={`${display.variable} ${sans.variable}`}>{children}</body></html>;
+  return (
+    <html lang="pt-BR">
+      <body className={`${display.variable} ${sans.variable}`}>
+        {children}
+        <MetaPixel />
+        {/* Fallback da Meta para quem navega sem JavaScript. Fica no HTML do
+            servidor, em todas as páginas, e não aparece na tela. */}
+        <noscript>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            alt=""
+            src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+          />
+        </noscript>
+      </body>
+    </html>
+  );
 }

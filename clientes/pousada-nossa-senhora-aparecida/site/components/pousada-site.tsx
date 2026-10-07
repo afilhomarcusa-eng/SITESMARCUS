@@ -3,11 +3,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
+import { rastrear } from "@/lib/meta-pixel";
 
 const phone = "5579999538948";
 const whatsapp = `https://wa.me/${phone}`;
 const instagram = "https://www.instagram.com/pousadansaparecida/?theme=dark";
 const maps = "https://www.google.com/maps/place/Pousada+Nossa+Senhora+Aparecida/@-10.6871599,-37.43191,17z";
+
+/*
+ * Eventos do Meta Pixel. So acoes que sao intencao real contam:
+ * contato direto (WhatsApp, telefone, e-mail) e Contact, pedir rota ate a
+ * pousada e FindLocation, e o formulario de reserva e Lead. Botoes que so
+ * rolam ate #reservar nao sao conversao e nao disparam nada.
+ */
+const contato = (canal: "WhatsApp" | "Telefone" | "E-mail", origem: string) => () =>
+  rastrear("Contact", { content_category: canal, content_name: origem });
+const rota = (origem: string) => () =>
+  rastrear("FindLocation", { content_name: origem });
 
 const rooms = [
   { name: "Casal", label: "Para dois", image: "/images/quarto-casal.jpeg", description: "Um ambiente reservado e funcional para descansar com tranquilidade.", capacity: "Até 2 hóspedes", beds: "1 cama de casal" },
@@ -145,6 +157,9 @@ export function PousadaSite() {
       `Check-out: ${data(departure)}`,
       `Hóspedes: ${guests}`,
     ].join("\n");
+    // O formulario nao tem servidor: o envio concluido e a mensagem montada e
+    // aberta no WhatsApp. Nenhum dado pessoal vai para a Meta.
+    rastrear("Lead", { content_name: "Consulta de hospedagem", content_category: "Reserva" });
     window.open(`${whatsapp}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   }
 
@@ -185,7 +200,7 @@ export function PousadaSite() {
       <section className="intro section" id="pousada">
         <div className="container intro-grid">
           <div data-reveal><span className="eyebrow">Nossa hospitalidade</span><h2>Uma estadia simples no melhor sentido.</h2></div>
-          <div className="intro-copy" data-reveal><p className="intro-lead">Há mais de uma década, recebemos quem chega a Itabaiana com atenção, praticidade e aquele cuidado que faz uma hospedagem virar descanso de verdade.</p><p>No centro da cidade e perto de tudo, somos um ponto de apoio confortável para representantes comerciais, estudantes, famílias, turistas e visitantes dos grandes eventos locais.</p><a className="text-link" href={whatsapp} target="_blank" rel="noreferrer">Falar com a recepção <Arrow /></a></div>
+          <div className="intro-copy" data-reveal><p className="intro-lead">Há mais de uma década, recebemos quem chega a Itabaiana com atenção, praticidade e aquele cuidado que faz uma hospedagem virar descanso de verdade.</p><p>No centro da cidade e perto de tudo, somos um ponto de apoio confortável para representantes comerciais, estudantes, famílias, turistas e visitantes dos grandes eventos locais.</p><a className="text-link" href={whatsapp} target="_blank" rel="noreferrer" onClick={contato("WhatsApp", "Falar com a recepção")}>Falar com a recepção <Arrow /></a></div>
         </div>
         <div className="container facts" data-reveal><div><strong>24h</strong><span>Recepção disponível</span></div><div><strong>100m</strong><span>Do centro da cidade</span></div><div><strong>850m</strong><span>Da universidade</span></div><div><strong>2012</strong><span>Recebendo em Itabaiana</span></div></div>
       </section>
@@ -277,29 +292,29 @@ export function PousadaSite() {
 
       <section className="location section" id="localizacao">
         <div className="container location-grid">
-          <div className="location-copy" data-reveal><span className="eyebrow eyebrow--light">No centro de Itabaiana</span><h2>Perto de tudo o que trouxe você à cidade.</h2><p>Rua Campo do Brito, 344<br/>Centro · Itabaiana/SE</p><ul><li><Icon name="pin"/>Em frente à Praça de Eventos</li><li><Icon name="pin"/>Próxima ao Estádio Presidente Médici</li><li><Icon name="pin"/>A cerca de 850 m da universidade</li></ul><a className="button button--white" href={maps} target="_blank" rel="noreferrer">Traçar rota no Google Maps <Arrow /></a></div>
+          <div className="location-copy" data-reveal><span className="eyebrow eyebrow--light">No centro de Itabaiana</span><h2>Perto de tudo o que trouxe você à cidade.</h2><p>Rua Campo do Brito, 344<br/>Centro · Itabaiana/SE</p><ul><li><Icon name="pin"/>Em frente à Praça de Eventos</li><li><Icon name="pin"/>Próxima ao Estádio Presidente Médici</li><li><Icon name="pin"/>A cerca de 850 m da universidade</li></ul><a className="button button--white" href={maps} target="_blank" rel="noreferrer" onClick={rota("Traçar rota")}>Traçar rota no Google Maps <Arrow /></a></div>
           <div className="location-map" data-reveal>
             <iframe title="Localização da Pousada Nossa Senhora Aparecida no Google Maps" src="https://www.google.com/maps?q=Pousada%20Nossa%20Senhora%20Aparecida%2C%20Rua%20Campo%20do%20Brito%20344%2C%20Itabaiana%20SE&z=16&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
-            <a href={maps} target="_blank" rel="noreferrer"><Icon name="pin"/><span><strong>Ver no Google Maps</strong>Rua Campo do Brito, 344</span><Arrow /></a>
+            <a href={maps} target="_blank" rel="noreferrer" onClick={rota("Ver no Google Maps")}><Icon name="pin"/><span><strong>Ver no Google Maps</strong>Rua Campo do Brito, 344</span><Arrow /></a>
           </div>
         </div>
       </section>
 
       <section className="booking section" id="reservar">
         <div className="container booking-grid">
-          <div className="booking-copy" data-reveal><span className="eyebrow">Sua próxima estadia</span><h2>Conte quando você vem. A gente cuida do resto.</h2><p>Envie as informações pelo formulário e continue o atendimento diretamente com a recepção no WhatsApp.</p><div><a href="tel:+5579999538948">(79) 99953-8948</a><a href="mailto:pousadansa@gmail.com">pousadansa@gmail.com</a></div></div>
+          <div className="booking-copy" data-reveal><span className="eyebrow">Sua próxima estadia</span><h2>Conte quando você vem. A gente cuida do resto.</h2><p>Envie as informações pelo formulário e continue o atendimento diretamente com a recepção no WhatsApp.</p><div><a href="tel:+5579999538948" onClick={contato("Telefone", "Seção de reserva")}>(79) 99953-8948</a><a href="mailto:pousadansa@gmail.com" onClick={contato("E-mail", "Seção de reserva")}>pousadansa@gmail.com</a></div></div>
           <form className="booking-form" onSubmit={reserve} data-reveal><label><span>Check-in</span><input type="date" value={arrival} onChange={event => setArrival(event.target.value)}/></label><label><span>Check-out</span><input type="date" value={departure} onChange={event => setDeparture(event.target.value)}/></label><label className="booking-form__wide"><span>Hóspedes</span><select value={guests} onChange={event => setGuests(event.target.value)}><option>1 hóspede</option><option>2 hóspedes</option><option>3 hóspedes</option><option>4 hóspedes</option><option>5 ou mais hóspedes</option></select></label><button className="button button--green booking-form__wide" type="submit">Consultar pelo WhatsApp <Arrow /></button><small className="booking-form__wide">A consulta não confirma automaticamente a reserva.</small></form>
         </div>
       </section>
 
       <footer className="footer">
-        <div className="container footer-top"><Brand/><div><span>Navegue</span><a href="#pousada">A pousada</a><a href="#acomodacoes">Acomodações</a><a href="#galeria">Galeria</a><a href="#localizacao">Localização</a></div><div><span>Contato</span><a href={`tel:+${phone}`}>+55 79 99953-8948</a><a href="mailto:pousadansa@gmail.com">pousadansa@gmail.com</a><a href={instagram} target="_blank" rel="noreferrer">Instagram ↗</a></div><div><span>Endereço</span><p>Rua Campo do Brito, 344<br/>Centro · Itabaiana/SE<br/>CEP 49500-109</p></div></div>
+        <div className="container footer-top"><Brand/><div><span>Navegue</span><a href="#pousada">A pousada</a><a href="#acomodacoes">Acomodações</a><a href="#galeria">Galeria</a><a href="#localizacao">Localização</a></div><div><span>Contato</span><a href={`tel:+${phone}`} onClick={contato("Telefone", "Rodapé")}>+55 79 99953-8948</a><a href="mailto:pousadansa@gmail.com" onClick={contato("E-mail", "Rodapé")}>pousadansa@gmail.com</a><a href={instagram} target="_blank" rel="noreferrer">Instagram ↗</a></div><div><span>Endereço</span><p>Rua Campo do Brito, 344<br/>Centro · Itabaiana/SE<br/>CEP 49500-109</p></div></div>
         <div className="container footer-bottom"><span>© 2026 Pousada Nossa Senhora Aparecida</span><Link href="/politica-de-privacidade">Política de Privacidade</Link></div>
       </footer>
 
       <div className="floating-socials" aria-label="Redes sociais e atendimento">
         <a className="floating-social floating-social--instagram" href={instagram} target="_blank" rel="noreferrer" aria-label="Ver o Instagram da pousada"><span>Instagram</span><SocialIcon name="instagram" /></a>
-        <a className="floating-social floating-social--whatsapp" href={whatsapp} target="_blank" rel="noreferrer" aria-label="Falar com a pousada no WhatsApp"><span>WhatsApp</span><SocialIcon name="whatsapp" /></a>
+        <a className="floating-social floating-social--whatsapp" href={whatsapp} target="_blank" rel="noreferrer" onClick={contato("WhatsApp", "Botão flutuante")} aria-label="Falar com a pousada no WhatsApp"><span>WhatsApp</span><SocialIcon name="whatsapp" /></a>
       </div>
     </main>
   );
